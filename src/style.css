@@ -1,0 +1,19 @@
+@import "tailwindcss";
+@plugin "flyonui";
+@import "flyonui/variants.css";
+@source "../node_modules/flyonui/flyonui.js"; /* Add only if node_modules is gitignored*/
+@plugin "@tailwindcss/typography";
+
+
+
+
+html, body {
+  margin: 0;
+  padding: 0;
+  overflow: hidden; /* désactive le scroll vertical ET horizontal */
+  height: 100%;
+  width: 100%;
+}
+* {
+  outline: 1px solid red;
+}
