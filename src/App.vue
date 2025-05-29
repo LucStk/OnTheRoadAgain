@@ -1,13 +1,13 @@
 <script setup>
-import Navbar from './components/Navbar.vue'
-import SideMenu from './components/SideMenu.vue'
-import DownMenu from './components/DownMenu.vue'
+import Menu from './components/Menu.vue';
+import DownMenu from './components/DownMenu.vue';
+import Map from "./components/Map.vue";
 </script>
 
 <template>
-  <Navbar/>
-  <SideMenu/>
-  <DownMenu/>
+
+  <Map />
+  <Menu />
 </template>
 
 <style scoped>

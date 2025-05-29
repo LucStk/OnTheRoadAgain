@@ -6,4 +6,4 @@ La carte est conçu avec leaflet.
 L'application utilise Vue.js et Tailwindcss
 
 Pour démarrer le dévellopement :
-- npm install -D tailwindcss@latest @tailwindcss/vite@latest @tailwindcss/typography flyonui
+- npm install -D tailwindcss@latest @tailwindcss/vite@latest @tailwindcss/typography flyonui @iconify/tailwind4 @iconify-json/tabler leaflet
