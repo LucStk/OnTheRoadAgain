@@ -17,6 +17,7 @@ onMounted(() => {
 
   L.marker([48.8566, 2.3522]).addTo(map).bindPopup('Paris').openPopup();
 });
+
 </script>
 <style>
 

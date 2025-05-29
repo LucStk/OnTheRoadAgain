@@ -6,7 +6,7 @@
       <li>
         <a href="#">
           <span class="icon-[tabler--home] size-5"></span>
-          Home
+          Mes parcours
         </a>
       </li>
       <li>
@@ -18,7 +18,7 @@
       <li>
         <a href="#">
           <span class="icon-[tabler--message] size-5"></span>
-          Notifications
+          Messages
         </a>
       </li>
       <li>

@@ -1,5 +1,5 @@
 <script setup>
-import SideBar from './SideBar.vue';
+
 import Searchbar from './Searchbar.vue';
 </script>
 
@@ -163,6 +163,6 @@ import Searchbar from './Searchbar.vue';
     </div>
   </div>
 </nav>
-<SideBar />
+
 </template>
 
