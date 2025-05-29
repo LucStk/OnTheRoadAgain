@@ -1,8 +1,18 @@
 <script setup>
 import Menu from './components/Menu.vue';
 import Map from "./components/Map.vue";
-import EtapeView from "./components/EtapeView.vue";
-import SideBar from './components/SideBar.vue';
+import EtapeView from "./components/etapeview/EtapeView.vue";
+import SideBar from './components/layout/SideBar.vue';
+import dataObject from '@/assets/data.json'
+
+
+import { provide, ref } from 'vue'
+
+const data = ref(dataObject)
+const selectedIndex = ref(null)
+provide("road", data)
+provide("nodeSelected", selectedIndex)
+
 </script>
 
 <template>

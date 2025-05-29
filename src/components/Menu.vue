@@ -1,6 +1,6 @@
 <script setup>
 
-import Searchbar from './Searchbar.vue';
+import Searchbar from './layout/Searchbar.vue';
 </script>
 
 

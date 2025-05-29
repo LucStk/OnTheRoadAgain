@@ -1,0 +1,60 @@
+{
+  "titre_etape": "Paris-Brest",
+  "titre_parcours": "Bretagne Express",
+  "num_etape": 3,
+  "num_jour": 1,
+  "denivele": "500m D+",
+  "tag": "cyclo",
+  "createur": "Jean Dupont",
+  "photos": "https://cdn.flyonui.com/fy-assets/avatar/avatar-1.png",
+  "etapes": [
+    {
+      "lat_lont": [48.406756306171914, -4.465942382812501],
+      "year": 1984,
+      "label": "Macintosh PC",
+      "proportion": 10,
+      "description": "Le premier Macintosh, révolutionnaire pour son interface graphique.",
+      "photo": "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c3/Macintosh_Portable-IMG_7541.jpg/1515px-Macintosh_Portable-IMG_7541.jpg"
+    },
+    {
+      "lat_lont": [48.38053982176634, -4.52962875366211],
+      "year": 1998,
+      "label": "iMac",
+      "proportion": 15,
+      "description": "L’iMac a marqué un tournant dans le design des ordinateurs personnels.",
+      "photo": "https://upload.wikimedia.org/wikipedia/commons/5/58/IMac_G4_sunflower7.png"
+    },
+    {
+      "lat_lont": [48.39307982571543, -4.526023864746095],
+      "year": 2001,
+      "label": "iPod",
+      "proportion": 15,
+      "description": "L’iPod a révolutionné la musique nomade.",
+      "photo": "https://upload.wikimedia.org/wikipedia/commons/6/6e/IPod_1G.png"
+    },
+    {
+      "lat_lont": [48.41040274663766, -4.49993133544922],
+      "year": 2007,
+      "label": "iPhone",
+      "proportion": 25,
+      "description": "Lancement du smartphone moderne avec écran tactile capacitif.",
+      "photo": "https://upload.wikimedia.org/wikipedia/commons/7/70/IPhone_2G_PSD_Mockup.png"
+    },
+    {
+      "lat_lont": [48.40607256947621, -4.5189857482910165],
+      "year": 2015,
+      "label": "Apple Watch",
+      "proportion": 20,
+      "description": "Apple entre dans l’univers des montres connectées.",
+      "photo": "https://upload.wikimedia.org/wikipedia/commons/3/3e/Apple_Watch.png"
+    },
+    {
+      "lat_lont": [48.4118840383916, -4.480361938476563],
+      "year": 2024,
+      "label": "Vision Pro",
+      "proportion": 15,
+      "description": "Le casque spatial d’Apple ouvre une nouvelle ère d’interface.",
+      "photo": "https://upload.wikimedia.org/wikipedia/commons/8/83/Apple_Vision_Pro_Logo.svg"
+    }
+  ]
+}

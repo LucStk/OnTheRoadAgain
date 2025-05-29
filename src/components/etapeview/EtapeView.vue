@@ -24,13 +24,4 @@
 import { ref } from 'vue'
 import TagLine from "./TagLine.vue"
 import EtapeInfo from './EtapeInfo.vue'
-
-const titre_étape = ref("Paris-Brest")
-const titre_parcours = ref("Bretagne Express")
-const num_étape = ref(3)
-const num_jour = ref(1)
-const denivele = ref("500m D+")
-const tag = ref("cyclo")
-const createur = ref("Jean Dupont")
-const photos = ref("📸")
 </script>
