@@ -1,3 +1,6 @@
+import L from 'leaflet';
+
+
 export class Map extends L.Map{
   constructor() {
 

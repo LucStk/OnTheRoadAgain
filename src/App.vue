@@ -1,7 +1,7 @@
 <script setup>
 import Menu from './components/Menu.vue';
 import Map from "./components/Map.vue";
-import PathView from "./components/ÉtapeView.vue";
+import EtapeView from "./components/EtapeView.vue";
 import SideBar from './components/SideBar.vue';
 </script>
 
@@ -22,7 +22,7 @@ import SideBar from './components/SideBar.vue';
       <div class="flex-1 flex flex-col justify-end">
         <!-- PathView alignée en bas -->
         <div class="bg-white border-t border-gray-300">
-          <PathView />
+          <EtapeView />
         </div>
       </div>
     </div>

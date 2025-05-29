@@ -1,4 +1,5 @@
 import { Point, Route } from './elements.js';
+import L from 'leaflet';
 
 
 export class Map extends L.Map{

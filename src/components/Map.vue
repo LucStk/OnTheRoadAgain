@@ -2,13 +2,16 @@
   <div id="map"></div>
 </template>
 
-<script setup>
+<script setup> 
 import { onMounted } from 'vue';
-import L from 'leaflet';
+
+
 import 'leaflet/dist/leaflet.css';
+import { Map } from '@/js/map.js';
 
 onMounted(() => {
-  const map = L.map('map').setView([48.8566, 2.3522], 13);
+  const map = new Map();
+  map.setView([48.8566, 2.3522], 13);
 
   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution:
