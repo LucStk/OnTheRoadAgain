@@ -7,6 +7,6 @@ L'application utilise Vue.js et Tailwindcss
 
 Pour démarrer le dévellopement :
 - npm install -D tailwindcss@latest @tailwindcss/vite@latest @tailwindcss/typography flyonui @iconify/tailwind4 @iconify-json/tabler leaflet
-npm install -D axios
+npm install -D axios pinia
 
 npm install -D express dotenv cors (si le backend n'existe pas encore)

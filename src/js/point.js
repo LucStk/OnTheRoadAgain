@@ -1,185 +1,72 @@
 import L from 'leaflet';
+import Lines from "./lines.js"
+import { createApp } from 'vue';
+import marker from '@/components/route/marker.vue';
+
 
 export class Route{
-
-	constructor(coordinates,map) {
-		this.coordinates = coordinates;
-		// Entrypoint est le point d'entrée de la chaîne
-		// C'est un point au hasard de la liste
-		this.entrypoint = new Point(coordinates,map);
-		this.entrypoint.route = this;
-	}
-
-    remove() {
-        // Supprimer tous les points
-        if (this.entrypoint) {
-			let n = this.entrypoint.next;
-			let p = this.entrypoint.previous;
-			this.entrypoint.remove();
-            function rec_drop(point, direction) {
-                if (!point) return;
-                const nextPoint = direction ? point.next : point.previous;
-                point.remove();
-                rec_drop(nextPoint, direction);
-            }
-            
-            rec_drop(n, true);
-            rec_drop(p, false);
-        }
-        
-        // Nettoyer les références
-        this.entrypoint = null;
-        this.coordinates = null;
-        
-        // Notifier la carte si nécessaire
-        if (this.map) {
-            // Émettre un événement de suppression de route
-            this.map.fire('routeremoved', { route: this });
-        } 
-	}
-
-	getFirstPoint(){
-		function rec_first(point) {
-			return point.previous ? rec_first(point.previous) : point
-		}
-		return rec_first(this.entrypoint);
-	}
-
-	getLastPoint(){
-		function rec_last(point) {
-			return point.next ? rec_first(point.next) : point
-		}
-		return rec_last(this.entrypoint);
-	}
-
-	invertAllPoints(){
-		// Change de tous les points de la route
-
-		function rec_inv_next(point) {
-			if (!point) {return;}
-			rec_inv_next(point.next);
-			invertPoint(point);
-		}
-		rec_inv_next(this.getFirstPoint());
-	}
-
-	invertPoint(point){
-		let prev = point.previous;
-		point.previous = point.next;
-		point.next = prev;
-	}
-
-	getLength(){
-		let length = 0;
-		let currentPoint = this.entrypoint;
-		while (currentPoint) {
-				length++;
-				currentPoint = currentPoint.next;
-		}
-		currentPoint = this.entrypoint;
-		while (currentPoint) {
-			length++;
-			currentPoint = currentPoint.previous;
-		}
-		return length;
-	}
-}
-
-class Lines extends L.Polyline {
-
-	constructor(coordinates,map) {
-		// Créer une ligne
-		super(coordinates, {
-			color: 'blue',
-			weight: 3,
-			opacity: 0.7
-		});
-		
-		this.colors = ['blue', 'red', 'green', 'purple', 'orange'];
-		this.currentColorIndex = 0;
-		this.point = null; // un segment est associé au point de départ
+	constructor(map) {
 		this.map = map;
-		this.addTo(map);
-
-		this.on("dblclick", this.handledbClick);
-		this.on("click", this.handleClick);
-		this.on("contextmenu", this.handleContextMenu);
+		this.startPt = null;
+		this.endPt   = null;
 	}
-	remove(){
-        this.off("dblclick");
-        this.off("click");
-        this.off("contextmenu");
+	addPoint(latlng){
+		// Si il n'y a aucun point dans la route
+		if (this.endPt){
+			let nwPt = this.endPt.creatNext(latlng)
+			this.endPt = nwPt;
+			return nwPt
+		}
 
-		super.remove();
-		this.point = null;
-
+		let nwPt = new Point(latlng,this.map,this);
+		this.startPt = nwPt;
+		this.endPt = nwPt;
+		return nwPt
 	}
-
-	nextColor() {
-	  this.currentColorIndex = (this.currentColorIndex + 1) % this.colors.length;
-	  return this.colors[this.currentColorIndex];
-	}
-
-	setColorPolyline(color) {this.setStyle({ color: color });}
-	
-	handledbClick(e) {
-		L.DomEvent.stopPropagation(e);
-	}
-
-	handleClick(e) {
-		 L.DomEvent.stopPropagation(e); // Empêche la propagation de l'événement
-		 e.originalEvent.preventDefault();
-		 const newColor = this.nextColor();
-		 this.setColorPolyline(newColor);
-	};
-
-	handleContextMenu(e) {
-		 L.DomEvent.stopPropagation(e); // Empêche la propagation de l'événement
-		 e.originalEvent.preventDefault();
-
-		 this.point.creatNext([e.latlng.lat, e.latlng.lng]);
-		 this.point.next.beginDrag();
-	}
-
 }
 
 export class Point extends L.Marker {
-	constructor(latlng, map) {
+	constructor(latlng, map, route=null) {
+
+		const container = document.createElement('div');
+    	container.className = 'vue-marker-container';
 
 		let options = {
 			draggable: true,
 			bubblingMouseEvents: true,
 			icon: L.divIcon({
 					className: 'custom-marker',
-					html: `
-						<div class="marker">
-									<span class = "close">×</span>
-									<!--<span class = "extend">+</span>-->
-						</div>`,
-					iconSize: [20, 20],
-					iconAnchor: [11, 11]
+					html: container.outerHTML,
+					iconSize: [20, 40],
+       				 iconAnchor: [60, 20],
 			})
 		}
 		super(latlng, options);
-		this.map = map;
+		//une fois que le point est affiché sur la carte, on insert l'élément vue
+		//-marker à l'intérieur
+
+		this.on('add', () => {
+			const markerEl = this.getElement();
+			if (!markerEl) return;
+			const vueContainer = markerEl.querySelector('.vue-marker-container');
+			if (vueContainer) {
+				this.vueApp = createApp(marker);
+				this.vueApp.mount(vueContainer);
+			}
+		});
 
 		this.addTo(map);
 
-		this.route    = null; // la route associée
-		this.next = null; // point suivant pour la chained list
-		this.previous  = null; // point precedent pour la chained list
-		this.segment    = null; // segment du point au point suivant
+		this.map 	  = map;
+		this.route    = route;
+		this.next     = null; // point suivant pour la chained list
+		this.previous = null; // point precedent pour la chained list
+		this.segment  = null; // segment du point au point suivant
 
-		this.getElement().objet = this; // Référence à l'objet Point dans le DOM
-
-		console.log(this.getElement());
-
-		// Création d'un nouveauPoint lié
+		/* Création d'un nouveauPoint lié
 		this.on("contextmenu", this.NewLinkPoint);
-
 		// Coucou
 		this.on("click", this.handleClick);
-
 		// Update les segments des deux côtés du point
 		this.on("move", e => {
 			this.updateSegment();
@@ -187,6 +74,7 @@ export class Point extends L.Marker {
 		});
 		//this.on("dragstart", this.watchForFuse);
 		//this.on("onmouseover", this.handleDragStart);
+		*/
 	}
 	remove() {
 		// Supprimer le marqueur graphiquement
@@ -230,7 +118,6 @@ export class Point extends L.Marker {
                 this.route.remove();
             }
         }
-		
 	}
 
 	watchForFuse(e) {
@@ -297,13 +184,13 @@ export class Point extends L.Marker {
 
 	creatNext(coord){
 		// Créer un point suivant à partir de celui-ci
-		let newPoint = new Point(coord, this.map);
-		newPoint.route = this.route;
-		// Si le point suivant existe on le relie à lui
-		if (this.next) {	
-			newPoint.setNext(this.next); // On met le suivant du nouveau point
+		let newPoint = new Point(coord, this.map, this.route);
+		// Si le point suivant existe, on met le nouveau pt entre les deux
+		if (this.next) {
+			newPoint.setNext(this.next);
 		}
-		this.setNext(newPoint); // On met le suivant du point actuel
+		this.setNext(newPoint); // On met à jour le point actuel
+		return newPoint;
 	}
 
 	fuse(point){

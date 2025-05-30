@@ -24,6 +24,7 @@
     "dotenv": "^16.5.0",
     "flyonui": "^2.2.0",
     "leaflet": "^1.9.4",
+    "pinia": "^3.0.2",
     "tailwindcss": "^4.1.8",
     "vite": "^6.3.5"
   }

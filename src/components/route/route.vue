@@ -13,11 +13,11 @@
           <div
             class="flex size-4.5 items-center justify-center rounded-full"
             :class="[
-              selectedIndex === index
+              IndexStore.index === index
                 ? 'bg-blue-500'
                 : 'bg-primary/20'
             ]"
-            @click="selectPoint(index)"
+            @click="IndexStore.change_index(index)"
           >
             <span class="badge badge-primary size-3 rounded-full p-0"></span>
           </div>
@@ -31,17 +31,17 @@
     </ul>
 
     <!-- Description & photo -->
-    <div id="taginfo" class="ml-8 p-4 border rounded w-96 overflow-y-hidden" v-if="selectedIndex !== null">
+    <div id="taginfo" class="ml-8 p-4 border rounded w-96 overflow-y-hidden" v-if="IndexStore.index !== null">
       <h3 class="text-xl font-semibold">
-        {{ road.etapes[selectedIndex].label }} ({{ road.etapes[selectedIndex].year }})
+        {{ road.etapes[IndexStore.index].label }} ({{ road.etapes[IndexStore.index].year }})
       </h3>
       <p class="mt-2 text-gray-700">
-        {{ road.etapes[selectedIndex].description }}
+        {{ road.etapes[IndexStore.index].description }}
       </p>
       <img
-        v-if="road.etapes[selectedIndex].photo"
-        :src="road.etapes[selectedIndex].photo"
-        :alt="road.etapes[selectedIndex].label"
+        v-if="road.etapes[IndexStore.index].photo"
+        :src="road.etapes[IndexStore.index].photo"
+        :alt="road.etapes[IndexStore.index].label"
         class="mt-4 max-w-full h-auto rounded"
       />
     </div>
@@ -51,15 +51,11 @@
 
 <script setup>
     import { ref,inject } from 'vue'
+    import { useIndexStore } from '@/stores/global'
 
     const totalWidth = 800
     const road = inject('road')
-    const selectedIndex = inject("nodeSelected")
-
-    function selectPoint(index) {
-      selectedIndex.value = index === selectedIndex.value ? null : index
-    }
-
+    const IndexStore = useIndexStore()
 </script>
 
 <style scoped>
