@@ -37,8 +37,6 @@ export class Point extends L.Marker {
 			icon: L.divIcon({
 					className: 'custom-marker',
 					html: container.outerHTML,
-					iconSize: [20, 40],
-       				 iconAnchor: [60, 20],
 			})
 		}
 		super(latlng, options);

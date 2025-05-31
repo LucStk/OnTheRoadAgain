@@ -9,6 +9,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@indoorequal/vue-maplibre-gl": "^8.3.0",
     "cors": "^2.8.5",
     "express": "^5.1.0",
     "vue": "^3.5.13"
@@ -23,9 +24,14 @@
     "daisyui": "^5.0.42",
     "dotenv": "^16.5.0",
     "flyonui": "^2.2.0",
+    "geojson": "^0.5.0",
     "leaflet": "^1.9.4",
+    "maplibre-gl": "^5.5.0",
+    "mitt": "^3.0.1",
     "pinia": "^3.0.2",
+    "sass-embedded": "^1.89.0",
     "tailwindcss": "^4.1.8",
-    "vite": "^6.3.5"
+    "vite": "^6.3.5",
+    "vue-maplibre-gl": "^5.5.9"
   }
 }

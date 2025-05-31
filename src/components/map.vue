@@ -1,40 +1,114 @@
-<template>
-  <div id="map"></div>
-  <div class="bg-white border-t border-gray-300">
-    <EtapesConteneur />
-  </div>
+<script setup>
+import { ref, computed, watch } from 'vue'
+import {
+  MglMap,
+  MglNavigationControl,
+  MglMarker,
+  MglGeoJsonSource,
+  MglLineLayer
+} from '@indoorequal/vue-maplibre-gl'
 
-</template>
+const style = 'https://api.maptiler.com/maps/streets-v2/style.json?key=AkDXKRSgsoWbmunH5eGo'
+const center = [-4.49993133544922, 48.41040274663766]
+const zoom = 8
 
-<script setup> 
-  import { onMounted, inject } from 'vue';
-  import { Map } from '@/js/map.js';
-  import 'leaflet/dist/leaflet.css';
-  import EtapesConteneur from "./route/conteneur.vue";
-  const road_data = inject('road');
+const segmentsSourceRef = ref(null)
 
-  onMounted(() => {
-    const map = new Map();
-    
-    //On lit les points de road et on les affiches sur la carte
-    var road = map.newRoute();
-    console.log(road_data)
-    road_data.value.etapes.forEach( i =>{
-    
-      let nwpt = road.addPoint(i.lat_lont)
-    
+const points = ref([
+  [-4.5296, 48.3805],
+  [-4.5260, 48.3930],
+  [-4.4999, 48.4104],
+])
+
+
+function generateGeoJSON(pointsArray) {
+  const features = []
+  for (let i = 0; i < pointsArray.length - 1; i++) {
+    features.push({
+      type: 'Feature',
+      geometry: {
+        type: 'LineString',
+        coordinates: [pointsArray[i], pointsArray[i + 1]]
+      },
+      properties: { id: i }
     })
-  });
-  
+  }
+  return {
+    type: 'FeatureCollection',
+    features
+  }
+}
+
+const initialGeoJSON = generateGeoJSON(points.value)
+
+watch(points, () => {
+  console.log("update")
+  if (segmentsSourceRef.value) {
+    segmentsSourceRef.value.setData(generateGeoJSON(points.value))
+  }
+}, { deep: true })
+
+function handleDrag(i) {
+  console.log("ping1",i)
+  return (event) => {
+    console.log("ping2")
+    points.value[i] = [event.lngLat.lng, event.lngLat.lat]
+  }
+}
+
+function handleDragEnd(i) {
+  return (event) => {
+    onDragEnd(event, i)
+  }
+}
+
+function onDragEnd(e, i) {
+  points.value[i] = [e.lngLat.lng, e.lngLat.lat]
+  console.log("ping")
+}
 </script>
 
-<style>
-  #map {
-    position: fixed;
-    top: 0;
-    left: 0;
-    height: 100%;
-    width: 100%;
-    z-index: 0; /* en arrière-plan */
-  }
+
+<template>
+  <mgl-map :map-style="style" :center="center" :zoom="zoom">
+    
+    <!-- Markers draggables -->
+    <mgl-marker
+      v-for="(coord, i) in points"
+      :key="i"
+      :coordinates="coord"
+      :draggable="true"
+      @drag="(e) => handleDrag(e)"
+      @dragend="handleDragEnd(i)"
+    >
+      <template #marker>
+        <div
+          style="background-color: #e63946; width: 12px; height: 12px; border-radius: 50%; cursor: grab;"
+        />
+      </template>
+    </mgl-marker>
+    
+    <!-- Segments -->
+    <mgl-geo-json-source
+      ref="segmentsSourceRef"
+      :source-id="'segments'"
+      :data="initialGeoJSON"
+    >
+      <mgl-line-layer
+        :layer-id="'segments-layer'"
+        :source-id="'segments'"
+        :paint="{
+          'line-color': '#0000ff',
+          'line-width': 2
+        }"
+      />
+    </mgl-geo-json-source>
+
+    <mgl-navigation-control />
+  </mgl-map>
+</template>
+
+
+<style lang="scss">
+@import "maplibre-gl/dist/maplibre-gl.css";
 </style>

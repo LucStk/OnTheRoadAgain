@@ -5,6 +5,9 @@
 @plugin "@tailwindcss/typography";
 @plugin "@iconify/tailwind4";
 
+@use "~maplibre-gl/dist/maplibre-gl.css";
+@use "~vue-maplibre-gl/dist/vue-maplibre-gl.css";
+@use "~vue-maplibre-gl/dist/vue-maplibre-gl-draw.css"; 
 
 html, body, #app {
   margin: 0;

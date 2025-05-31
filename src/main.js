@@ -17,6 +17,9 @@ import './style.css';
 import 'leaflet/dist/leaflet.css';
 import './assets/css/elements.css';
 
+import 'maplibre-gl/dist/maplibre-gl.css';
+import VueMaplibreGl from '@indoorequal/vue-maplibre-gl'
+
 import { createApp } from 'vue';
 import { createPinia } from 'pinia';
 import App from './App.vue';
@@ -25,5 +28,6 @@ import App from './App.vue';
 const pinia = createPinia()
 const app = createApp(App)
 
+app.use(VueMaplibreGl)
 app.use(pinia)
 app.mount('#app')
