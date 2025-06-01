@@ -1,49 +1,35 @@
 <template>
-    <div class="marker">
-        <span class = "close">×</span>
-    <!--<span class = "extend">+</span>-->
-    </div>`,
+  <div class="marker-content">
+    📍
+    <div
+      class="flex size-4.5 items-center justify-center rounded-full"
+      :class="IndexStore.index === index ? 'bg-blue-500' : 'bg-primary/20'"
+      @click="IndexStore.change_index(index)"
+    ></div>
+  </div>
 </template>
 
-<style>
-    .marker {
-        position: relative;
-        width: 20px;
-        height: 20px;
-        background-color: #2196F3;
-        border-radius: 50%;
-        border: 2px solid white;
-        box-shadow: 0 0 3px rgba(0,0,0,0.3);
-    }
+<script setup>
+    import { ref,inject } from 'vue'
+    import { useIndexStore } from '@/stores/global'
+    const IndexStore = useIndexStore()
 
+    const props = defineProps({
+        index : Number
+    });
 
-    .marker span {
-        color: #000;
-        position: absolute;
-        bottom: 0;
-        left: 50%;
-        cursor: pointer;
-        background: white;
-        border-radius: 50%;
-        width: 16px;
-        height: 16px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        border: 1px solid #666;
-        font-size: 14px;
-        box-shadow: 0 0 3px rgba(0,0,0,0.2);
-        left: 0px;
-        top: -18px;
-    }
-    .marker .close{
-        transform: translateX(60%);
-    }
-    .marker .extend{
-        transform: translateX(-60%);
-    }
+    const handleClick = () => {
+        console.log("Clicked marker:", props.index);
+    };
+</script>
 
-    .marker span:hover {
-        background: #f0f0f0;
-    }
+<style scoped>
+.marker-content {
+  background-color: white;
+  padding: 4px 8px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  cursor: pointer;
+  box-shadow: 0 0 4px rgba(0,0,0,0.3);
+}
 </style>

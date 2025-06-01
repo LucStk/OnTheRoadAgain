@@ -1,15 +1,20 @@
 
 <template>
   <div id="map"></div>
+  <RouteInfo />
 </template>
 
 
 <script setup>
-  import { onMounted,ref, watch} from 'vue';
+  import { onMounted,ref, watch, inject} from 'vue';
   import {Map_custom} from '@/js/map'
+  import { useIndexStore } from '@/stores/global'
+  import RouteInfo from "./route/conteneur.vue"
 
   const routePoints = ref([]); // 🔁 partagé avec Route
   const refmap = ref(null)
+  const road_data = inject('road')
+  const IndexStore = useIndexStore()
 
 onMounted(() => {
   // ── 1) Instanciation de la map / stockage dans refmap ──
@@ -19,9 +24,11 @@ onMounted(() => {
   // ── 2) Quand le style est chargé, on crée une Route et on pose 2 points ──
   map.on('load', () => {
     const route = map.newRoute();
-    route.addPoint([-4.5, 48.41]);
-    route.addPoint([-4.51, 48.412]);
-    route.addPoint([-4.52, 48.412]);
+
+    console.log(road_data.value.etapes)
+    road_data.value.etapes.forEach(element => {
+      route.addPoint(element.long_lat);
+    });
 
     // ── 3) On forcera manuellement la mise à jour au cas où le watch ne l’aurait pas encore fait ──
     map.getSource('route-source').setData({
@@ -45,7 +52,6 @@ watch(
 
     const src = map.getSource('route-source');
     if (src) {
-      console.log("okey")
       src.setData({
         type: 'Feature',
         geometry: {

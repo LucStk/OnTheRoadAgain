@@ -10,7 +10,7 @@
   "etapes": [
 
     {
-      "lat_lont": [48.38053982176634, -4.52962875366211],
+      "long_lat": [ -4.52962875366211, 48.38053982176634],
       "year": 1998,
       "label": "iMac",
       "proportion": 15,
@@ -18,7 +18,7 @@
       "photo": "https://upload.wikimedia.org/wikipedia/commons/5/58/IMac_G4_sunflower7.png"
     },
     {
-      "lat_lont": [48.39307982571543, -4.526023864746095],
+      "long_lat": [-4.526023864746095, 48.39307982571543],
       "year": 2001,
       "label": "iPod",
       "proportion": 15,
@@ -26,7 +26,7 @@
       "photo": "https://upload.wikimedia.org/wikipedia/commons/6/6e/IPod_1G.png"
     },
     {
-      "lat_lont": [48.41040274663766, -4.49993133544922],
+      "long_lat": [-4.49993133544922, 48.41040274663766],
       "year": 2007,
       "label": "iPhone",
       "proportion": 25,
@@ -34,7 +34,7 @@
       "photo": "https://upload.wikimedia.org/wikipedia/commons/7/70/IPhone_2G_PSD_Mockup.png"
     },
     {
-      "lat_lont": [48.406756306171914, -4.465942382812501],
+      "long_lat": [-4.465942382812501, 48.406756306171914],
       "year": 1984,
       "label": "Macintosh PC",
       "proportion": 10,
