@@ -13,11 +13,8 @@ window.noUiSlider = noUiSlider;*/
 
 // FlyonUI
 import "flyonui/flyonui";
-import './style.css';
-import 'leaflet/dist/leaflet.css';
+import './main.css';
 import './assets/css/elements.css';
-
-import 'maplibre-gl/dist/maplibre-gl.css';
 import VueMaplibreGl from '@indoorequal/vue-maplibre-gl'
 
 import { createApp } from 'vue';

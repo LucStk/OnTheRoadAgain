@@ -1,26 +1,19 @@
-import { Marker } from "maplibre-gl";
+import { Marker, LngLatBounds} from "maplibre-gl";
 import { createApp, h } from "vue";
 import MyMarkerComponent from "@/components/route/marker.vue";
 
-
-
-
+// Point personnalisé avec composant Vue monté dynamiquement
 export class Point extends Marker {
-	constructor(coords, map, onMove, index=0) {
-		// Crée un élément DOM qui va contenir le composant Vue
+	constructor(coords, map, onMove, index = 0) {
 		const container = document.createElement("div");
 
-		// Monte dynamiquement le composant Vue dans ce conteneur
-		const app = createApp({
+		// Monte dynamiquement le composant Vue dans le conteneur
+		createApp({
 			render: () => h(MyMarkerComponent, { index })
-		});
-		app.mount(container);
+		}).mount(container);
 
-		// Utilise le conteneur comme élément du marker
 		super({ element: container, draggable: true });
-
 		this.setLngLat(coords).addTo(map);
-
 		if (onMove) {
 			this.on("drag", () => onMove(this));
 		}
@@ -32,71 +25,89 @@ export class Route {
 		this.map = map;
 		this.pointsRef = pointsRef;
 		this.markers = [];
+		this.selectedSegmentIndex = null;
 
-	map.addSource('route-source', {
-		type: 'geojson',
-		data: {
-			type: 'FeatureCollection',
-			features: []
-		}
-	});
+		this._initRouteSourceAndLayer();
+		this._setupMapEvents();
+		this.updateRoute();
+		this.bounds = new LngLatBounds();
+	}
 
-	map.addLayer({
-		id: 'route-line',
-		type: 'line',
-		source: 'route-source',
-		layout: {
-			'line-join': 'round',
-			'line-cap': 'round'
-		},
-		paint: {
-			'line-color': '#FF0000',
-			'line-width': 4
-		}
-	});
-
-	// Clic sur segment individuel
-	map.on('click', 'route-line', (e) => {
-		const segmentIndex = e.features[0].properties.segmentIndex;
-		console.log('Segment cliqué:', segmentIndex);
-	});
-
-		// Curseur pointeur au survol
-		map.on('mouseenter', 'route-line', () => {
-			map.getCanvas().style.cursor = 'pointer';
+	// Initialisation de la source GeoJSON et du calque
+	_initRouteSourceAndLayer() {
+		this.map.addSource('route-source', {
+			type: 'geojson',
+			data: { type: 'FeatureCollection', features: [] }
 		});
-		map.on('mouseleave', 'route-line', () => {
-			map.getCanvas().style.cursor = '';
+
+		this.map.addLayer({
+			id: 'route-line',
+			type: 'line',
+			source: 'route-source',
+			layout: {
+				'line-join': 'round',
+				'line-cap': 'round'
+			},
+			paint: {
+				'line-color': [
+					'case',
+					['==', ['get', 'isSelected'], true], '#0000FF', // bleu si sélectionné
+					'#FF0000' // rouge sinon
+				],
+				'line-width': 4
+			}
 		});
 	}
 
-	addPoint(coord) {
-		const marker = new Point(coord, this.map, () => {
+	// Événements liés à la carte (clic, survol)
+	_setupMapEvents() {
+		this.map.on('click', 'route-line', (e) => {
+			const segmentIndex = e.features[0].properties.segmentIndex;
+			this.selectedSegmentIndex = segmentIndex;
 			this.updateRoute();
-			},this.markers.length
-		);
+		});
+
+		this.map.on('mouseenter', 'route-line', () => {
+			this.map.getCanvas().style.cursor = 'pointer';
+		});
+
+		this.map.on('mouseleave', 'route-line', () => {
+			this.map.getCanvas().style.cursor = '';
+		});
+	}
+
+	// Ajoute un point (marqueur) à la route
+	addPoint(coord) {
+		const marker = new Point(coord, this.map, () => this.updateRoute(), this.markers.length);
 		this.markers.push(marker);
 		this.updateRoute();
+		this.bounds.extend(marker.getLngLat());
+		this.map.fitBounds(this.bounds, {
+			padding: 50,     // marge autour
+			animate: true,   // animation douce
+			duration: 1000   // en ms
+		});
 	}
 
+	// Met à jour les segments de la route et le style de sélection
 	updateRoute() {
-		const segments = [];
-
-		for (let i = 0; i < this.markers.length - 1; i++) {
-			const start = this.markers[i].getLngLat().toArray();
+		console.log("updateroute")
+		const segments = this.markers.slice(0, -1).map((marker, i) => {
+			const start = marker.getLngLat().toArray();
 			const end = this.markers[i + 1].getLngLat().toArray();
 
-			segments.push({
+			return {
 				type: 'Feature',
 				geometry: {
 					type: 'LineString',
 					coordinates: [start, end]
 				},
 				properties: {
-					segmentIndex: i
+					segmentIndex: i,
+					isSelected: i === this.selectedSegmentIndex
 				}
-			});
-		}
+			};
+		});
 
 		const source = this.map.getSource('route-source');
 		if (source) {
@@ -105,10 +116,5 @@ export class Route {
 				features: segments
 			});
 		}
-	}
-
-
-	updatePointsRef() {
-		this.pointsRef.value = this.markers.map(m => m.getLngLat().toArray());
 	}
 }
