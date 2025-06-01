@@ -1,10 +1,11 @@
 <template>
-  <div class="marker-content">
+  <div class="marker-content"
+  @click="IndexStore.change_index(index)">
     📍
     <div
       class="flex size-4.5 items-center justify-center rounded-full"
       :class="IndexStore.index === index ? 'bg-blue-500' : 'bg-primary/20'"
-      @click="IndexStore.change_index(index)"
+      
     ></div>
   </div>
 </template>

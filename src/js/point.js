@@ -33,40 +33,80 @@ export class Route {
 		this.pointsRef = pointsRef;
 		this.markers = [];
 
-		map.addSource('route-source', {
-			type: 'geojson',
-			data: {
-				type: 'Feature',
-				geometry: {
-					type: 'LineString',
-					coordinates: []
-				}
-			}
-		});
+	map.addSource('route-source', {
+		type: 'geojson',
+		data: {
+			type: 'FeatureCollection',
+			features: []
+		}
+	});
 
-		map.addLayer({
-			id: 'route-line',
-			type: 'line',
-			source: 'route-source',
-			layout: {
-				'line-join': 'round',
-				'line-cap': 'round'
-			},
-			paint: {
-				'line-color': '#FF0000',
-				'line-width': 4
-			}
+	map.addLayer({
+		id: 'route-line',
+		type: 'line',
+		source: 'route-source',
+		layout: {
+			'line-join': 'round',
+			'line-cap': 'round'
+		},
+		paint: {
+			'line-color': '#FF0000',
+			'line-width': 4
+		}
+	});
+
+	// Clic sur segment individuel
+	map.on('click', 'route-line', (e) => {
+		const segmentIndex = e.features[0].properties.segmentIndex;
+		console.log('Segment cliqué:', segmentIndex);
+	});
+
+		// Curseur pointeur au survol
+		map.on('mouseenter', 'route-line', () => {
+			map.getCanvas().style.cursor = 'pointer';
+		});
+		map.on('mouseleave', 'route-line', () => {
+			map.getCanvas().style.cursor = '';
 		});
 	}
 
 	addPoint(coord) {
 		const marker = new Point(coord, this.map, () => {
-			this.updatePointsRef();
+			this.updateRoute();
 			},this.markers.length
 		);
 		this.markers.push(marker);
-		this.updatePointsRef();
+		this.updateRoute();
 	}
+
+	updateRoute() {
+		const segments = [];
+
+		for (let i = 0; i < this.markers.length - 1; i++) {
+			const start = this.markers[i].getLngLat().toArray();
+			const end = this.markers[i + 1].getLngLat().toArray();
+
+			segments.push({
+				type: 'Feature',
+				geometry: {
+					type: 'LineString',
+					coordinates: [start, end]
+				},
+				properties: {
+					segmentIndex: i
+				}
+			});
+		}
+
+		const source = this.map.getSource('route-source');
+		if (source) {
+			source.setData({
+				type: 'FeatureCollection',
+				features: segments
+			});
+		}
+	}
+
 
 	updatePointsRef() {
 		this.pointsRef.value = this.markers.map(m => m.getLngLat().toArray());
