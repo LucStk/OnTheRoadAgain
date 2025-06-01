@@ -82,8 +82,14 @@ export class Route {
 		this.markers.push(marker);
 		this.updateRoute();
 		this.bounds.extend(marker.getLngLat());
+
 		this.map.fitBounds(this.bounds, {
-			padding: 50,     // marge autour
+			padding: {
+			top: 100,
+			bottom: 350, // ← adapte à la hauteur de ta fenêtre d’info
+			left: 100,
+			right: 100
+			},
 			animate: true,   // animation douce
 			duration: 1000   // en ms
 		});

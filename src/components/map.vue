@@ -1,13 +1,8 @@
 
 <template>
-  <div class="flex flex-col h-full">
-    <div class="flex-grow flex">
-      <div class="flex-grow relative">
-        <div id="map" class="absolute inset-0 z-0"></div>
-      </div>
-      <RouteInfo />
-    </div>
-  </div>
+
+  <div id="map" ></div>
+  <RouteInfo />
 </template>
 
 <script setup>
@@ -37,6 +32,10 @@
 
 <style lang="scss">
   @import "maplibre-gl/dist/maplibre-gl.css";
+
+  #map{
+    height: 100%;
+  }
 
   .coordinates {
       background: rgba(0, 0, 0, 0.5);
