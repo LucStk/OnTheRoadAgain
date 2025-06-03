@@ -13,4 +13,13 @@ export default defineConfig({
       '@': path.resolve(__dirname, './src'),  // 👈 ici !
     },
   },
+  devServer: {
+    proxy: {
+      '/api': {
+        target: 'http://localhost:8000',  // ton backend Django
+        changeOrigin: true,
+        secure: false,
+      },
+    },
+  },
 })
