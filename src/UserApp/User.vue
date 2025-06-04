@@ -16,8 +16,6 @@
     <div class="mt-6 space-y-2">
       <p><strong>Email :</strong> {{ user.email }}</p>
       <p><strong>Date de naissance :</strong> {{ formatDate(user.date_naissance) }}</p>
-      <p><strong>Genre :</strong> {{ genreLabel(user.genre) }}</p>
-      <p><strong>Niveau de marche :</strong> {{ niveauLabel(user.niveau_marche) }}</p>
       <p><strong>Bio :</strong> {{ user.bio || 'Aucune bio disponible.' }}</p>
     </div>
   </div>

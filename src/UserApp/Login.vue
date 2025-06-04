@@ -30,48 +30,22 @@
   </div>
 </template>
 
-<script>
-import axios from 'axios';
+<script setup>
+  
 
-export default {
-  name: 'LoginForm',
-  data() {
-    return {
-      username: '',
-      password: '',
-      loading: false,
-      error: null,
+  async function handleLogin(){
+    this.loading = true;
+    this.error = null;
+    const response = await login(this.username, this.password);
+    this.loading = false;
+    // Ici tu peux rediriger vers une page protégée
+    if (response){
+      this.$router.push('/user'); // par exemple si tu utilises Vue Router
+    }
+    else{
+      this.error = 'Nom d’utilisateur ou mot de passe incorrect.';
     };
-  },
-  methods: {
-    async handleLogin() {
-      this.error = null;
-      this.loading = true;
-
-      try {
-        const response = await axios.post('http://localhost:8000/api/token/', {
-          username: this.username,
-          password: this.password,
-        });
-
-        // Stocker les tokens dans localStorage
-        localStorage.setItem('access_token', response.data.access);
-        localStorage.setItem('refresh_token', response.data.refresh);
-
-        // Configurer axios pour envoyer automatiquement le token JWT
-        axios.defaults.headers.common['Authorization'] = `Bearer ${response.data.access}`;
-
-        // Ici tu peux rediriger vers une page protégée
-        this.$router.push('/user'); // par exemple si tu utilises Vue Router
-
-      } catch (err) {
-        this.error = 'Nom d’utilisateur ou mot de passe incorrect.';
-      } finally {
-        this.loading = false;
-      }
-    },
-  },
-};
+  };
 </script>
 
 <style scoped>

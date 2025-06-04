@@ -16,6 +16,7 @@ import "flyonui/flyonui";
 import './main.css';
 import './assets/css/elements.css';
 import VueMaplibreGl from '@indoorequal/vue-maplibre-gl'
+import "./token.js"
 
 import router from "./router"
 
