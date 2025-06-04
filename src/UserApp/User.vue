@@ -31,7 +31,7 @@ const user = ref({})
 
 onMounted(async () => {
   try {
-    const response = await axios.get('/api/profile/') // Adapte l'URL à ton backend
+    const response = await axios.get('/api/profil/') // Adapte l'URL à ton backend
     user.value = response.data
   } catch (error) {
     console.error("Erreur lors du chargement du profil :", error)
