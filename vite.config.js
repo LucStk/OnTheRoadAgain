@@ -10,7 +10,9 @@ export default defineConfig({
   ],
   resolve: {
     alias: {
-      '@': path.resolve(__dirname, './src'),  // 👈 ici !
+      '@': path.resolve(__dirname, './src'),  
+      '@MapApp': path.resolve(__dirname, './src/MapApp'),  
+      '@UserApp': path.resolve(__dirname, './src/UserApp'),  
     },
   },
   devServer: {

@@ -1,6 +1,6 @@
 import { Marker, LngLatBounds} from "maplibre-gl";
 import { createApp, h } from "vue";
-import MyMarkerComponent from "@/components/route/marker.vue";
+import MyMarkerComponent from "@MapApp/components/route/marker.vue";
 
 // Point personnalisé avec composant Vue monté dynamiquement
 export class Point extends Marker {

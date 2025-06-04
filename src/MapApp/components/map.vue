@@ -7,7 +7,7 @@
 
 <script setup>
   import { onMounted,ref, watch, inject} from 'vue';
-  import {Map_custom} from '@/js/map'
+  import {Map_custom} from '@MapApp/js/map'
   import { useIndexStore } from '@/stores/global'
   import RouteInfo from "./route/conteneur.vue"
 

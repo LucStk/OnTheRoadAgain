@@ -17,9 +17,10 @@ import './main.css';
 import './assets/css/elements.css';
 import VueMaplibreGl from '@indoorequal/vue-maplibre-gl'
 
+import router from "./router"
+
 import { createApp } from 'vue';
 import { createPinia } from 'pinia';
-import App from './App.vue';
 
 
 const pinia = createPinia()
@@ -27,4 +28,5 @@ const app = createApp(App)
 
 app.use(VueMaplibreGl)
 app.use(pinia)
+app.use(router)
 app.mount('#app')
