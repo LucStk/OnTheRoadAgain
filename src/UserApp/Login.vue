@@ -62,7 +62,7 @@ export default {
         axios.defaults.headers.common['Authorization'] = `Bearer ${response.data.access}`;
 
         // Ici tu peux rediriger vers une page protégée
-        this.$router.push('/dashboard'); // par exemple si tu utilises Vue Router
+        this.$router.push('/user'); // par exemple si tu utilises Vue Router
 
       } catch (err) {
         this.error = 'Nom d’utilisateur ou mot de passe incorrect.';

@@ -1,12 +1,15 @@
 import { createMemoryHistory, createRouter } from 'vue-router'
 
-import App from '@MapApp/Map.vue';
-import User from '@MapUser/User.vue'
+import Map from '@MapApp/Map.vue';
+import User from '@UserApp/User.vue'
+import Login from '@UserApp/Login.vue'
 
 
 const routes = [
-  { path: '/', component: App, name :"Map" },
-  { path: '/users/', component: User, name :"user" },
+  { path: '/map/', component: Map, name :"map" },
+  { path: '/user/', component: User, name :"user" },
+  { path: '/login/', component: Login, name :"login" },
+  { path: '/', component: Login, name :"login_first" },
 ]
 const router = createRouter({
   history: createMemoryHistory(),
