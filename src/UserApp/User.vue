@@ -8,28 +8,30 @@
         class="w-24 h-24 rounded-full object-cover"
       />
       <div>
-        <h2 class="text-2xl font-semibold">{{ user.nom_complet || user.username }}</h2>
+        <h2 class="text-2xl font-semibold">{{ user.username }}</h2>
         <p class="text-gray-500">{{ user.ville }}, {{ user.pays }}</p>
       </div>
     </div>
 
     <div class="mt-6 space-y-2">
-      <p><strong>Email :</strong> {{ user.email }}</p>
       <p><strong>Date de naissance :</strong> {{ formatDate(user.date_naissance) }}</p>
       <p><strong>Bio :</strong> {{ user.bio || 'Aucune bio disponible.' }}</p>
+       <p><strong>mail :</strong> {{ user.bio || 'Aucune bio disponible.' }}</p>
     </div>
   </div>
 </template>
 
 <script setup>
 import { ref, onMounted } from 'vue'
-import axios from 'axios'
+import { useRoute } from 'vue-router'
+import api from '@/token.js'
 
+const route = useRoute()
 const user = ref({})
 
 onMounted(async () => {
   try {
-    const response = await axios.get('/api/profil/') // Adapte l'URL à ton backend
+    const response = await api.get(`users/${route.params.username}/`)
     user.value = response.data
   } catch (error) {
     console.error("Erreur lors du chargement du profil :", error)
@@ -41,15 +43,6 @@ function formatDate(dateStr) {
   return new Date(dateStr).toLocaleDateString()
 }
 
-function genreLabel(code) {
-  const map = { M: 'Homme', F: 'Femme', O: 'Autre' }
-  return map[code] || 'Non spécifié'
-}
-
-function niveauLabel(code) {
-  const map = { D: 'Débutant', I: 'Intermédiaire', A: 'Avancé' }
-  return map[code] || 'Non spécifié'
-}
 </script>
 
 <style scoped>

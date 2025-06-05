@@ -7,7 +7,11 @@ import Login from '@UserApp/Login.vue'
 
 const routes = [
   { path: '/map/', component: Map, name :"map" },
-  { path: '/user/', component: User, name :"user" },
+  { path: '/users/:username',
+    name: 'User',
+    component: User,
+  },
+  { path: '/me/', component: User, name :"user" },
   { path: '/login/', component: Login, name :"login" },
   { path: '/', component: Login, name :"login_first" },
 ]
