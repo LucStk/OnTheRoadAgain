@@ -16,7 +16,8 @@
     <div class="mt-6 space-y-2">
       <p><strong>Date de naissance :</strong> {{ formatDate(user.date_naissance) }}</p>
       <p><strong>Bio :</strong> {{ user.bio || 'Aucune bio disponible.' }}</p>
-       <p><strong>mail :</strong> {{ user.bio || 'Aucune bio disponible.' }}</p>
+      <p v-if="user.email"><strong>Email :</strong> {{ user.email }}</p>
+      <p v-if="user.nom_complet"><strong>Nom complet :</strong> {{ user.nom_complet }}</p>
     </div>
   </div>
 </template>
@@ -31,12 +32,16 @@ const user = ref({})
 
 onMounted(async () => {
   try {
-    const response = await api.get(`users/${route.params.username}/`)
+    const username = route.params.username
+    const endpoint = username ? `users/${username}/` : `users/me/`
+
+    const response = await api.get(endpoint)
     user.value = response.data
   } catch (error) {
     console.error("Erreur lors du chargement du profil :", error)
   }
 })
+
 
 function formatDate(dateStr) {
   if (!dateStr) return 'Non renseignée'
@@ -44,7 +49,3 @@ function formatDate(dateStr) {
 }
 
 </script>
-
-<style scoped>
-/* Tu peux ajouter du style ici si tu veux */
-</style>

@@ -19,7 +19,7 @@ import VueMaplibreGl from '@indoorequal/vue-maplibre-gl'
 
 //import "./token.js"
 
-import router from "./router"
+import router from "./router.js"
 
 import { createApp } from 'vue';
 import { createPinia } from 'pinia';

@@ -1,23 +1,28 @@
-import { createMemoryHistory, createRouter } from 'vue-router'
+import { createMemoryHistory, createRouter,createWebHistory } from 'vue-router'
 
-import Map from '@MapApp/Map.vue';
+import Map from '@MapApp/Map.vue'
 import User from '@UserApp/User.vue'
 import Login from '@UserApp/Login.vue'
 
-
 const routes = [
-  { path: '/map/', component: Map, name :"map" },
-  { path: '/users/:username',
-    name: 'User',
-    component: User,
-  },
-  { path: '/me/', component: User, name :"user" },
-  { path: '/login/', component: Login, name :"login" },
-  { path: '/', component: Login, name :"login_first" },
+  // Redirection de la racine vers la carte
+  { path: '/', redirect: '/map' },
+
+  // Carte
+  { path: '/map/', name: 'map', component: Map },
+
+  // Page de profil utilisateur connecté
+  { path: '/me/', name: 'me', component: User },
+
+  // Page de profil d’un autre utilisateur
+  { path: '/users/:username', name: 'user', component: User },
+
+  // Page de login
+  { path: '/login/', name: 'login', component: Login }
 ]
+
 const router = createRouter({
-  history: createMemoryHistory(),
+  history: createWebHistory(),
   routes,
 })
-
 export default router
