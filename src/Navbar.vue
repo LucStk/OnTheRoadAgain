@@ -1,6 +1,22 @@
 <script setup>
 
 import Searchbar from '@MapApp/components/layout/Searchbar.vue';
+
+import { ref, onMounted } from 'vue'
+import { useRoute } from 'vue-router'
+import api from '@/token.js'
+
+const route = useRoute()
+const user = ref({})
+
+onMounted(async () => {
+  try {
+    const response = await api.get("users/me")
+    user.value = response.data
+  } catch (error) {
+    console.error("Erreur lors du chargement du profil :", error)
+  }
+})
 </script>
 
 

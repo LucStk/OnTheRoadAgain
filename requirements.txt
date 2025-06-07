@@ -3,3 +3,8 @@ tailwindcss
 tailwindcss/typography
 vue-router
 axios
+unplugin-auto-import
+unplugin-vue-components
+vite-plugin-router
+vite-plugin-vue-layouts
+typescript
