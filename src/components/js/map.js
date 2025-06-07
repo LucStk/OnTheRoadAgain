@@ -1,6 +1,6 @@
 
 import {Map} from "maplibre-gl"
-import {Route, Point} from "./point.js";
+import {Route} from "./point.js";
 
 export class Map_custom extends Map {
 	constructor(routePointsRef) {

@@ -3,14 +3,8 @@
     <div class="flex flex-wrap items-center justify-between h-full gap-4">
 
       <!-- Bloc gauche -->
-      <EtapeInfo />
-      <TagLine />
+      <RouteInfos />
+      <RouteUI />
     </div>
   </div>
 </template>
-
-<script setup>
-import { ref } from 'vue'
-import TagLine from "./route.vue"
-import EtapeInfo from './infos.vue'
-</script>

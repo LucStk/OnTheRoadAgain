@@ -2,14 +2,13 @@
 <template>
 
   <div id="map" ></div>
-  <RouteInfo />
+  <RouteBar />
 </template>
 
 <script setup>
   import { onMounted,ref, watch, inject} from 'vue';
   import {Map_custom} from '@MapApp/js/map'
   import { useIndexStore } from '@/stores/global'
-  import RouteInfo from "./route/conteneur.vue"
 
   const routePoints = ref([]); // 🔁 partagé avec Route
   const road_data = inject('road')
