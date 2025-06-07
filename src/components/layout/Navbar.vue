@@ -1,7 +1,5 @@
 <script setup>
 
-import Searchbar from '@MapApp/components/layout/Searchbar.vue';
-
 import { ref, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import api from '@/token.js'

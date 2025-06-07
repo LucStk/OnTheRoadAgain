@@ -1,6 +1,5 @@
 <script setup>
   import dataObject from '@/assets/data.json'
-  import Navbar from '@/Navbar.vue';
   import { provide, ref } from 'vue'
 
   const data = ref(dataObject)
@@ -8,7 +7,7 @@
 </script>
 
 <template>
-  <Navbar/>
+  <Navbar />
   <RouterView />
 </template>
 
