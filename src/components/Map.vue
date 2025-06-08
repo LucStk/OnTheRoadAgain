@@ -6,7 +6,6 @@
 </template>
 
 <script setup>
-  import { onMounted,ref, watch, inject} from 'vue';
   import {Map_custom} from '@/js/map'
   import { useIndexStore } from '@/stores/global'
 

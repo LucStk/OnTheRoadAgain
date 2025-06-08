@@ -50,7 +50,6 @@
 
 
 <script setup>
-    import { ref,inject } from 'vue'
     import { useIndexStore } from '@/stores/global'
 
     const totalWidth = 800

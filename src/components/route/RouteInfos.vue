@@ -18,8 +18,5 @@
 </template>
 
 <script setup>
-import { inject } from 'vue'
-
-const road = inject('road')
-
+    const road = inject('road')
 </script>

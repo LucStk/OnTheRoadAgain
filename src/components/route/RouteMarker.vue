@@ -11,7 +11,6 @@
 </template>
 
 <script setup>
-    import { ref,inject } from 'vue'
     import { useIndexStore } from '@/stores/global'
     const IndexStore = useIndexStore()
 
