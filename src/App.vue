@@ -1,9 +1,17 @@
 <script setup>
   import dataObject from '@/assets/data.json'
-  import { provide, ref } from 'vue'
+  import { useAuthStore } from '@/store/auth';
 
   const data = ref(dataObject)
   provide("road", data)
+
+  const auth = useAuthStore();
+
+  onMounted(() => {
+    if (auth.access) {
+      auth.fetchUser(); // 👈 charge user si déjà loggué
+    }
+  });
 </script>
 
 <template>

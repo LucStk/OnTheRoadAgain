@@ -7,3 +7,4 @@ unplugin-auto-import
 unplugin-vue-components
 vite-plugin-router
 typescript
+axios-auth-refresh
