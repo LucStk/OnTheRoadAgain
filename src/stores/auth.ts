@@ -58,6 +58,30 @@ export const useAuthStore = defineStore('auth', {
       } catch (err: unknown) {
         this.user = null;
       }
+    },
+
+    async initialize() {
+      if (this.access && !this.user) {
+        try {
+          await this.fetchUser(); // access encore valide
+        } catch (e) {
+          // access expiré → tente refresh
+          if (this.refresh) {
+            try {
+              const res = await api.post<{ access: string }>('token/refresh/', {
+                refresh: this.refresh,
+              });
+              this.access = res.data.access;
+              localStorage.setItem('access', this.access);
+              await this.fetchUser();
+            } catch (e) {
+              this.logout();
+            }
+          } else {
+            this.logout(); // pas de refresh → on déconnecte
+          }
+        }
+      }
     }
   },
 });

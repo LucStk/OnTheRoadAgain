@@ -1,6 +1,6 @@
 import type {} from "vite";
 import { createRouter, createWebHistory } from 'vue-router'
-import {useAuthStore} from './stores/auth'
+import { useAuthStore } from './stores/auth'
 import { routes, handleHotUpdate } from 'vue-router/auto-routes'
 
 
