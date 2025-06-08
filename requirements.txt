@@ -1,6 +1,4 @@
 vite
-tailwindcss
-tailwindcss/typography
 vue-router
 axios
 unplugin-auto-import
@@ -8,3 +6,8 @@ unplugin-vue-components
 vite-plugin-router
 typescript
 axios-auth-refresh
+
+tailwindcss
+tailwindcss/typography
+postcss 
+autoprefixer

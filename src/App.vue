@@ -1,6 +1,6 @@
 <script setup>
   import dataObject from '@/assets/data.json'
-  import { useAuthStore } from '@/store/auth';
+  import { useAuthStore } from '@/stores/auth';
 
   const data = ref(dataObject)
   provide("road", data)

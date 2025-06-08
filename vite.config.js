@@ -1,20 +1,30 @@
 import { defineConfig } from 'vite'
-
-import VueRouter from 'unplugin-vue-router/vite'
-
 import vue from '@vitejs/plugin-vue'
+import VueRouter from 'unplugin-vue-router/vite'
+import AutoImport from 'unplugin-auto-import/vite'
+import Components from 'unplugin-vue-components/vite'
 
-import tailwindcss from '@tailwindcss/vite'
+
 import path from 'path'
 
-import Components from 'unplugin-vue-components/vite';
-
-// https://vite.dev/config/
 export default defineConfig({
   plugins: [
-    VueRouter({/* options */}),
+    VueRouter(),
     vue(),
-    tailwindcss(),
+
+    AutoImport({
+      imports: [
+        'vue',          // auto-import ref, reactive, etc.
+        'vue-router',   // useRoute, useRouter
+        'pinia',
+        {
+          axios: [['default', 'axios']],
+        },
+      ],
+      dts: 'src/auto-imports.d.ts',
+      vueTemplate: true,
+    }),
+
     Components({
       dirs: ['src/components'],
       extensions: ['vue'],
@@ -27,10 +37,10 @@ export default defineConfig({
       '@': path.resolve(__dirname, './src'),
     },
   },
-  devServer: {
+  server: {  // attention: pas `devServer`, c’est `server` dans Vite
     proxy: {
       '/api': {
-        target: 'http://localhost:8000',  // ton backend Django
+        target: 'http://localhost:8000',
         changeOrigin: true,
         secure: false,
       },

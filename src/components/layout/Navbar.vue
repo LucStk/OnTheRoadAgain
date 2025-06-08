@@ -2,7 +2,7 @@
 
 import { ref, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
-import api from '@/token.js'
+import api from '@/services/api'
 
 const route = useRoute()
 const user = ref({})

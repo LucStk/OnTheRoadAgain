@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@indoorequal/vue-maplibre-gl": "^8.3.0",
+    "@tailwindcss/postcss": "^4.1.8",
     "cors": "^2.8.5",
     "express": "^5.1.0",
     "vue": "^3.5.13"
@@ -18,8 +19,8 @@
     "@iconify-json/tabler": "^1.2.18",
     "@iconify/tailwind4": "^1.0.6",
     "@tailwindcss/typography": "^0.5.16",
-    "@tailwindcss/vite": "^4.1.8",
     "@vitejs/plugin-vue": "^5.2.3",
+    "autoprefixer": "^10.4.21",
     "axios": "^1.9.0",
     "axios-auth-refresh": "^3.3.6",
     "daisyui": "^5.0.42",
@@ -29,6 +30,8 @@
     "maplibre-gl": "^5.5.0",
     "mitt": "^3.0.1",
     "pinia": "^3.0.2",
+    "postcss": "^8.5.4",
+    "postcss-import": "^16.1.0",
     "sass-embedded": "^1.89.0",
     "tailwindcss": "^4.1.8",
     "typescript": "^5.8.3",
