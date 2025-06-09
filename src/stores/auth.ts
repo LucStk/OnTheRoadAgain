@@ -1,19 +1,19 @@
 import { defineStore } from 'pinia';
 import api from '@/services/api';
 
-interface User {
+export interface User {
   username: string;
-  photo_profile : string;
-  photo_profile_cropping : string;
-  bio: string;
-  ville : string;
-  pays : string;
-  date_naissance : string;
+  photo_profile? : string;
+  photo_profile_cropping? : string;
+  bio?: string;
+  ville? : string;
+  pays? : string;
+  date_naissance? : string;
   email?: string;
   nom_complet? : string;
 }
 
-interface AuthState {
+export interface AuthState {
   access: string | null;
   refresh: string | null;
   user: User | null;
@@ -30,11 +30,9 @@ export const useAuthStore = defineStore('auth', {
     async login(username: string, password: string): Promise<boolean> {
       try {
         const res = await api.post<{ access: string; refresh: string }>('token/', { username, password });
-        this.access = res.data.access;
-        this.refresh = res.data.refresh;
 
-        localStorage.setItem('access', this.access);
-        localStorage.setItem('refresh', this.refresh);
+        localStorage.setItem('access', res.data.access);
+        localStorage.setItem('refresh', res.data.refresh);
 
         await this.fetchUser();
 

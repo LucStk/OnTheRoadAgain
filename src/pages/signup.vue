@@ -2,17 +2,17 @@
   <div class="max-w-md mx-auto mt-10 p-6 bg-white rounded-2xl shadow-lg space-y-6">
     <h2 class="text-2xl font-semibold text-center">Créer un utilisateur</h2>
 
-    <!-- Champ Nom -->
+    <!-- Champ Username -->
     <div class="input-floating w-full">
       <input
-        v-model="form.name"
+        v-model="form.username"
         type="text"
-        placeholder="Jean Dupont"
+        placeholder="Jiji"
         class="input w-full"
-        :class="{ 'border-red-500': errors.name }"
+        :class="{ 'border-red-500': errors.username }"
       />
-      <label class="input-floating-label">Nom</label>
-      <p v-if="errors.name" class="helper-text text-red-500 text-sm">{{ errors.name }}</p>
+      <label class="input-floating-label">Username</label>
+      <p v-if="errors.username" class="helper-text text-red-500 text-sm">{{ errors.username }}</p>
     </div>
 
     <!-- Champ Email -->
@@ -46,53 +46,70 @@
   </div>
 </template>
 
-<script setup lang="ts">
-import { reactive } from 'vue'
+<script setup lang="ts">  
+  definePage({
+    meta: {requiresGuest: true,},
+  })
 
-const form = reactive({
-  name: '',
-  email: '',
-  password: '',
-})
+  import { reactive } from 'vue'
+  import api from '@/services/api';
+  import {useAuthStore} from "@/stores/auth"
 
-const errors = reactive({
-  name: '',
-  email: '',
-  password: '',
-})
+  const form = reactive({
+    username: '',
+    email: '',
+    password: '',
+  })
 
-function validateEmail(email: string) {
-  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
-}
+  const errors = reactive({
+    username: '',
+    email: '',
+    password: '',
+  })
 
-function handleSubmit() {
-  errors.name = ''
-  errors.email = ''
-  errors.password = ''
-
-  let valid = true
-
-  if (!form.name) {
-    errors.name = 'Le nom est requis'
-    valid = false
+  function validateEmail(email: string) {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
   }
 
-  if (!form.email || !validateEmail(form.email)) {
-    errors.email = 'Email invalide'
-    valid = false
+  function handleSubmit() {
+    errors.username = ''
+    errors.email = ''
+    errors.password = ''
+
+    let valid = true
+
+    if (!form.username) {
+      errors.username = 'Username est requis'
+      valid = false
+    }
+
+    if (!form.email || !validateEmail(form.email)) {
+      errors.email = 'Email invalide'
+      valid = false
+    }
+
+    if (!form.password || form.password.length < 6) {
+      errors.password = 'Mot de passe trop court'
+      valid = false
+    }
+
+    if (!valid) { return}
+
+    console.log("essaie validation")
+    const res = api.post<{access : string, refresh : string}>("users/", form);
+    res.then((res) => {
+      console.log(res)
+      localStorage.setItem('access', res.data.access);
+      localStorage.setItem('refresh', res.data.refresh);
+      const auth = useAuthStore();
+      
+      //Chargement de l'user
+      auth.fetchUser();
+      console.log('Utilisateur créé:', { ...form })
+
+      //Redirection
+      const router = useRouter();
+      router.push('/users/me');
+    });
   }
-
-  if (!form.password || form.password.length < 6) {
-    errors.password = 'Mot de passe trop court'
-    valid = false
-  }
-
-  if (!valid) return
-
-  console.log('Utilisateur créé:', { ...form })
-
-  form.name = ''
-  form.email = ''
-  form.password = ''
-}
 </script>

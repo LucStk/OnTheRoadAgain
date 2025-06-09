@@ -28,9 +28,13 @@
           />
         </div>
 
-      <button type="submit" :disabled="loading">
+      <button type="submit" :disabled="loading" 
+          class="btn btn-success btn-block">
         {{ loading ? 'Connexion...' : 'Se connecter' }}
       </button>
+      <a class="btn btn-ghost btn-block" href="signup">
+          Sign up
+      </a>
       <p v-if="error" class="error">{{ error }}</p>
 
 
