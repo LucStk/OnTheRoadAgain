@@ -40,14 +40,11 @@
   </div>
 </template>
 
-<script setup>
-  import { login } from '@/token.js'
-  import { useAuthStore } from '@/store/auth';
-
-    definePageMeta({
-    requiresGuest: true,
-    });
-
+<script setup lang="ts">
+  definePage({
+    meta: {requiresGuest: true,},
+  })
+  import { useAuthStore } from '@/stores/auth';
    
     const router = useRouter();
     const auth = useAuthStore();
@@ -60,14 +57,14 @@
 
   const username = ref('')
   const password = ref('')
-  const error = ref(null)
+  const error = ref("")
   const loading = ref(false)
 
   async function handleLogin() {
     loading.value = true
-    error.value = null
+    error.value = ""
 
-    const success = await login(username.value, password.value)
+    const success = await auth.login(username.value, password.value)
 
     loading.value = false
 

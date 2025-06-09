@@ -9,7 +9,10 @@ import path from 'path'
 
 export default defineConfig({
   plugins: [
-    VueRouter(),
+    VueRouter({
+      routesFolder:"src/pages",
+      dts: 'src/typed-router.d.ts',
+    }),
     vue(),
 
     AutoImport({

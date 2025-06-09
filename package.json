@@ -17,6 +17,7 @@
   },
   "devDependencies": {
     "@iconify-json/tabler": "^1.2.18",
+    "@iconify/json": "^2.2.347",
     "@iconify/tailwind4": "^1.0.6",
     "@tailwindcss/typography": "^0.5.16",
     "@vitejs/plugin-vue": "^5.2.3",

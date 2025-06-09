@@ -26,16 +26,20 @@
                 <img src="https://cdn.flyonui.com/fy-assets/avatar/avatar-1.png" 
                      alt="avatar 1" />
             </div>
+            <div v-else class="size-9.5 rounded-full">
+                <span class="text-4xl icon-[solar--user-circle-bold-duotone]"></span>
+            </div>
         </div>
     </button>
-    <ul class="dropdown-menu 
+    <ul v-if="auth.user" class="dropdown-menu 
                 dropdown-open:opacity-100 
                 hidden min-w-60" 
         role="menu" 
         aria-orientation="vertical" 
         aria-labelledby="dropdown-avatar">
 
-    <li class="dropdown-header gap-2">
+    <!-- Profile -->
+    <li  class="dropdown-header gap-2">
         <div class="avatar">
         <div class="w-10 rounded-full">
             <img src="https://cdn.flyonui.com/fy-assets/avatar/avatar-1.png" alt="avatar" />
@@ -65,6 +69,22 @@
         </a>
     </li>
     </ul>
+    <ul v-else="auth.user" class="dropdown-menu 
+            dropdown-open:opacity-100 
+            hidden min-w-60" 
+    role="menu" 
+    aria-orientation="vertical" 
+    aria-labelledby="dropdown-avatar">
+    
+        <li class="dropdown-footer gap-2">
+            <a class="btn btn-success btn-soft btn-block" href="login">
+            <span class="icon-[tabler--logout]"></span>
+            Log in / Sign up
+            </a>
+        </li>
+    </ul>
+
+
 </div>
 </template>
 
