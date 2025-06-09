@@ -2,11 +2,15 @@ import { defineStore } from 'pinia';
 import api from '@/services/api';
 
 interface User {
-  // Ajuste selon la structure réelle de ton objet utilisateur
-  id: number;
   username: string;
+  photo_profile : string;
+  photo_profile_cropping : string;
+  bio: string;
+  ville : string;
+  pays : string;
+  date_naissance : string;
   email?: string;
-  // ajoute d'autres propriétés ici si besoin
+  nom_complet? : string;
 }
 
 interface AuthState {
@@ -53,7 +57,7 @@ export const useAuthStore = defineStore('auth', {
 
     async fetchUser(): Promise<void> {
       try {
-        const res = await api.get<User>('user/');
+        const res = await api.get<User>('users/me');
         this.user = res.data;
       } catch (err: unknown) {
         this.user = null;

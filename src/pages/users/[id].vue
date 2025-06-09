@@ -23,15 +23,9 @@
 </template>
 
 <script setup>
-definePageMeta({requiresAuth: true,}); //Ne peux se connecter à la page que si identifié
-
-
-import { ref, onMounted } from 'vue'
-import { useRoute } from 'vue-router'
-import api from '@/token.js'
-
 const route = useRoute()
 const user = ref({})
+const auth = useAuthStore();
 
 onMounted(async () => {
   try {

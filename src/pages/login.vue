@@ -46,14 +46,8 @@
   })
   import { useAuthStore } from '@/stores/auth';
    
-    const router = useRouter();
-    const auth = useAuthStore();
-
-    onMounted(() => {
-        if (auth.access && auth.user) {
-            router.push('/users');
-        }
-    }); 
+  const router = useRouter();
+  const auth = useAuthStore();
 
   const username = ref('')
   const password = ref('')
