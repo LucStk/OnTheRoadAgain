@@ -3,7 +3,6 @@
   User connecté 
   {{ auth.user?.username }}
   {{ auth.user?.bio }}
-  {{ auth.user?}}
 </template>
 
 
