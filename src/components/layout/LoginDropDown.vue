@@ -1,6 +1,7 @@
 <script setup>
   const auth = useAuthStore();
   const router = useRouter();
+  const user = auth.user;
 
   function goToLogin() {
     router.push('/login');
@@ -20,16 +21,15 @@
             aria-label="Dropdown">
 
         <div class="avatar">
-            <div v-if="auth.user" class="size-9.5 rounded-full">
-                <img src="https://cdn.flyonui.com/fy-assets/avatar/avatar-1.png" 
-                     alt="avatar 1" />
+            <div v-if="user && user.photo_profile" class="size-9.5 rounded-full">
+                {{user.photo_profile}}
             </div>
             <div v-else class="size-9.5 rounded-full">
                 <span class="text-4xl icon-[solar--user-circle-bold-duotone]"></span>
             </div>
         </div>
     </button>
-    <ul v-if="auth.user" class="dropdown-menu 
+    <ul v-if="user" class="dropdown-menu 
                 dropdown-open:opacity-100 
                 hidden min-w-60" 
         role="menu" 

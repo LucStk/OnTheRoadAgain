@@ -8,7 +8,12 @@
       @click="showFileChooser"
     >
       <p class="text-gray-500">Glisse-dépose une image ici ou clique pour choisir</p>
-      <input ref="input" type="file" name="image" class="hidden" @change="setImage" accept="image/*" />
+      <input ref="input" 
+            type="file" 
+            name="image" 
+            class="hidden" 
+            @change="setImage" 
+            accept="image/*" />
     </div>
 
     <div class="content flex-col">
@@ -33,57 +38,41 @@
 </template>
 
 <script setup>
-    import { ref } from 'vue'
     import VueCropper from 'vue-cropperjs'
     import 'cropperjs/dist/cropper.css'
 
     const cropper = ref(null)
     const input = ref(null)
 
-    const imgSrc = ref('/assets/images/berserk.jpg')
+    const imgSrc = ref('')
     const cropImg = ref('')
     const data = ref('')
 
-    function showFileChooser() {
-    input.value.click()
+    function showFileChooser() {input.value.click()}
+
+    function loadImage(file){
+        if (!file || !file.type.startsWith('image/')) {
+            alert('Veuillez sélectionner un fichier image valide.')
+            return
+        }
+        const reader = new FileReader()
+        reader.onload = (event) => {
+            imgSrc.value = event.target.result
+            cropper.value.replace(event.target.result)
+        }
+        reader.readAsDataURL(file)
     }
 
-    function setImage(e) {
-    const file = e.target.files[0]
-    if (!file || !file.type.startsWith('image/')) {
-        alert('Veuillez sélectionner un fichier image valide.')
-        return
-    }
-
-    const reader = new FileReader()
-    reader.onload = (event) => {
-        imgSrc.value = event.target.result
-        cropper.value.replace(event.target.result)
-    }
-    reader.readAsDataURL(file)
-    }
-
-    function handleDrop(event) {
-    const file = event.dataTransfer.files[0]
-    if (!file || !file.type.startsWith('image/')) {
-        alert('Veuillez glisser un fichier image valide.')
-        return
-    }
-
-    const reader = new FileReader()
-    reader.onload = (e) => {
-        imgSrc.value = e.target.result
-        cropper.value.replace(e.target.result)
-    }
-    reader.readAsDataURL(file)
-    }
+    function setImage(event) {loadImage(event.target.files[0])}
+    function handleDrop(event) { loadImage(event.dataTransfer.files[0])}
 
     function cropImage() {
-    const canvas = cropper.value.getCroppedCanvas()
-    if (canvas) {
-        cropImg.value = canvas.toDataURL()
+        const canvas = cropper.value.getCroppedCanvas()
+        if (canvas) {
+            cropImg.value = canvas.toDataURL()
+        }
     }
-    }
+
 </script>
 
 <style>

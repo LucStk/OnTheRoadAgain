@@ -1,0 +1,4 @@
+- Faire une page utilisateur privé
+- Faire une page de création d'un utilisateur
+- Stocker les tokens refresh et access dans des cookies privé
+- Mettre le backend sur le serveur

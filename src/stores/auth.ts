@@ -9,7 +9,6 @@ export interface User {
   pays? : string;
   date_naissance? : string;
   email?: string;
-  nom_complet? : string;
 }
 
 export interface AuthState {
