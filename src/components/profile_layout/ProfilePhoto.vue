@@ -37,9 +37,7 @@
 </template>
 
 <script setup>
-import { watch, ref, onMounted } from 'vue'
-import VueCropper from 'vue-cropperjs'
-import 'cropperjs/dist/cropper.css'
+
 
 defineProps({
   modelValue: String // base64 ou URL d'image

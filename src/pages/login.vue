@@ -68,7 +68,7 @@
 
     if (success) {
       console.log("sucess redirection")
-      router.push('/profile/')
+      router.push('/profile')
     } else {
       error.value = 'Nom d’utilisateur ou mot de passe incorrect.'
     }

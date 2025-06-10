@@ -21,11 +21,9 @@
             aria-label="Dropdown">
 
         <div class="avatar">
-            <div v-if="user && user.photo_profil" class="size-9.5 rounded-full">
-                {{user.e}}
-            </div>
-            <div v-else class="size-9.5 rounded-full">
-                <span class="text-4xl icon-[solar--user-circle-bold-duotone]"></span>
+            <div class="size-9.5 rounded-full">
+                <img  v-if="user && user.photo_profil" :src="user.photo_profil"></img>
+                <span v-else class="text-4xl icon-[solar--user-circle-bold-duotone]"></span>
             </div>
         </div>
     </button>
@@ -39,10 +37,10 @@
     <!-- Profile -->
     <li  class="dropdown-header gap-2">
         <div class="avatar">
-        <div class="w-10 rounded-full">
-            <img src="https://cdn.flyonui.com/fy-assets/avatar/avatar-1.png" alt="avatar" />
-            
-        </div>
+            <div class="size-9.5 rounded-full">
+                <img  v-if="user && user.photo_profil" :src="user.photo_profil"></img>
+                <span v-else class="text-4xl icon-[solar--user-circle-bold-duotone]"></span>
+            </div>
         </div>
         <div>
         <h6 class="text-base-content text-base font-semibold">{{auth.user.username}}</h6>
