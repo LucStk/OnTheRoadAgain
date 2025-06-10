@@ -30,7 +30,7 @@ const auth = useAuthStore();
 onMounted(async () => {
   try {
     const username = route.params.username
-    const endpoint = username ? `users/${username}/` : `users/me/`
+    const endpoint = `users/${username}/`
 
     const response = await api.get(endpoint)
     user.value = response.data

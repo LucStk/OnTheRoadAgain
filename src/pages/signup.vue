@@ -92,8 +92,7 @@
 
     if (!valid) { return}
 
-    console.log("essaie validation")
-    const res = api.post<{access : string, refresh : string}>("users/", form);
+    const res = api.post<{access : string, refresh : string}>("signup/", form);
     res.then((res) => {
       console.log(res)
       localStorage.setItem('access', res.data.access);

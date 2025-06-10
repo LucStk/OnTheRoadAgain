@@ -21,24 +21,22 @@
 
         <div class="w-96">
           <label class="label-text " for="defaultInput">Ville</label>
-          <input type="text" placeholder="Paris" class="input" id="defaultInput" />
+          <input v-model="form.ville" type="text" placeholder="Paris" class="input" id="defaultInput" />
         </div>
 
         <div class="w-96">
           <label class="label-text " for="defaultInput">Pays</label>
-          <input type="text" placeholder="France" class="input" id="defaultInput" />
+          <input v-model="form.pays" type="text" placeholder="France" class="input" id="defaultInput" />
         </div>
-
+        <label class="label-text " for="defaultInput">Bio</label>
         <div class="textarea max-w-sm">
           <div class="textarea-floating grow">
-            <textarea class="resize-none" placeholder="Hello!!!" id="textareaFloatingMedium"></textarea>
-            <label class="textarea-floating-label" for="textareaFloatingMedium">{{ user.bio }}</label>
+            <textarea v-model="form.bio" class="resize-none" placeholder="Ma bio" id="textareaFloatingMedium"></textarea>
           </div>
-          <span class="icon-[tabler--message] text-base-content/80 mt-2 mx-4 size-5 shrink-0"></span>
         </div>
-
+        <label class="label-text " for="defaultInput">Date de naissance</label>
         <flat-pickr
-            v-model="date"
+            v-model="form.date_naissance"
             :config="config"                                                          
             class="form-control" 
             placeholder="Select date"               
@@ -62,34 +60,37 @@
   import flatPickr from 'vue-flatpickr-component';
   import 'flatpickr/dist/flatpickr.css';
 
-  const date = ref(null);
   const config = {
           wrap: true, // set wrap to true only when using 'input-group'
-          altFormat: 'M j, Y',
+          altFormat: 'Y-m-d',
           altInput: true,
-          dateFormat: 'Y-m-d',     
+          dateFormat: 'Y-m-d',
         }
 
   const auth = useAuthStore();
   const user = auth.user;
+  console.log("date_naissance",user?.date_naissance)
 
-  const username = ref('')
-  const password = ref('')
+  const form = reactive({
+    date_naissance: user?.date_naissance ? new Date(user.date_naissance) : null,
+    bio: user?.bio || "",
+    pays: user?.pays || "",
+    ville: user?.ville || ""
+  })
+
   const error = ref("")
-  const router = useRouter()
   const loading = ref(false)
 
   async function handleUpdate() {
-    loading.value = true
     error.value = ""
 
-    const success = await auth.login(username.value, password.value)
+    console.log(form)
 
-    loading.value = false
+    const success = await api.patch("profile/patch/", form);
 
     if (success) {
       console.log("sucess redirection")
-      router.push('/profile/')
+      auth.fetchUser()
     } else {
       error.value = 'Nom d’utilisateur ou mot de passe incorrect.'
     }
