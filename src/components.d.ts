@@ -12,6 +12,7 @@ declare module 'vue' {
     Map: typeof import('./components/Map.vue')['default']
     Navbar: typeof import('./components/layout/Navbar.vue')['default']
     Notification: typeof import('./components/layout/Notification.vue')['default']
+    ProfilePhoto: typeof import('./components/profile_layout/ProfilePhoto.vue')['default']
     RouteBar: typeof import('./components/route/RouteBar.vue')['default']
     RouteInfos: typeof import('./components/route/RouteInfos.vue')['default']
     RouteMarker: typeof import('./components/route/RouteMarker.vue')['default']

@@ -20,7 +20,7 @@ export default defineConfig({
         'vue',          // auto-import ref, reactive, etc.
         'vue-router',   // useRoute, useRouter
         'pinia',
-
+        
         {
           axios: [['default', 'axios']],
           "@/stores/auth":["useAuthStore"],

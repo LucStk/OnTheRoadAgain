@@ -32,6 +32,7 @@
           class="btn btn-success btn-block">
         {{ loading ? 'Connexion...' : 'Se connecter' }}
       </button>
+
       <a class="btn btn-ghost btn-block" href="signup">
           Sign up
       </a>
@@ -66,7 +67,7 @@
     loading.value = false
 
     if (success) {
-      router.push('/users')
+      router.push('profile/')
     } else {
       error.value = 'Nom d’utilisateur ou mot de passe incorrect.'
     }

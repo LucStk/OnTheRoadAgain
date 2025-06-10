@@ -16,7 +16,7 @@
 
     </button>
     <div class="navbar-start flex flex-1 items-center">
-      <a class="link text-base-content link-neutral text-xl font-semibold no-underline" href="#">
+      <a class="link text-base-content link-neutral text-xl font-semibold no-underline" href="/">
         On the Road Again
       </a>
     </div>

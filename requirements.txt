@@ -12,3 +12,5 @@ tailwindcss
 tailwindcss/typography
 postcss 
 autoprefixer
+cropperjs
+vue-cropperjs

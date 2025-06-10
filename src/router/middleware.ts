@@ -23,13 +23,13 @@ export async function globalMiddleware(to: RouteLocationNormalized, from: RouteL
 
   if (guestOnly) {
     if (auth.access && auth.user) {
-      return next('/users');
+      return next('/profile');
     }
 
     if (auth.access && !auth.user) {
       try {
         await auth.fetchUser();
-        return next('/users');
+        return next('/profile');
       } catch (e) {
         return next(); // token invalide → on reste sur la page guest
       }

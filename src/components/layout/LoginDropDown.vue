@@ -41,27 +41,22 @@
         <div class="avatar">
         <div class="w-10 rounded-full">
             <img src="https://cdn.flyonui.com/fy-assets/avatar/avatar-1.png" alt="avatar" />
+            
         </div>
         </div>
         <div>
-        <h6 class="text-base-content text-base font-semibold">John Doe</h6>
-        <small class="text-base-content/50">Admin</small>
+        <h6 class="text-base-content text-base font-semibold">{{auth.user.username}}</h6>
+        <!--<small class="text-base-content/50">Admin</small>-->
         </div>
     </li>
     <li>
-        <a class="dropdown-item" href="#">
+        <a class="dropdown-item" href="/profile">
         <span class="icon-[tabler--user]"></span>
         My Profile
         </a>
     </li>
-    <li>
-        <a class="dropdown-item" href="#">
-        <span class="icon-[tabler--help-triangle]"></span>
-        FAQs
-        </a>
-    </li>
     <li class="dropdown-footer gap-2">
-        <a class="btn btn-error btn-soft btn-block" href="#">
+        <a class="btn btn-error btn-soft btn-block" href="signout">
         <span class="icon-[tabler--logout]"></span>
         Sign out
         </a>

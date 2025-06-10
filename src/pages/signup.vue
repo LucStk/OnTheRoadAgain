@@ -106,7 +106,7 @@
 
       //Redirection
       
-      router.push('/users');
+      router.push('/profile');
     });
   }
 </script>
