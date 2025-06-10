@@ -8,11 +8,13 @@ export {}
 /* prettier-ignore */
 declare module 'vue' {
   export interface GlobalComponents {
+    copy: typeof import('./components/profile_layout/ProfilePhoto copy.vue')['default']
     LoginDropDown: typeof import('./components/layout/LoginDropDown.vue')['default']
     Map: typeof import('./components/Map.vue')['default']
     Navbar: typeof import('./components/layout/Navbar.vue')['default']
     Notification: typeof import('./components/layout/Notification.vue')['default']
     ProfilePhoto: typeof import('./components/profile_layout/ProfilePhoto.vue')['default']
+    ProfilePhoto_exe: typeof import('./components/profile_layout/ProfilePhoto_exe.vue')['default']
     RouteBar: typeof import('./components/route/RouteBar.vue')['default']
     RouteInfos: typeof import('./components/route/RouteInfos.vue')['default']
     RouteMarker: typeof import('./components/route/RouteMarker.vue')['default']
