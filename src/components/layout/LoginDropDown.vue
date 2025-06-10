@@ -21,8 +21,8 @@
             aria-label="Dropdown">
 
         <div class="avatar">
-            <div v-if="user && user.photo_profile" class="size-9.5 rounded-full">
-                {{user.photo_profile}}
+            <div v-if="user && user.photo_profil" class="size-9.5 rounded-full">
+                {{user.e}}
             </div>
             <div v-else class="size-9.5 rounded-full">
                 <span class="text-4xl icon-[solar--user-circle-bold-duotone]"></span>

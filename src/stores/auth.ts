@@ -2,8 +2,7 @@ import { defineStore } from 'pinia';
 
 export interface User {
   username: string;
-  photo_profile? : string;
-  photo_profile_cropping? : string;
+  photo_profil? : string;
   bio?: string;
   ville? : string;
   pays? : string;

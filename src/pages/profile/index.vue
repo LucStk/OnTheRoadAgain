@@ -3,10 +3,10 @@
   <div v-if="user" class="max-w-2xl mx-auto mt-8 p-6 bg-white rounded-2xl shadow-md">
     <div class="flex-col items-center space-x-4">
       <div class="avatar">
-          <div v-if="user.photo_profile" class="size-9.5 rounded-full">
+          <div v-if="user.photo_profil" class="size-9.5 rounded-full">
             <!--
-              {{user.photo_profile}}
-              <img src="{{user.photo_profile}}" 
+              {{user.photo_profil}}
+              <img src="{{user.photo_profil}}" 
                     alt="avatar 1" />
             -->  
             Coucou

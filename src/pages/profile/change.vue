@@ -2,20 +2,11 @@
 <template>
   <div v-if="user" class="max-w-2xl mx-auto mt-8 p-6 bg-white rounded-2xl shadow-md">
     <div class="flex-col items-center space-x-4">
-      <div class="avatar">
-          <div v-if="user.photo_profile" class="size-9.5 rounded-full">
-            <!--
-              {{user.photo_profile}}
-              <img src="{{user.photo_profile}}" 
-                    alt="avatar 1" />
-            -->  
-            Coucou
-          </div>
-          <div v-else class="size-9.5 rounded-full">
-              <span class="text-4xl icon-[solar--user-circle-bold-duotone]"></span>
-          </div>
-      </div>
       <h2 class="text-2xl font-semibold">{{ user.username }}</h2>
+
+
+      <ProfilePhoto v-model="img" />
+      
 
       <form @submit.prevent="handleUpdate">
 
@@ -59,6 +50,7 @@
   })
   import flatPickr from 'vue-flatpickr-component';
   import 'flatpickr/dist/flatpickr.css';
+import ProfilePhoto from '@/components/profile_layout/ProfilePhoto.vue';
 
   const config = {
           wrap: true, // set wrap to true only when using 'input-group'
@@ -70,6 +62,8 @@
   const auth = useAuthStore();
   const user = auth.user;
   console.log("date_naissance",user?.date_naissance)
+
+  const img = ref(null)
 
   const form = reactive({
     date_naissance: user?.date_naissance ? new Date(user.date_naissance) : null,
@@ -84,7 +78,8 @@
   async function handleUpdate() {
     error.value = ""
 
-    console.log(form)
+    const blob = await (await fetch(img)).blob()
+    form["photo_profil"] = blob
 
     const success = await api.patch("profile/patch/", form);
 

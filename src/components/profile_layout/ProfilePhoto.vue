@@ -1,83 +1,99 @@
 <template>
   <div>
     <!-- Zone de drag and drop -->
-    <div
-      class="border-2 border-dashed border-gray-400 rounded-lg p-6 text-center cursor-pointer"
+    <div class="border-2 
+      border-dashed border-gray-400 
+      rounded-lg p-6 
+      text-center 
+      cursor-pointer"
+
       @dragover.prevent
       @drop.prevent="handleDrop"
-      @click="showFileChooser"
-    >
+      @click="showFileChooser">
+
+
       <p class="text-gray-500">Glisse-dépose une image ici ou clique pour choisir</p>
+      
       <input ref="input" 
             type="file" 
             name="image" 
             class="hidden" 
             @change="setImage" 
             accept="image/*" />
+    
     </div>
-
-    <div class="content flex-col">
-      <section class="cropper-area">
-        <div class="img-cropper">
-          <VueCropper
-            ref="cropper"
-            :aspect-ratio="16 / 9"
-            :src="imgSrc"
-            preview=".preview"
-          />
-        </div>
-        <textarea v-model="data" />
-      </section>
-
-      <section class="preview-area">
-        <p>Preview</p>
-        <div class="preview" />
-      </section>
-    </div>
+    <section class="cropper-area">
+      <div class="img-cropper">
+        <VueCropper
+          ref="cropper"
+          :aspect-ratio="1 / 1"
+          :src="imgSrc"
+          preview=".preview"
+          @ready="cropImage"
+        />
+      </div>
+    </section>
   </div>
 </template>
 
 <script setup>
-    import VueCropper from 'vue-cropperjs'
-    import 'cropperjs/dist/cropper.css'
+import { watch, ref, onMounted } from 'vue'
+import VueCropper from 'vue-cropperjs'
+import 'cropperjs/dist/cropper.css'
 
-    const cropper = ref(null)
-    const input = ref(null)
+defineProps({
+  modelValue: String // base64 ou URL d'image
+})
+const emit = defineEmits(['update:modelValue'])
 
-    const imgSrc = ref('')
-    const cropImg = ref('')
-    const data = ref('')
+const cropper = ref(null)
+const input = ref(null)
+const imgSrc = ref('')
+const cropImg = ref('')
 
-    function showFileChooser() {input.value.click()}
+// Affiche le file picker
+function showFileChooser() {
+  input.value.click()
+}
 
-    function loadImage(file){
-        if (!file || !file.type.startsWith('image/')) {
-            alert('Veuillez sélectionner un fichier image valide.')
-            return
-        }
-        const reader = new FileReader()
-        reader.onload = (event) => {
-            imgSrc.value = event.target.result
-            cropper.value.replace(event.target.result)
-        }
-        reader.readAsDataURL(file)
-    }
+// Charge et affiche l'image dans le cropper
+function loadImage(file) {
+  if (!file || !file.type.startsWith('image/')) {
+    alert('Veuillez sélectionner un fichier image valide.')
+    return
+  }
+  const reader = new FileReader()
+  reader.onload = (event) => {
+    imgSrc.value = event.target.result
+    cropper.value.replace(event.target.result)
+  }
+  reader.readAsDataURL(file)
+}
 
-    function setImage(event) {loadImage(event.target.files[0])}
-    function handleDrop(event) { loadImage(event.dataTransfer.files[0])}
+// Gère l'upload
+function setImage(event) {
+  loadImage(event.target.files[0])
+}
 
-    function cropImage() {
-        const canvas = cropper.value.getCroppedCanvas()
-        if (canvas) {
-            cropImg.value = canvas.toDataURL()
-        }
-    }
+// Drag & Drop
+function handleDrop(event) {
+  loadImage(event.dataTransfer.files[0])
+}
 
+// Crop et émet au parent
+function cropImage() {
+  const canvas = cropper.value.getCroppedCanvas()
+  if (canvas) {
+    const cropped = canvas.toDataURL()
+    cropImg.value = cropped
+    emit('update:modelValue', cropped) // 🔁 Remonte l'image croppée
+  }
+}
 </script>
 
 <style>
 .preview-area {
-  width: 307px;
+  width: 20px;
 }
 
 .preview-area p {
@@ -91,8 +107,8 @@
 }
 
 .preview {
-  width: 100%;
-  height: calc(372px * (9 / 16));
+  width: 20%;
+  height: 20%;
   overflow: hidden;
 }
 
