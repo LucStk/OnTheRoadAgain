@@ -67,7 +67,8 @@
     loading.value = false
 
     if (success) {
-      router.push('profile/')
+      console.log("sucess redirection")
+      router.push('/profile/')
     } else {
       error.value = 'Nom d’utilisateur ou mot de passe incorrect.'
     }

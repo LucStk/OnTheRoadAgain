@@ -17,17 +17,39 @@
       </div>
       <h2 class="text-2xl font-semibold">{{ user.username }}</h2>
 
+      <form @submit.prevent="handleUpdate">
 
-      <div></div>
+        <div class="w-96">
+          <label class="label-text " for="defaultInput">Ville</label>
+          <input type="text" placeholder="Paris" class="input" id="defaultInput" />
+        </div>
 
-      <p v-if="user.ville" class="text-gray-500">Ville : {{ user.ville }}</p>
-      <p v-if="user.pays" class="text-gray-500">Pays : {{ user.pays }}</p>
-      <p v-if="user.bio" class="text-gray-500">Bio : {{ user.bio }}</p>
-      <p v-if="user.date_naissance" class="text-gray-500">Date de naissance : {{ user.date_naissance }}</p>
-      <p v-if="user.email" class="text-gray-500">Email : {{ user.email }}</p>
+        <div class="w-96">
+          <label class="label-text " for="defaultInput">Pays</label>
+          <input type="text" placeholder="France" class="input" id="defaultInput" />
+        </div>
 
-      <a class="btn" href="/profile/change">Modifier</a>
+        <div class="textarea max-w-sm">
+          <div class="textarea-floating grow">
+            <textarea class="resize-none" placeholder="Hello!!!" id="textareaFloatingMedium"></textarea>
+            <label class="textarea-floating-label" for="textareaFloatingMedium">{{ user.bio }}</label>
+          </div>
+          <span class="icon-[tabler--message] text-base-content/80 mt-2 mx-4 size-5 shrink-0"></span>
+        </div>
 
+        <flat-pickr
+            v-model="date"
+            :config="config"                                                          
+            class="form-control" 
+            placeholder="Select date"               
+            name="date">
+        </flat-pickr>
+
+        <button type="submit" :disabled="loading" class="btn btn-success btn-block">
+          Modifier
+        </button>
+
+      </form>
     </div>
   </div>
 </template>
@@ -37,16 +59,41 @@
   definePage({
     meta: {requiresAuth: true,},
   })
+  import flatPickr from 'vue-flatpickr-component';
+  import 'flatpickr/dist/flatpickr.css';
+
+  const date = ref(null);
+  const config = {
+          wrap: true, // set wrap to true only when using 'input-group'
+          altFormat: 'M j, Y',
+          altInput: true,
+          dateFormat: 'Y-m-d',     
+        }
+
   const auth = useAuthStore();
   const user = auth.user;
 
   const username = ref('')
   const password = ref('')
-  const error = ref(null)
-  const loading = ref(false)
+  const error = ref("")
   const router = useRouter()
+  const loading = ref(false)
 
-  //Dans le cas où l'utilisateur est bien connecté mes ces informations ne sont pas 
-  // dans l'objet auth.ts (ne devrait pas arriver mais tout de même)
+  async function handleUpdate() {
+    loading.value = true
+    error.value = ""
 
+    const success = await auth.login(username.value, password.value)
+
+    loading.value = false
+
+    if (success) {
+      console.log("sucess redirection")
+      router.push('/profile/')
+    } else {
+      error.value = 'Nom d’utilisateur ou mot de passe incorrect.'
+    }
+  }
+
+  
 </script>
