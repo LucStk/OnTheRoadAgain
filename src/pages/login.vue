@@ -48,7 +48,6 @@
   definePage({
     meta: {requiresGuest: true,},
   })
-  import { useAuthStore } from '@/stores/auth';
    
   const router = useRouter();
   const auth = useAuthStore();

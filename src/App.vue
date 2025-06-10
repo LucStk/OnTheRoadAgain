@@ -1,7 +1,4 @@
 <script setup>
-  import dataObject from '@/assets/data.json'
-  import { useAuthStore } from '@/stores/auth';
-
   const auth = useAuthStore();
 
   onMounted(() => {

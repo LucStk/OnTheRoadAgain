@@ -1,5 +1,4 @@
 import { defineStore } from 'pinia';
-import api from '@/services/api';
 
 export interface User {
   username: string;

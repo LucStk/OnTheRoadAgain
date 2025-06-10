@@ -6,7 +6,7 @@ import axios, {
 } from 'axios';
 import createAuthRefreshInterceptor from 'axios-auth-refresh';
 
-const api: AxiosInstance = axios.create({
+export const api: AxiosInstance = axios.create({
   baseURL: 'http://localhost:8000/api/',
 });
 
@@ -53,5 +53,3 @@ createAuthRefreshInterceptor(api, async (failedRequest: any): Promise<void> => {
     return Promise.reject(error);
   }
 });
-
-export default api;

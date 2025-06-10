@@ -50,10 +50,7 @@
   definePage({
     meta: {requiresGuest: true,},
   })
-
-  import { reactive } from 'vue'
-  import api from '@/services/api';
-  import {useAuthStore} from "@/stores/auth"
+  const router = useRouter();
 
   const form = reactive({
     username: '',
@@ -108,8 +105,8 @@
       console.log('Utilisateur créé:', { ...form })
 
       //Redirection
-      const router = useRouter();
-      router.push('/users/me');
+      
+      router.push('/users');
     });
   }
 </script>
