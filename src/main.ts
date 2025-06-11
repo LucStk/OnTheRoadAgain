@@ -25,6 +25,7 @@ async function bootstrap() {
     await auth.initialize();
     
     app.mount('#app');
+    
 
 }
 

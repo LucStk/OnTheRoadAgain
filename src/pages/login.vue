@@ -58,6 +58,7 @@
   const error = ref("")
   const loading = ref(false)
 
+
   async function handleLogin() {
     loading.value = true
     error.value = ""
@@ -67,6 +68,7 @@
     loading.value = false
 
     if (success) {
+      await auth.fetchUser()  
       console.log("sucess redirection")
       router.push('/profile')
     } else {

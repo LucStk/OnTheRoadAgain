@@ -13,15 +13,27 @@ export interface User {
 export interface AuthState {
   access: string | null;
   refresh: string | null;
-  user: User | null;
+  user: User;
   isUserLoaded: boolean;  // <--- ajout
+}
+
+function createEmptyUser(): User {
+  return {
+    username: "",
+    photo_profil: undefined,
+    bio: undefined,
+    ville: undefined,
+    pays: undefined,
+    date_naissance: undefined,
+    email: undefined,
+  }
 }
 
 export const useAuthStore = defineStore('auth', {
   state: (): AuthState => ({
     access: localStorage.getItem('access'),
     refresh: localStorage.getItem('refresh'),
-    user: null,
+    user: createEmptyUser(),
     isUserLoaded: false,
   }),
 
@@ -47,7 +59,7 @@ export const useAuthStore = defineStore('auth', {
     logout(): boolean {
       this.access = null;
       this.refresh = null;
-      this.user = null;
+      Object.assign(this.user, createEmptyUser());
       this.isUserLoaded = false;
 
       localStorage.removeItem('access');
@@ -61,13 +73,14 @@ export const useAuthStore = defineStore('auth', {
         this.isUserLoaded = false;
         const res = await api.get<User>('profile/');
         if (res.data && res.data.username) {
-          this.user = res.data;
+          Object.assign(this.user, res.data); 
         } else {
-          this.user = null;
+          console.log("Error user auth")
+          Object.assign(this.user, createEmptyUser());
         }
       } catch (err) {
         console.warn("fetchUser failed, user non instancié", err);
-        this.user = null;
+        Object.assign(this.user, createEmptyUser());
       } finally {
         this.isUserLoaded = true;
       }
@@ -87,6 +100,7 @@ export const useAuthStore = defineStore('auth', {
               this.access = res.data.access;
               localStorage.setItem('access', this.access);
               await this.fetchUser();
+              console.log("user connecté")
             } catch (e) {
               this.logout();
             }

@@ -1,11 +1,5 @@
 <script setup>
   const auth = useAuthStore();
-  const router = useRouter();
-  const user = auth.user;
-
-  function goToLogin() {
-    router.push('/login');
-  }
 </script>
 
 
@@ -22,12 +16,12 @@
 
         <div class="avatar">
             <div class="size-9.5 rounded-full">
-                <img  v-if="user && user.photo_profil" :src="user.photo_profil"></img>
+                <img  v-if="auth.isUserLoaded && auth.user.photo_profil" :src="auth.user.photo_profil"></img>
                 <span v-else class="text-4xl icon-[solar--user-circle-bold-duotone]"></span>
             </div>
         </div>
     </button>
-    <ul v-if="user" class="dropdown-menu 
+    <ul v-if="auth.isUserLoaded" class="dropdown-menu 
                 dropdown-open:opacity-100 
                 hidden min-w-60" 
         role="menu" 
@@ -38,7 +32,7 @@
     <li  class="dropdown-header gap-2">
         <div class="avatar">
             <div class="size-9.5 rounded-full">
-                <img  v-if="user && user.photo_profil" :src="user.photo_profil"></img>
+                <img  v-if="auth.isUserLoaded && auth.user.photo_profil" :src="auth.user.photo_profil"></img>
                 <span v-else class="text-4xl icon-[solar--user-circle-bold-duotone]"></span>
             </div>
         </div>
@@ -63,9 +57,9 @@
     <ul v-else="auth.user" class="dropdown-menu 
             dropdown-open:opacity-100 
             hidden min-w-60" 
-    role="menu" 
-    aria-orientation="vertical" 
-    aria-labelledby="dropdown-avatar">
+            role="menu" 
+            aria-orientation="vertical" 
+            aria-labelledby="dropdown-avatar">
     
         <li class="dropdown-footer gap-2">
             <a class="btn btn-success btn-soft btn-block" href="login">
