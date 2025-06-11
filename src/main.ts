@@ -22,9 +22,9 @@ async function bootstrap() {
     // ⚠️ Initialisation de l'auth avant le rendu
     
     const auth = useAuthStore();
-    await auth.initialize();
     
     app.mount('#app');
+    auth.initialize();
     
 
 }

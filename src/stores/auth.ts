@@ -59,7 +59,7 @@ export const useAuthStore = defineStore('auth', {
     logout(): boolean {
       this.access = null;
       this.refresh = null;
-      Object.assign(this.user, createEmptyUser());
+      this.user = createEmptyUser();;
       this.isUserLoaded = false;
 
       localStorage.removeItem('access');
@@ -87,7 +87,7 @@ export const useAuthStore = defineStore('auth', {
     },
 
     async initialize() {
-      if (this.access && !this.user) {
+      if (this.access) {
         try {
           await this.fetchUser(); // access encore valide
         } catch (e) {
