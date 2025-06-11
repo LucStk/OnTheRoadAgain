@@ -11,10 +11,21 @@ import router from './router/router'
 
 import App from './App.vue'
 
-const pinia = createPinia()
-const app = createApp(App)
+async function bootstrap() {
+    const pinia = createPinia()
+    const app = createApp(App)
 
-app.use(VueMaplibreGl)
-app.use(pinia)
-app.use(router)
-app.mount('#app')
+    app.use(VueMaplibreGl)
+    app.use(pinia)
+    app.use(router)
+
+    // ⚠️ Initialisation de l'auth avant le rendu
+    
+    const auth = useAuthStore();
+    await auth.initialize();
+    
+    app.mount('#app');
+
+}
+
+bootstrap(); // ✅ App lancée quand tout est prêt

@@ -2,11 +2,11 @@ import { defineStore } from 'pinia';
 
 export interface User {
   username: string;
-  photo_profil? : string;
+  photo_profil?: string;
   bio?: string;
-  ville? : string;
-  pays? : string;
-  date_naissance? : string;
+  ville?: string;
+  pays?: string;
+  date_naissance?: string;
   email?: string;
 }
 
@@ -14,6 +14,7 @@ export interface AuthState {
   access: string | null;
   refresh: string | null;
   user: User | null;
+  isUserLoaded: boolean;  // <--- ajout
 }
 
 export const useAuthStore = defineStore('auth', {
@@ -21,6 +22,7 @@ export const useAuthStore = defineStore('auth', {
     access: localStorage.getItem('access'),
     refresh: localStorage.getItem('refresh'),
     user: null,
+    isUserLoaded: false,
   }),
 
   actions: {
@@ -28,14 +30,17 @@ export const useAuthStore = defineStore('auth', {
       try {
         const res = await api.post<{ access: string; refresh: string }>('token/', { username, password });
 
-        localStorage.setItem('access', res.data.access);
-        localStorage.setItem('refresh', res.data.refresh);
+        this.access = res.data.access;
+        this.refresh = res.data.refresh;
 
-        await this.fetchUser();
+        localStorage.setItem('access', this.access);
+        localStorage.setItem('refresh', this.refresh);
 
-        return true
+        // On ne fetch pas ici pour éviter les problèmes d'état dans les composants
+        return true;
       } catch (err: unknown) {
-        return false
+        console.error('Login failed', err);
+        return false;
       }
     },
 
@@ -43,19 +48,28 @@ export const useAuthStore = defineStore('auth', {
       this.access = null;
       this.refresh = null;
       this.user = null;
+      this.isUserLoaded = false;
 
       localStorage.removeItem('access');
       localStorage.removeItem('refresh');
 
-      return true
+      return true;
     },
 
     async fetchUser(): Promise<void> {
       try {
+        this.isUserLoaded = false;
         const res = await api.get<User>('profile/');
-        this.user = res.data;
-      } catch (err: unknown) {
+        if (res.data && res.data.username) {
+          this.user = res.data;
+        } else {
+          this.user = null;
+        }
+      } catch (err) {
+        console.warn("fetchUser failed, user non instancié", err);
         this.user = null;
+      } finally {
+        this.isUserLoaded = true;
       }
     },
 
