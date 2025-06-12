@@ -2,6 +2,8 @@
   const auth = useAuthStore();
   const router = useRouter();
 
-  auth.logout()
-  router.push('/profile')
+onMounted(() => {
+  auth.logout();
+  router.push('/');
+});
 </script>

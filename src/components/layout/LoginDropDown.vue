@@ -28,32 +28,44 @@
         role="menu" 
         aria-orientation="vertical" 
         aria-labelledby="dropdown-avatar">
-
-    <!-- Profile -->
-    <li  class="dropdown-header gap-2">
-        <div class="avatar">
-            <div class="size-9.5 rounded-full">
-                <img  :src="auth?.user?.photo_profil"></img>
-              <!-- <span class="text-4xl icon-[solar--user-circle-bold-duotone]"></span>--> 
+    <!--TODO : Quand l'utilisateur logout, la bar ne se refresh pas-->
+    <template v-if="auth.isUserLoaded">
+        <li  class="dropdown-header gap-2">
+            <div class="avatar">
+                <div class="size-9.5 rounded-full">
+                    <img  :src="auth?.user?.photo_profil"></img>
+                <!-- <span class="text-4xl icon-[solar--user-circle-bold-duotone]"></span>--> 
+                </div>
             </div>
-        </div>
-        <div>
-        <h6 class="text-base-content text-base font-semibold">{{auth?.user?.username}}</h6>
-        <!--<small class="text-base-content/50">Admin</small>-->
-        </div>
-    </li>
-    <li>
-        <a class="dropdown-item" href="/profile">
-        <span class="icon-[tabler--user]"></span>
-        My Profile
-        </a>
-    </li>
-    <li class="dropdown-footer gap-2">
-        <a class="btn btn-error btn-soft btn-block" href="signout">
-        <span class="icon-[tabler--logout]"></span>
-        Sign out
-        </a>
-    </li>
+            <div>
+            <h6 class="text-base-content text-base font-semibold">{{auth?.user?.username}}</h6>
+            <!--<small class="text-base-content/50">Admin</small>-->
+            </div>
+        </li>
+        <li>
+            <a class="dropdown-item" href="/profile">
+            <span class="icon-[tabler--user]"></span>
+            My Profile
+            </a>
+        </li>
+        <li class="dropdown-footer gap-2">
+            <a class="btn btn-error btn-soft btn-block" href="signout">
+            <span class="icon-[tabler--logout]"></span>
+            Sign out
+            </a>
+        </li>
+
+    </template>
+    <template v-else>
+        <li class="dropdown-footer gap-2">
+            <a class="btn btn-base-100 btn-soft btn-block" href="login">
+            <span class="icon-[tabler--logout]"></span>
+            Sign in
+            </a>
+        </li>
+
+    </template>
+        
     </ul>
 
 </div>

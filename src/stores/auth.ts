@@ -59,7 +59,7 @@ export const useAuthStore = defineStore('auth', {
     logout(): boolean {
       this.access = null;
       this.refresh = null;
-      this.user = createEmptyUser();;
+      this.user = createEmptyUser()
       this.isUserLoaded = false;
 
       localStorage.removeItem('access');

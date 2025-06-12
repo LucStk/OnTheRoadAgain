@@ -172,6 +172,7 @@ async function handleUpdate() {
         <button type="submit" :disabled="loading" class="btn btn-success btn-block">
           Modifier
         </button>
+        <a class="btn btn-success btn-block" href="/profile">Annuler</a>
 
         <p v-if="error" class="text-red-500 mt-2">{{ error }}</p>
       </form>
