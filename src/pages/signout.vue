@@ -3,7 +3,7 @@
   const router = useRouter();
 
 onMounted(() => {
-  auth.logout();
+  auth.resetStore();
   router.push('/');
 });
 </script>

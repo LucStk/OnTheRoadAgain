@@ -10,23 +10,23 @@ definePage({ meta: { requiresAuth: true } })
 
 const VueCropper = VueCropperImport.default || VueCropperImport
 
-const config = { wrap: true, altFormat: 'Y-m-d', altInput: true, dateFormat: 'Y-m-d' }
+const configDate = { wrap: true, altFormat: 'Y-m-d', altInput: true, dateFormat: 'Y-m-d' }
 
 const auth = useAuthStore()
-const user = auth.user
 
 const input   = ref<HTMLInputElement | null>(null)
 const cropper = ref<any>(null)
-const imgSrc  = ref(user?.photo_profil || "")
+const imgSrc  = ref(auth.photo_profil ? auth.photo_profil : "")
 const cropImg = ref('') // image croppée au format base64
 const error   = ref('')
 const loading = ref(false)
 
 // Remplacement de reactive par refs individuelles
-const date_naissance = ref(user?.date_naissance ? new Date(user.date_naissance) : null)
-const bio   = ref(user?.bio   || '')
-const pays  = ref(user?.pays  || '')
-const ville = ref(user?.ville || '')
+const userDate = auth.date_naissance ? new Date(auth.date_naissance) : new Date();
+const date_naissance = ref(userDate);
+const bio   = ref(auth.bio   || '')
+const pays  = ref(auth.pays  || '')
+const ville = ref(auth.ville || '')
 
 function showFileChooser() {
   if (input.value) input.value.click()
@@ -82,6 +82,8 @@ async function handleUpdate() {
 
   try {
     const formData = new FormData()
+    let v = date_naissance.value ? date_naissance.value.toISOString().split('T')[0] : ''
+
     formData.append('date_naissance', date_naissance.value ? date_naissance.value.toISOString().split('T')[0] : '')
     formData.append('bio', bio.value)
     formData.append('pays', pays.value)
@@ -91,7 +93,9 @@ async function handleUpdate() {
       formData.append('photo_profil', blob, 'photo.png')
     }
 
-    const response = await api.patch('profile/patch/', formData)
+    
+    const response = await api.patch('/profile/update-profile/', formData)
+    console.log(response)
     if (response) {
       await auth.fetchUser()
     } else {
@@ -106,9 +110,9 @@ async function handleUpdate() {
 </script>
 
 <template>
-  <div v-if="user" class="max-w-2xl mx-auto mt-8 p-6 bg-white rounded-2xl shadow-md">
+  <div v-if="auth.isUserLoaded" class="max-w-2xl mx-auto mt-8 p-6 bg-white rounded-2xl shadow-md">
     <div class="flex flex-col items-center space-x-4">
-      <h2 class="text-2xl font-semibold">{{ user.username }}</h2>
+      <h2 class="text-2xl font-semibold">{{ auth.isUserLoaded }}</h2>
 
       <div>
         <div
@@ -162,14 +166,14 @@ async function handleUpdate() {
         <label class="label-text" for="dateInput">Date de naissance</label>
         <flat-pickr
           v-model="date_naissance"
-          :config="config"
+          :config="configDate"
           class="form-control mb-6"
           placeholder="Select date"
           name="date"
           id="dateInput"
         />
 
-        <button type="submit" :disabled="loading" class="btn btn-success btn-block">
+        <button type="submit" class="btn btn-success btn-block">
           Modifier
         </button>
         <a class="btn btn-success btn-block" href="/profile">Annuler</a>

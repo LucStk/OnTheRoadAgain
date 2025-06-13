@@ -43,36 +43,37 @@
       </form>
     </div>
   </div>
-</template>
+  </template>
 
 <script setup lang="ts">
   definePage({
     meta: {requiresGuest: true,},
   })
-   
   const router = useRouter();
-  const auth = useAuthStore();
+  const auth   = useAuthStore();
 
   const username = ref('')
   const password = ref('')
-  const error = ref("")
-  const loading = ref(false)
-
+  const error    = ref("")
+  const loading  = ref(false)
 
   async function handleLogin() {
     loading.value = true
     error.value = ""
 
-    const success = await auth.login(username.value, password.value)
-
-    loading.value = false
-
-    if (success) {
-      await auth.fetchUser()  
-      console.log("sucess redirection")
-      router.push('/profile')
-    } else {
-      error.value = 'Nom d’utilisateur ou mot de passe incorrect.'
+    try {
+      const success = await auth.login(username.value, password.value)
+      if (success) {
+        router.push('/profile')
+      } else {
+        error.value = 'Nom d’utilisateur ou mot de passe incorrect.'
+      }
+    }catch(e){
+      error.value = (e as Error).message;
+    }finally{
+      loading.value = false
     }
+    
+
   }
 </script>

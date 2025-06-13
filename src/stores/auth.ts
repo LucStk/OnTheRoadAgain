@@ -1,4 +1,6 @@
-import { defineStore } from 'pinia';
+import { defineStore } from 'pinia'
+import { ref, reactive, toRefs } from 'vue'
+import { api } from '@/services/api'
 
 export interface User {
   username: string;
@@ -10,16 +12,9 @@ export interface User {
   email?: string;
 }
 
-export interface AuthState {
-  access: string | null;
-  refresh: string | null;
-  user: User;
-  isUserLoaded: boolean;  // <--- ajout
-}
-
-function createEmptyUser(): User {
+function initialUser(): User {
   return {
-    username: "",
+    username: 'Invité',
     photo_profil: undefined,
     bio: undefined,
     ville: undefined,
@@ -29,86 +24,50 @@ function createEmptyUser(): User {
   }
 }
 
-export const useAuthStore = defineStore('auth', {
-  state: (): AuthState => ({
-    access: localStorage.getItem('access'),
-    refresh: localStorage.getItem('refresh'),
-    user: createEmptyUser(),
-    isUserLoaded: false,
-  }),
+export const useAuthStore = defineStore("auth", () => {
+  const access = ref<string>("")
+  const isUserLoaded = ref<boolean>(false)
+  // utilisateur réactif champ par champ
+  const user = reactive<User>(initialUser())
 
-  actions: {
-    async login(username: string, password: string): Promise<boolean> {
-      try {
-        const res = await api.post<{ access: string; refresh: string }>('token/', { username, password });
-
-        this.access = res.data.access;
-        this.refresh = res.data.refresh;
-
-        localStorage.setItem('access', this.access);
-        localStorage.setItem('refresh', this.refresh);
-
-        // On ne fetch pas ici pour éviter les problèmes d'état dans les composants
+  async function login(username: string, password: string): Promise<boolean> {
+    try {
+        const res = await api.post<{ access: string }>('token/', {username,password});
+        console.log(res)
+        access.value = "modifié"//res.data.access;
+        console.log(access.value)
+        await fetchUser();
         return true;
-      } catch (err: unknown) {
-        console.error('Login failed', err);
-        return false;
-      }
-    },
-
-    logout(): boolean {
-      this.access = null;
-      this.refresh = null;
-      this.user = createEmptyUser()
-      this.isUserLoaded = false;
-
-      localStorage.removeItem('access');
-      localStorage.removeItem('refresh');
-
-      return true;
-    },
-
-    async fetchUser(): Promise<void> {
-      try {
-        this.isUserLoaded = false;
-        const res = await api.get<User>('profile/');
-        if (res.data && res.data.username) {
-          Object.assign(this.user, res.data); 
-        } else {
-          console.log("Error user auth")
-          Object.assign(this.user, createEmptyUser());
-        }
       } catch (err) {
-        console.warn("fetchUser failed, user non instancié", err);
-        Object.assign(this.user, createEmptyUser());
-      } finally {
-        this.isUserLoaded = true;
+        console.error('Login failed', err);
+        throw err
       }
-    },
+  }
 
-    async initialize() {
-      if (this.access) {
-        try {
-          await this.fetchUser(); // access encore valide
-        } catch (e) {
-          // access expiré → tente refresh
-          if (this.refresh) {
-            try {
-              const res = await api.post<{ access: string }>('token/refresh/', {
-                refresh: this.refresh,
-              });
-              this.access = res.data.access;
-              localStorage.setItem('access', this.access);
-              await this.fetchUser();
-              console.log("user connecté")
-            } catch (e) {
-              this.logout();
-            }
-          } else {
-            this.logout(); // pas de refresh → on déconnecte
-          }
-        }
-      }
+  function resetStore() {
+    access.value = ''
+    isUserLoaded.value = false
+    Object.assign(user, initialUser()) // reset propre du user
+  }
+
+  async function fetchUser(): Promise<void> {
+    try {
+      const res = await api.get<User>('profile/me/');
+      Object.assign(user, res.data);
+    } catch (err) {
+      console.warn('User fetch failed');
+      throw err;
     }
-  },
-});
+  }
+
+  return {
+    login, 
+    fetchUser,
+    isUserLoaded,
+    access,
+    resetStore,
+    ...toRefs(user)  // <-- rend chaque champ exporté individuellement en tant que `ref`
+  }
+}, {
+  persist: true,
+})

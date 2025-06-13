@@ -1,4 +1,5 @@
 <script setup>
+import {logout} from "@/services/signout"
   const auth = useAuthStore();
 </script>
 
@@ -17,7 +18,7 @@
 
         <div class="avatar">
             <div class="size-9.5 rounded-full">
-                <img  v-if="auth.isUserLoaded && auth.user.photo_profil" :src="auth?.user?.photo_profil"></img>
+                <img  v-if="auth.isUserLoaded && auth.photo_profil" :src="auth.photo_profil"></img>
                 <span v-else class="text-4xl icon-[solar--user-circle-bold-duotone]"></span>
             </div>
         </div>
@@ -33,12 +34,12 @@
         <li  class="dropdown-header gap-2">
             <div class="avatar">
                 <div class="size-9.5 rounded-full">
-                    <img  :src="auth?.user?.photo_profil"></img>
-                <!-- <span class="text-4xl icon-[solar--user-circle-bold-duotone]"></span>--> 
+                    <img v-if="auth.photo_profil" :src="auth.photo_profil"></img>
+                    <span v-else class="text-4xl icon-[solar--user-circle-bold-duotone]"></span>
                 </div>
             </div>
             <div>
-            <h6 class="text-base-content text-base font-semibold">{{auth?.user?.username}}</h6>
+            <h6 class="text-base-content text-base font-semibold">{{auth.username}}</h6>
             <!--<small class="text-base-content/50">Admin</small>-->
             </div>
         </li>
@@ -49,10 +50,10 @@
             </a>
         </li>
         <li class="dropdown-footer gap-2">
-            <a class="btn btn-error btn-soft btn-block" href="signout">
+            <button class="btn btn-error btn-soft btn-block" @click="logout">
             <span class="icon-[tabler--logout]"></span>
             Sign out
-            </a>
+            </button>
         </li>
 
     </template>

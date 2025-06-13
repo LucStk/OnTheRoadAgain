@@ -67,11 +67,17 @@
   function validateEmail(email: string) {
     return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
   }
-
-  function handleSubmit() {
+  // TODO : mettre un second mdp de vérification
+  // TODO : Demander un mdp fort
+  // TODO : Mettre un CATCHA pour purger les bots
+  // TODO : Proposer une authentification par google où autre
+  // TODO : Envoyer un mail pour confirmer l'inscription
+  
+  async function handleSubmit() {
     errors.username = ''
     errors.email = ''
     errors.password = ''
+    const auth = useAuthStore();
 
     let valid = true
 
@@ -92,20 +98,14 @@
 
     if (!valid) { return}
 
-    const res = api.post<{access : string, refresh : string}>("signup/", form);
-    res.then((res) => {
-      console.log(res)
-      localStorage.setItem('access', res.data.access);
-      localStorage.setItem('refresh', res.data.refresh);
-      const auth = useAuthStore();
-      
-      //Chargement de l'user
-      auth.fetchUser();
-      console.log('Utilisateur créé:', { ...form })
-
-      //Redirection
-      
-      router.push('/profile');
-    });
+    const res = await api.post<{access : string}>("signup/", form);
+    
+    auth.isUserLoaded = true;
+    auth.access = res.data.access;
+    //Chargement de l'user
+    await auth.fetchUser();
+    console.log('Utilisateur créé:', { ...form })
+    //Redirection
+    router.push('/profile');
   }
 </script>

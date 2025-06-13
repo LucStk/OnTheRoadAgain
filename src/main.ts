@@ -1,32 +1,28 @@
+import { createPinia } from 'pinia';
+import piniaPluginPersistedstate from 'pinia-plugin-persistedstate';
 
-// FlyonUI
+import { createApp } from 'vue';
+import App from './App.vue';
+
+import router from './services/router';
+import {api} from "./services/api";
+import './services/intercepteur'
+
+import VueMaplibreGl from '@indoorequal/vue-maplibre-gl';
 import "flyonui/flyonui";
 import './main.css';
 import './assets/css/elements.css';
-import VueMaplibreGl from '@indoorequal/vue-maplibre-gl'
-
-import { createPinia } from 'pinia';
-import { createApp } from 'vue'
-import router from './router/router'
-
-import App from './App.vue'
 
 async function bootstrap() {
-    const pinia = createPinia()
-    const app = createApp(App)
+  const pinia = createPinia();
+  pinia.use(piniaPluginPersistedstate);
+  const app = createApp(App);
+  app.use(pinia);
 
-    app.use(VueMaplibreGl)
-    app.use(pinia)
-    app.use(router)
+  app.use(VueMaplibreGl);
+  app.use(router);
 
-    // ⚠️ Initialisation de l'auth avant le rendu
-    
-    const auth = useAuthStore();
-    
-    app.mount('#app');
-    auth.initialize();
-    
-
+  app.mount('#app');
 }
 
-bootstrap(); // ✅ App lancée quand tout est prêt
+bootstrap();
