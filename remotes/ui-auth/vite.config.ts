@@ -7,13 +7,10 @@ export default defineConfig({
   plugins: [
     vue(),
     federation({
-      name: 'ui_remote',
-      filename: 'remoteEntry.js',
-      exposes: {
-        './api': './src/services/api.ts',
-        './useAuthStore': './src/stores/auth.ts'
+      remotes: {
+        ui_remote: 'http://localhost:3000/assets/remoteEntry.js', // adapte le port si besoin
       },
-      shared: ['vue', 'pinia']
+      shared: ['vue', 'pinia'],
     })
   ],
   resolve: {
@@ -27,7 +24,7 @@ export default defineConfig({
     cssCodeSplit: false
   },
   server: {
-    port: 5006
+    port: 5007
   },
     test: {
     environment: 'jsdom', // ou node
