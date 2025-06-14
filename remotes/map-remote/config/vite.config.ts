@@ -10,7 +10,6 @@ import federation from "@originjs/vite-plugin-federation";
 import path from 'path'
 
 export default {
-    root: 'public', // si tu mets index.html dans un dossier "public"
     plugins: [
         VueRouter({
             routesFolder:"src/pages",

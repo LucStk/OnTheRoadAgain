@@ -9,19 +9,19 @@ export {}
 declare module 'vue' {
   export interface GlobalComponents {
     copy: typeof import('./components/profile_layout/ProfilePhoto copy.vue')['default']
-    LoginDropDown: typeof import('./components/layout/LoginDropDown.vue')['default']
+    LoginDropDown: typeof import('./../src/components/layout/LoginDropDown.vue')['default']
     Map: typeof import('../map/src/js/Map.vue')['default']
-    Navbar: typeof import('./components/layout/Navbar.vue')['default']
-    Notification: typeof import('./components/layout/Notification.vue')['default']
-    ProfilePhoto: typeof import('./components/profile_layout/ProfilePhoto.vue')['default']
-    ProfilePhoto_exe: typeof import('./components/profile_layout/ProfilePhoto_exe.vue')['default']
+    Navbar: typeof import('./../src/components/layout/Navbar.vue')['default']
+    Notification: typeof import('./../src/components/layout/Notification.vue')['default']
+    ProfilePhoto: typeof import('./../src/components/profile_layout/ProfilePhoto.vue')['default']
+    ProfilePhoto_exe: typeof import('./../src/components/profile_layout/ProfilePhoto_exe.vue')['default']
     RouteBar: typeof import('./components/route/RouteBar.vue')['default']
     RouteInfos: typeof import('./components/route/RouteInfos.vue')['default']
     RouteMarker: typeof import('./components/route/RouteMarker.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     RouteUI: typeof import('./components/route/RouteUI.vue')['default']
-    Searchbar: typeof import('./components/layout/Searchbar.vue')['default']
-    SideBar: typeof import('./components/layout/SideBar.vue')['default']
+    Searchbar: typeof import('./../src/components/layout/Searchbar.vue')['default']
+    SideBar: typeof import('./../src/components/layout/SideBar.vue')['default']
   }
 }

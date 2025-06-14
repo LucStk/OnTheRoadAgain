@@ -3,14 +3,16 @@ import vue from '@vitejs/plugin-vue'
 import VueRouter from 'unplugin-vue-router/vite'
 import AutoImport from 'unplugin-auto-import/vite'
 import Components from 'unplugin-vue-components/vite'
-import { sharedDeps } from '../../../vite.config.shared'
+import { sharedDeps } from '../../vite.config.shared'
 
 import federation from '@originjs/vite-plugin-federation'
 
 import path from 'path'
 
 export default defineConfig({
-  root: 'public', // si tu mets index.html dans un dossier "public"
+  optimizeDeps: {
+    exclude: ['pinia-plugin-persistedstate']
+  },
   plugins: [
     VueRouter({
       routesFolder:"src/pages",
@@ -49,7 +51,7 @@ export default defineConfig({
   ],
   resolve: {
     alias: {
-      '@': path.resolve(__dirname, '../src'),
+      '@': path.resolve(__dirname, 'src'),
     },
   },
 })

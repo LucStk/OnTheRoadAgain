@@ -27,7 +27,6 @@
 
     <div class="navbar-end flex items-center gap-4">
       <Notification />
-      <LoginDropDown />
     </div>
   </nav>
 

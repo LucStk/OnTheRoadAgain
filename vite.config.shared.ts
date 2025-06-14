@@ -14,11 +14,6 @@ export const sharedDeps = {
     "strictVersion": true,
     "requiredVersion": "^3.0.2"
   },
-  "pinia-plugin-persistedstate": {
-    "singleton": true,
-    "strictVersion": true,
-    "requiredVersion": "^4.3.0"
-  },
   "axios": {
     "singleton": true,
     "strictVersion": true,
@@ -28,11 +23,6 @@ export const sharedDeps = {
     "singleton": true,
     "strictVersion": true,
     "requiredVersion": "^3.3.6"
-  },
-  "mitt": {
-    "singleton": true,
-    "strictVersion": true,
-    "requiredVersion": "^3.0.1"
   },
   "vue-cropperjs": {
     "singleton": true,
