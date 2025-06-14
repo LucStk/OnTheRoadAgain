@@ -6,5 +6,5 @@
     },
     "types": ["unplugin-vue-router/client"]
   },
-  "include": ["src", "types", "../../remotes/ui-remote/src/services/router.ts", "../../remotes/ui-remote/src/stores/services", "../../remotes/stores"]
+  "include": ["src", "types",]
 }

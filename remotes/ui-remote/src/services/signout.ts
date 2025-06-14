@@ -1,3 +1,5 @@
+import { useAuthStore } from "../stores/auth";
+import { api } from "./api";
 
 
 export async function logout() {

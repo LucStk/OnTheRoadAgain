@@ -1,11 +1,11 @@
-import {InternalAxiosRequestConfig,} from 'axios';
+import axios, {InternalAxiosRequestConfig,} from 'axios';
 import createAuthRefreshInterceptor from 'axios-auth-refresh';
-import { useAuthStore } from '@/stores/auth'
-
+import { useAuthStore } from '../stores/auth'
+import {api} from "./api"
 
 
 // Intercepteur de requête : ajoute le token dynamiquement
-api.interceptors.request.use((config: InternalAxiosRequestConfig): InternalAxiosRequestConfig => {
+export function requestInterceptor(config: InternalAxiosRequestConfig) {
   const auth = useAuthStore()
   const access = auth.access
 
@@ -18,14 +18,14 @@ api.interceptors.request.use((config: InternalAxiosRequestConfig): InternalAxios
   }
 
   return config;
-});
+};
 
 // Intercepteur de réponse : refresh token si 401
 const plainAxios = axios.create({
   baseURL: 'http://localhost:8000/api/',
   withCredentials: true,
 });
-createAuthRefreshInterceptor(api, async (failedRequest)=> {
+export async function refreshInterceptor(failedRequest: any) {
   const auth = useAuthStore() 
   try {
     const response = await plainAxios.post<{ access: string }>('token/refresh/');
@@ -42,6 +42,7 @@ createAuthRefreshInterceptor(api, async (failedRequest)=> {
     console.warn("Access Token cannot be refreshed")
     return Promise.reject(error)
   }
-});
-
+}
+api.interceptors.request.use(requestInterceptor)
+createAuthRefreshInterceptor(api, refreshInterceptor)
 

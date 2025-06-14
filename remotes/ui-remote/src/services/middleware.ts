@@ -1,5 +1,6 @@
 // router/middleware.ts
 import type { NavigationGuardNext, RouteLocationNormalized } from 'vue-router'
+import { useAuthStore } from '../stores/auth';
 
 
 export async function globalMiddleware(to: RouteLocationNormalized, from: RouteLocationNormalized, next: NavigationGuardNext) {

@@ -19,8 +19,6 @@
 @use "~vue-maplibre-gl/dist/vue-maplibre-gl-draw.css"; 
 
 
-
-
 html, body, #app {
   margin: 0;
   padding: 0;

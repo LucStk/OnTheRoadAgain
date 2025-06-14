@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
 import { ref, reactive, toRefs } from 'vue'
-import { api } from '@/services/api'
+import { api } from '../services/api'
 
 export interface User {
   username: string;
@@ -69,5 +69,10 @@ export const useAuthStore = defineStore("auth", () => {
     ...toRefs(user)  // <-- rend chaque champ exporté individuellement en tant que `ref`
   }
 }, {
-  persist: true,
+  // @ts-ignore
+  persist: {
+    key: 'auth-data',
+    storage: localStorage,
+    omit : ["email"]
+  }
 })
