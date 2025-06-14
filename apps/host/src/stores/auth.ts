@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
 import { ref, reactive, toRefs } from 'vue'
-import { api } from '@/services/api'
+import { api } from 'host/src/services/api'
 
 export interface User {
   username: string;

@@ -1,5 +1,5 @@
 <script setup>
-import {logout} from "@/services/signout"
+import {logout} from "host/src/services/signout"
   const auth = useAuthStore();
 </script>
 

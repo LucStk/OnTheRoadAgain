@@ -1,18 +1,30 @@
 vite
 vue-router
 axios
+
 unplugin-auto-import
 unplugin-vue-components
+
 vite-plugin-router
+
 typescript
+
 axios-auth-refresh
 
 flyonui
 tailwindcss
 tailwindcss/typography
 postcss 
+
 autoprefixer
+
 cropperjs
+
 vue-cropperjs
+
 vue-flatpickr-component
+
+pinia
 pinia-plugin-persistedstate
+
+c --save-dev

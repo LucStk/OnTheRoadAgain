@@ -3,18 +3,27 @@ import vue from '@vitejs/plugin-vue'
 import VueRouter from 'unplugin-vue-router/vite'
 import AutoImport from 'unplugin-auto-import/vite'
 import Components from 'unplugin-vue-components/vite'
+import { sharedDeps } from '../../../vite.config.shared'
 
+import federation from '@originjs/vite-plugin-federation'
 
 import path from 'path'
 
 export default defineConfig({
+  root: 'public', // si tu mets index.html dans un dossier "public"
   plugins: [
     VueRouter({
       routesFolder:"src/pages",
-      dts: 'src/typed-router.d.ts',
+      dts: 'types/typed-router.d.ts',
     }),
     vue(),
-
+    federation({
+      name: 'host',
+      remotes: {
+        map_remote: 'http://localhost:5001/assets/mapRemoteEntry.js'
+      },
+      shared: sharedDeps,
+    }),
     AutoImport({
       imports: [
         'vue',          // auto-import ref, reactive, etc.
@@ -27,7 +36,7 @@ export default defineConfig({
           "@/services/api":["api"]
         },
       ],
-      dts: 'src/auto-imports.d.ts',
+      dts: 'types/auto-imports.d.ts',
       vueTemplate: true,
     }),
 
@@ -35,21 +44,12 @@ export default defineConfig({
       dirs: ['src/components'],
       extensions: ['vue'],
       deep: true,
-      dts: 'src/components.d.ts',
+      dts: 'types/components.d.ts',
     }),
   ],
   resolve: {
     alias: {
-      '@': path.resolve(__dirname, './src'),
-    },
-  },
-  server: {  // attention: pas `devServer`, c’est `server` dans Vite
-    proxy: {
-      '/api': {
-        target: 'http://localhost:8000',
-        changeOrigin: true,
-        secure: false,
-      },
+      '@': path.resolve(__dirname, '../src'),
     },
   },
 })

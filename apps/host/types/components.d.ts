@@ -10,7 +10,7 @@ declare module 'vue' {
   export interface GlobalComponents {
     copy: typeof import('./components/profile_layout/ProfilePhoto copy.vue')['default']
     LoginDropDown: typeof import('./components/layout/LoginDropDown.vue')['default']
-    Map: typeof import('./components/Map.vue')['default']
+    Map: typeof import('../map/src/js/Map.vue')['default']
     Navbar: typeof import('./components/layout/Navbar.vue')['default']
     Notification: typeof import('./components/layout/Notification.vue')['default']
     ProfilePhoto: typeof import('./components/profile_layout/ProfilePhoto.vue')['default']

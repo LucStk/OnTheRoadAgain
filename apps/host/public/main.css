@@ -5,8 +5,6 @@
 /*@import "tailwindcss/preflight";
 @import "@tailwindcss/typography";*/
 
-
-
 @plugin "flyonui";
 
 @source "../node_modules/flyonui/flyonui.js"; /* Add only if node_modules is gitignored*/
