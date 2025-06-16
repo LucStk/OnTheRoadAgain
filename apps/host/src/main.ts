@@ -1,5 +1,5 @@
-//import { createPinia } from 'pinia';
-//import piniaPluginPersistedstate from 'pinia-plugin-persistedstate';
+import { createPinia } from 'pinia';
+import piniaPluginPersistedstate from 'pinia-plugin-persistedstate';
 
 import { createApp } from 'vue';
 import App from './App.vue';
@@ -11,16 +11,18 @@ import App from './App.vue';
 import "flyonui/flyonui";
 import './main.css';
 import './assets/css/elements.css';
+import { api, useAuthStore } from 'auth-lib'
 
 async function bootstrap() {
-  //const pinia = createPinia();
-  //pinia.use(piniaPluginPersistedstate);
+  const pinia = createPinia();
+  pinia.use(piniaPluginPersistedstate);
   const app = createApp(App);
-  //app.use(pinia);
+  app.use(pinia);
 
   //app.use(VueMaplibreGl);
   //app.use(router);
 
+  const auth = useAuthStore()
   app.mount('#app');
 }
 
