@@ -4,7 +4,7 @@ import piniaPluginPersistedstate from 'pinia-plugin-persistedstate';
 import { createApp } from 'vue';
 import App from './App.vue';
 
-//import router from './services/router';
+import router from './router';
 //import {api} from "./services/api";
 //import './services/intercepteur'
 
@@ -20,7 +20,7 @@ async function bootstrap() {
   app.use(pinia);
 
   //app.use(VueMaplibreGl);
-  //app.use(router);
+  app.use(router);
 
   const auth = useAuthStore()
   app.mount('#app');

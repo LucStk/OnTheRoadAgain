@@ -3,20 +3,22 @@
   "compilerOptions": {
     "target": "ESNext",
     "module": "ESNext",
-    "moduleResolution": "Node",
+    "moduleResolution": "bundler",
     "baseUrl": ".",
     "paths": {
-      "@/*": ["src/*"]
+      "@/*": ["src/*"],
+      //"auth-lib": ["../../packages/auth-lib/dist",]  // accès direct si besoin
     },
+    "types": ["unplugin-vue-router/client"],
     "declaration": true,
     "declarationDir": "dist",
-    "emitDeclarationOnly": true,
+    "emitDeclarationOnly": false,
     "outDir": "dist",
     "rootDir": "src",
     "strict": true,
     "esModuleInterop": true,
     "skipLibCheck": true
   },
-  "include": ["src/**/*.ts"],
+  "include": ["src","types", "vite/client"],
   "exclude": ["node_modules", "dist"]
 }

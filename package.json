@@ -4,11 +4,7 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev:host": "pnpm --filter host dev",
-    "dev:map-remote": "pnpm --filter map-remote dev",
-    "dev:ui-remote": "pnpm --filter ui-remote dev",
-    "dev:ui-auth": "pnpm --filter ui-auth dev",
-    "dev:all": "pnpm --parallel --filter host... dev"
+    "build" : "pnpm --filter auth-lib run build && pnpm --filter auth-pages run build"
   },
   "dependencies": {
     "@tailwindcss/postcss": "^4.1.8",

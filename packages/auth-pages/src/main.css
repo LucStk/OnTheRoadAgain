@@ -1,0 +1,26 @@
+
+@import "flyonui/variants.css";
+
+@import "tailwindcss";
+/*@import "tailwindcss/preflight";
+@import "@tailwindcss/typography";*/
+
+@plugin "flyonui";
+
+@source "../node_modules/flyonui/flyonui.js"; /* Add only if node_modules is gitignored*/
+@plugin "@iconify/tailwind4";
+
+/* src/assets/main.css */
+
+@tailwind utilities;
+
+@use "~maplibre-gl/dist/maplibre-gl.css";
+@use "~vue-maplibre-gl/dist/vue-maplibre-gl.css";
+@use "~vue-maplibre-gl/dist/vue-maplibre-gl-draw.css"; 
+
+
+html, body, #app {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+}
