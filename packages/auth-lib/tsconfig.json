@@ -6,5 +6,5 @@
     },
     "types": ["unplugin-vue-router/client"]
   },
-  "include": ["src", "types",]
+  "include": ["src", "types", "lib",]
 }

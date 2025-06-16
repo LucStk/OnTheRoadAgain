@@ -8,7 +8,7 @@ export default defineConfig({
     vue(),
     federation({
       remotes: {
-        ui_remote: 'http://localhost:3000/assets/remoteEntry.js', // adapte le port si besoin
+        ui_remote: 'http://localhost:5001/assets/remoteEntry.js', // adapte le port si besoin
       },
       shared: ['vue', 'pinia'],
     })
@@ -21,10 +21,15 @@ export default defineConfig({
   build: {
     target: 'esnext',
     minify: false,
-    cssCodeSplit: false
+    cssCodeSplit: false,
+    rollupOptions: {
+      output: {
+        format: 'esm',
+      },
+    },
   },
   server: {
-    port: 5007
+    port: 5002
   },
     test: {
     environment: 'jsdom', // ou node
