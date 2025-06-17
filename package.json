@@ -1,38 +1,16 @@
 {
-  "name": "ontheroadagain",
-  "private": true,
-  "version": "0.0.0",
-  "type": "module",
+  "name": "App-OntheroadAgain",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
   "scripts": {
-    "dev": "vite",
-    "build": "vite build",
-    "preview": "vite preview"
+    "dev": "pnpm --filter ./apps/web dev",
+    "dev:ui": "pnpm --filter ./libs/ui dev",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "test:all": "pnpm -r test"
   },
-  "dependencies": {
-    "@indoorequal/vue-maplibre-gl": "^8.3.0",
-    "cors": "^2.8.5",
-    "express": "^5.1.0",
-    "vue": "^3.5.13"
-  },
-  "devDependencies": {
-    "@iconify-json/tabler": "^1.2.18",
-    "@iconify/tailwind4": "^1.0.6",
-    "@tailwindcss/typography": "^0.5.16",
-    "@tailwindcss/vite": "^4.1.8",
-    "@vitejs/plugin-vue": "^5.2.3",
-    "axios": "^1.9.0",
-    "daisyui": "^5.0.42",
-    "dotenv": "^16.5.0",
-    "flyonui": "^2.2.0",
-    "geojson": "^0.5.0",
-    "leaflet": "^1.9.4",
-    "maplibre-gl": "^5.5.0",
-    "mitt": "^3.0.1",
-    "pinia": "^3.0.2",
-    "sass-embedded": "^1.89.0",
-    "tailwindcss": "^4.1.8",
-    "vite": "^6.3.5",
-    "vue-maplibre-gl": "^5.5.9",
-    "vue-router": "^4.5.1"
-  }
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "packageManager": "pnpm@10.12.1"
 }

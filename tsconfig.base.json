@@ -1,0 +1,9 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+        "@ontheroadagain/ui": ["libs/ui/src"],
+        "@ontheroadagain/auth": ["libs/auth/src"],
+        }
+    }
+}

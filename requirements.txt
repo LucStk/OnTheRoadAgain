@@ -1,5 +1,0 @@
-vite
-tailwindcss
-tailwindcss/typography
-vue-router
-axios
