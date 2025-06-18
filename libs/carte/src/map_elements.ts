@@ -1,10 +1,59 @@
 import { Marker, LngLatBounds, Map, type LngLatLike} from "maplibre-gl";
 import { createApp, h, type Ref } from "vue";
-import MyMarkerComponent from "../components/route/RouteMarker.vue";
+import MyMarkerComponent from "./components/route/RouteMarker.vue";
+
+
+export class Map_custom extends Map {
+  routes: Route[];
+  routes: Point[];
+  routePointsRef: Ref<any[]>;
+
+  constructor(routePointsRef: Ref<any[]>) {
+    super({
+      container: 'map',
+      style: 'https://api.maptiler.com/maps/streets-v2/style.json?key=AkDXKRSgsoWbmunH5eGo',
+      center: [-4.49993133544922, 48.41040274663766],
+      zoom: 13,
+    });
+    this.routes = [];
+    this.points = [];
+    this.routePointsRef = routePointsRef;
+  }
+  addPoint(coord: LngLatLike) {
+    const marker = new Point(coord, this, (e) => {this.local_save});
+    this.points.push(marker);
+    this.local_save();
+  }
+  newRoute() {
+    const r = new Route(this, this.routePointsRef);
+    this.routes.push(r);
+    return r;
+  }
+  local_save(){
+    const simplifiedPoints = this.points.map(p => ({
+      lngLat: p.marker.getLngLat(), // ou p.coord si tu stockes ça directement
+    }));
+    localStorage.setItem('points', JSON.stringify(simplifiedPoints));
+  }
+
+  local_load(){
+    const points = localStorage.getItem('points');
+    if (points) {
+      const parsed = JSON.parse(points);
+      parsed.forEach((p: { lngLat: LngLatLike }) => {
+        this.addPoint(p.lngLat);
+      });
+    }
+  }
+
+
+
+
+
 
 // Point personnalisé avec composant Vue monté dynamiquement
 export class Point extends Marker {
-	constructor(coords: LngLatLike, map: Map, onMove : any, index = 0) {
+	constructor(coords: LngLatLike, map: Map, onMove? : Function, index = 0) {
 		const container = document.createElement("div");
 
 		// Monte dynamiquement le composant Vue dans le conteneur

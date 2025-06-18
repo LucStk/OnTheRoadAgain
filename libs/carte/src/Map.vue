@@ -1,45 +1,17 @@
-<!-- script classique pour la classe -->
-<script lang="ts">
-import { Map } from 'maplibre-gl';
-import { Route } from './js/point';
-import type { Ref } from 'vue';
-
-class Map_custom extends Map {
-  routes: Route[];
-  routePointsRef: Ref<any[]>;
-
-  constructor(routePointsRef: Ref<any[]>) {
-    super({
-      container: 'map',
-      style: 'https://api.maptiler.com/maps/streets-v2/style.json?key=AkDXKRSgsoWbmunH5eGo',
-      center: [-4.49993133544922, 48.41040274663766],
-      zoom: 13,
-    });
-
-    this.routes = [];
-    this.routePointsRef = routePointsRef;
-  }
-
-  newRoute() {
-    const r = new Route(this, this.routePointsRef);
-    this.routes.push(r);
-    return r;
-  }
-}
-</script>
-
 <script setup lang="ts">
   import { onMounted, ref, type Ref } from 'vue';
-
-  const routePoints = ref([]);
+  import { Route, Point , Map_custom} from './map_elements';
 
   onMounted(() => {
-    const map = new Map_custom(routePoints);
+    const map = new Map_custom();
+    map.local_load();
 
-    map.on('load', () => {
-      map.newRoute();
+    map.on('contextmenu', (e) => {
+      map.addPoint(e.lngLat);
+      console.log(e.lngLat)
+    
     });
-  });
+  })
 </script>
 
 <template>
