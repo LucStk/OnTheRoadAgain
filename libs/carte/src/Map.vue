@@ -1,0 +1,49 @@
+<template>
+
+  <div id="map" ></div>
+  <!-- <RouteBar /> -->
+</template>
+
+<script setup lang="ts">
+  import {Map_custom} from './js/map.ts'
+  import { ref, onMounted } from 'vue'
+
+  const routePoints = ref([]); // 🔁 partagé avec Route
+    /*
+  const road_data = inject('road')
+*/
+  onMounted(() => {
+    // ── 1) Instanciation de la map / stockage dans refmap ──
+    const map = new Map_custom(routePoints);
+
+    // ── 2) Quand le style est chargé, on crée une Route et on pose 2 points ──
+    map.on('load', () => {
+      const route = map.newRoute();
+    });
+  });
+  
+  </script>
+
+
+
+<style lang="scss">
+  @import "maplibre-gl/dist/maplibre-gl.css";
+
+  #map{
+    height: 100%;
+  }
+
+  .coordinates {
+      background: rgba(0, 0, 0, 0.5);
+      color: #fff;
+      position: absolute;
+      bottom: 40px;
+      left: 10px;
+      padding: 5px 10px;
+      margin: 0;
+      font-size: 11px;
+      line-height: 18px;
+      border-radius: 3px;
+      display: none;
+  }
+</style>

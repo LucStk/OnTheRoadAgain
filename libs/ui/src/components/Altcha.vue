@@ -16,11 +16,36 @@ const internalValue = ref(props.payload);
 
 watch(internalValue, (v) => {emit('update:payload', v || '');});
 
+const verifyWithBackend = async (payload: string) => {
+  try {
+    const response = await fetch('/api/verify-altcha/', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ payload })
+    });
+
+    const result = await response.json();
+    if (result.success) {
+      console.log('Altcha vérifié côté serveur.');
+    } else {
+      console.warn('Échec de la vérification Altcha côté serveur.');
+      internalValue.value = '';
+    }
+  } catch (error) {
+    console.error('Erreur côté client pendant la vérification Altcha :', error);
+    internalValue.value = '';
+  }
+};
+
+
 const onStateChange = (ev: CustomEvent | Event) => {
   if ('detail' in ev) {
     const { payload, state } = ev.detail;
     if (state === 'verified' && payload) {
       internalValue.value = payload;
+      verifyWithBackend(payload);
     } else {
       internalValue.value = '';
     }

@@ -16,7 +16,8 @@
     "baseUrl": ".",
     "paths": {
       "@ontheroadagain/ui": ["../libs/ui/src"],
-      "@ontheroadagain/auth": ["../libs/auth/src"]
+      "@ontheroadagain/auth": ["../libs/auth/src"],
+      "@ontheroadagain/map": ["../libs/map/src"]
     }
   },
   "include": ["src/**/*.ts", "src/**/*.tsx", "src/**/*.vue",
