@@ -5,10 +5,10 @@ import MyMarkerComponent from "./components/route/RouteMarker.vue";
 
 export class Map_custom extends Map {
   routes: Route[];
-  routes: Point[];
-  routePointsRef: Ref<any[]>;
+  routePointsRef: Ref<any[]> | undefined;
+  points: Point[];
 
-  constructor(routePointsRef: Ref<any[]>) {
+  constructor(routePointsRef?: Ref<any[]>) {
     super({
       container: 'map',
       style: 'https://api.maptiler.com/maps/streets-v2/style.json?key=AkDXKRSgsoWbmunH5eGo',
@@ -20,18 +20,20 @@ export class Map_custom extends Map {
     this.routePointsRef = routePointsRef;
   }
   addPoint(coord: LngLatLike) {
-    const marker = new Point(coord, this, (e) => {this.local_save});
+    const marker = new Point(coord, this, () => {this.local_save});
     this.points.push(marker);
     this.local_save();
   }
   newRoute() {
-    const r = new Route(this, this.routePointsRef);
-    this.routes.push(r);
-    return r;
+	if (this.routePointsRef) {
+		const r = new Route(this, this.routePointsRef);
+		this.routes.push(r);
+		return r;
+	}
   }
   local_save(){
     const simplifiedPoints = this.points.map(p => ({
-      lngLat: p.marker.getLngLat(), // ou p.coord si tu stockes ça directement
+      lngLat: p.getLngLat(), // ou p.coord si tu stockes ça directement
     }));
     localStorage.setItem('points', JSON.stringify(simplifiedPoints));
   }
@@ -45,10 +47,7 @@ export class Map_custom extends Map {
       });
     }
   }
-
-
-
-
+}
 
 
 // Point personnalisé avec composant Vue monté dynamiquement
@@ -75,7 +74,7 @@ export class Route {
 	pointsRef: Ref<LngLatLike[]>;
 	markers: Point[];
 	bounds: LngLatBounds;
-	constructor(map: any, pointsRef: Ref<never[], never[]>) {
+	constructor(map: any, pointsRef: Ref<any[], any[]>) {
 		this.map = map;
 		this.pointsRef = pointsRef;
 		this.markers = [];
