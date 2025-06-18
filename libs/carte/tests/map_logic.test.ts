@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
-import { Map_custom, Point } from './map_logic';
+import { Map_custom, Point } from '../src/map_elements';
 
 // Simuler localStorage dans un environnement JSDOM
 beforeEach(() => {
@@ -19,8 +19,8 @@ describe('Map_custom local storage', () => {
     map2.local_load();
 
     expect(map2.points.length).toBe(2);
-    expect(map2.points[0].coord).toEqual([1.23, 4.56]);
-    expect(map2.points[1].coord).toEqual([7.89, 0.12]);
+    expect(map2.points[0].getLngLat()).toEqual([1.23, 4.56]);
+    expect(map2.points[1].getLngLat()).toEqual([7.89, 0.12]);
   });
 
   it('should store valid JSON in localStorage', () => {
