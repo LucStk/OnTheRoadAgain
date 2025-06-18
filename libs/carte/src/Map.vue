@@ -1,36 +1,57 @@
-<template>
+<!-- script classique pour la classe -->
+<script lang="ts">
+import { Map } from 'maplibre-gl';
+import { Route } from './js/point';
+import type { Ref } from 'vue';
 
+class Map_custom extends Map {
+  routes: Route[];
+  routePointsRef: Ref<any[]>;
+
+  constructor(routePointsRef: Ref<any[]>) {
+    super({
+      container: 'map',
+      style: 'https://api.maptiler.com/maps/streets-v2/style.json?key=AkDXKRSgsoWbmunH5eGo',
+      center: [-4.49993133544922, 48.41040274663766],
+      zoom: 13,
+    });
+
+    this.routes = [];
+    this.routePointsRef = routePointsRef;
+  }
+
+  newRoute() {
+    const r = new Route(this, this.routePointsRef);
+    this.routes.push(r);
+    return r;
+  }
+}
+</script>
+
+<script setup lang="ts">
+  import { onMounted, ref, type Ref } from 'vue';
+
+  const routePoints = ref([]);
+
+  onMounted(() => {
+    const map = new Map_custom(routePoints);
+
+    map.on('load', () => {
+      map.newRoute();
+    });
+  });
+</script>
+
+<template>
   <div id="map" ></div>
   <!-- <RouteBar /> -->
 </template>
-
-<script setup lang="ts">
-  import {Map_custom} from './js/map.ts'
-  import { ref, onMounted } from 'vue'
-
-  const routePoints = ref([]); // 🔁 partagé avec Route
-    /*
-  const road_data = inject('road')
-*/
-  onMounted(() => {
-    // ── 1) Instanciation de la map / stockage dans refmap ──
-    const map = new Map_custom(routePoints);
-
-    // ── 2) Quand le style est chargé, on crée une Route et on pose 2 points ──
-    map.on('load', () => {
-      const route = map.newRoute();
-    });
-  });
-  
-  </script>
-
-
 
 <style lang="scss">
   @import "maplibre-gl/dist/maplibre-gl.css";
 
   #map{
-    height: 100%;
+    height: 800px;
   }
 
   .coordinates {
