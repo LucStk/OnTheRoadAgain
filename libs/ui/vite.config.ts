@@ -11,7 +11,13 @@ export default defineConfig({
     VueRouter({
       dts: './src/types/typed-router.d.ts'
     }),
-    vue(),
+    vue({
+    template: {
+      compilerOptions: {
+        isCustomElement: (tag) => tag === 'altcha-widget' // Pour altcha
+      }
+    }
+    }),
     tsconfigPaths(),
     tailwindcss(),
   ],

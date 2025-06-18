@@ -56,13 +56,7 @@
 
     <!-- CAPTCHA (simple question anti-bot) -->
     <div class="input-floating w-full">
-      <input
-        v-model="form.captcha"
-        type="text"
-        placeholder="Combien font 3 + 4 ?"
-        class="input w-full"
-        :class="{ 'border-red-500': errors.captcha }"
-      />
+      <Altcha/>
       <label class="input-floating-label">Captcha</label>
       <p v-if="errors.captcha" class="helper-text text-red-500 text-sm">{{ errors.captcha }}</p>
     </div>
@@ -80,6 +74,7 @@ definePage({
 import { reactive } from 'vue'
 import { useAuthStore, api } from '@ontheroadagain/auth'
 import router from "../router"
+import Altcha from "../components/Altcha.vue"
 
 const form = reactive({
   username: '',
