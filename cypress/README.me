@@ -1,0 +1,9 @@
+The following configuration options enable Cypress to execute its postinstall script so it can install the Cypress binary into the binary cache. If these configuration options are not set, then Cypress may skip the postinstall script execution and Cypress will not run.
+The pnpm side effects cache uses and caches the results of (pre/post)install hooks and is not compatible with Cypress' own caching. Disable the pnpm side effects cache, for example using the following command, executed in the root of your Cypress project:
+
+pnpm config set side-effects-cache false --location project
+
+pnpm@10.0.0 and above require allowlisting cypress. Refer to the pnpm settings documentation for additional information. In pnpm@10.4.0 and above, the CLI add option --allow-build can be used, for example:
+
+pnpm --allow-build=cypress add --save-dev cypress
+

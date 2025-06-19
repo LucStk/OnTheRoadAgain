@@ -4,22 +4,16 @@ import './main.css';
 import "flyonui/flyonui";
 
 import { createRouter, createWebHistory } from 'vue-router'
-import { routes,handleHotUpdate } from 'vue-router/auto-routes'
 
 import { useAuthStore, pinia_auth } from '@ontheroadagain/auth'
+import {routes} from '@ontheroadagain/ui'
 
+console.log(routes)
 const router = createRouter({
   history: createWebHistory(),
-  // pass the generated routes written by the plugin 🤖
   routes,
 })
-if (import.meta.hot) {
-  handleHotUpdate(router)
-}
 
-router.afterEach(async (to, from, failure) => {
-  if (!failure) setTimeout(() => window.HSStaticMethods.autoInit(), 100);
-});
 
 const app = createApp(App)
 app.use(router)
