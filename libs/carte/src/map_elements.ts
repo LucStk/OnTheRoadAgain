@@ -8,7 +8,7 @@ export class Map_custom extends Map {
   routePointsRef: Ref<any[]> | undefined;
   points: Point[];
 
-  constructor(routePointsRef?: Ref<any[]>) {
+  constructor() {
     super({
       container: 'map',
       style: 'https://api.maptiler.com/maps/streets-v2/style.json?key=AkDXKRSgsoWbmunH5eGo',
@@ -17,7 +17,6 @@ export class Map_custom extends Map {
     });
     this.routes = [];
     this.points = [];
-    this.routePointsRef = routePointsRef;
   }
   addPoint(coord: LngLatLike) {
     const marker = new Point(coord, this, () => {this.local_save});
