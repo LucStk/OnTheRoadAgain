@@ -1,6 +1,6 @@
 <script setup lang="ts">
-    import {logout} from '@ontheroadagain/auth'
-    import { useAuthStore } from '@ontheroadagain/auth';
+    import {logout} from '@repo/auth'
+    import { useAuthStore } from '@repo/auth';
     const auth = useAuthStore();
 </script>
 
