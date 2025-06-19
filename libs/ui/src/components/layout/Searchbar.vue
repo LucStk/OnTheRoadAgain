@@ -22,9 +22,14 @@
 
 <script setup lang="ts">
 import { ref } from 'vue';
+import axios from 'axios';
 
 const query = ref('');
-const suggestions = ref([]);
+type Suggestion = {
+  description: string;
+}
+const suggestions = ref<Suggestion[]>([]);
+
 
 // Fetch place suggestions from the proxy
 const fetchPlaceSuggestions = async () => {
@@ -46,7 +51,7 @@ const fetchPlaceSuggestions = async () => {
   }
 };
 
-const selectSuggestion = (suggestion) => {
+const selectSuggestion = (suggestion : Suggestion) => {
   query.value = suggestion.description;
   suggestions.value = [];
   // Optionally, take further actions, like focusing the map on this location

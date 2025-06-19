@@ -21,4 +21,10 @@ export default defineConfig({
     tsconfigPaths(),
     tailwindcss(),
   ],
+  build: {
+    rollupOptions: {
+      external: ['cropperjs/dist/cropper.css','flatpickr/dist/flatpickr.css'],
+      
+    }
+  }
 })

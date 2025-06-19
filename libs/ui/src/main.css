@@ -1,7 +1,12 @@
 @import "tailwindcss";
 @plugin "flyonui";
 @import "flyonui/variants.css";
+
+/*@import 'cropperjs/dist/cropper.css';
+@import 'flatpickr/dist/flatpickr.css';*/
 @plugin "@iconify/tailwind4";
+
+
 html, body, #app {
   margin: 0;
   padding: 0;

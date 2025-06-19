@@ -1,11 +1,10 @@
 <script setup lang="ts">
 import { ref, watch, nextTick } from 'vue'
-import { useAuthStore, api } from '@ontheroadagain/auth'
+import { useAuthStore, api } from '@repo/auth'
 import flatPickr from 'vue-flatpickr-component'
 import VueCropperImport from 'vue-cropperjs'
 
-import 'cropperjs/dist/cropper.css'
-import 'flatpickr/dist/flatpickr.css'
+
 
 definePage({ meta: { requiresAuth: true } })
 
@@ -83,7 +82,6 @@ async function handleUpdate() {
 
   try {
     const formData = new FormData()
-    let v = date_naissance.value ? date_naissance.value.toISOString().split('T')[0] : ''
 
     formData.append('date_naissance', date_naissance.value ? date_naissance.value.toISOString().split('T')[0] : '')
     formData.append('bio', bio.value)

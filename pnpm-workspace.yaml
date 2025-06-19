@@ -1,8 +1,12 @@
 packages:
   - libs/**
   - apps/**
-  - tools/**
 
 ignoredBuiltDependencies:
   - '@tailwindcss/oxide'
   - esbuild
+
+onlyBuiltDependencies:
+  - cypress
+
+sideEffectsCache: false

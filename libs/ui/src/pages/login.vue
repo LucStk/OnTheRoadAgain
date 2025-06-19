@@ -50,7 +50,7 @@
     meta: {requiresGuest: true,},
   })
   import { ref } from 'vue'
-  import { useAuthStore } from '@ontheroadagain/auth'
+  import { useAuthStore } from '@repo/auth'
   import router from '../router';
 
   const auth   = useAuthStore();

@@ -13,7 +13,7 @@ if (import.meta.hot) {
 }
 
 router.beforeEach(globalMiddleware)
-router.afterEach(async (to, from, failure) => {
+router.afterEach(async (_to, _from, failure) => {
   if (!failure) setTimeout(() => window.HSStaticMethods.autoInit(), 100);
 });
 

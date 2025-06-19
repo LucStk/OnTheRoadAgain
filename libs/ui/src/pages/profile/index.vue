@@ -28,13 +28,12 @@
   definePage({
     meta: {requiresAuth: true,},
   })
-  import { ref } from 'vue'
-  import { useAuthStore } from '@ontheroadagain/auth'
+  import { useAuthStore } from '@repo/auth'
 
   const auth = useAuthStore();
 
-  const error = ref(null)
-  const loading = ref(false)
+  //const error = ref(null)
+  //const loading = ref(false)
   //Dans le cas où l'utilisateur est bien connecté mes ces informations ne sont pas 
   // dans l'objet auth.ts (ne devrait pas arriver mais tout de même)
 </script>

@@ -15,9 +15,9 @@
     "allowJs": true,
     "baseUrl": ".",
     "paths": {
-      "@ontheroadagain/ui": ["../libs/ui/src"],
-      "@ontheroadagain/auth": ["../libs/auth/src"],
-      "@ontheroadagain/map": ["../libs/map/src"]
+      "@repo/ui": ["../libs/ui/src"],
+      "@repo/auth": ["../libs/auth/src"],
+      "@repo/map": ["../libs/map/src"]
     }
   },
   "include": ["src/**/*.ts", "src/**/*.tsx", "src/**/*.vue",

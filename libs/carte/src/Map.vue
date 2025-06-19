@@ -1,6 +1,6 @@
 <script setup lang="ts">
-  import { onMounted, ref, type Ref } from 'vue';
-  import { Route, Point , Map_custom} from './map_elements';
+  import { onMounted} from 'vue';
+  import {Map_custom} from './map_elements';
 
   onMounted(() => {
     const map = new Map_custom();

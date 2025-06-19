@@ -72,7 +72,7 @@ definePage({
 })
 
 import { reactive } from 'vue'
-import { useAuthStore, api } from '@ontheroadagain/auth'
+import { useAuthStore, api } from '@repo/auth'
 import router from "../router"
 import Altcha from "../components/Altcha.vue"
 

@@ -1,9 +1,9 @@
 // router/middleware.ts
 import type { NavigationGuardNext, RouteLocationNormalized } from 'vue-router'
-import { useAuthStore } from '@ontheroadagain/auth';
+import { useAuthStore } from '@repo/auth';
 
 
-export async function globalMiddleware(to: RouteLocationNormalized, from: RouteLocationNormalized, next: NavigationGuardNext) {
+export async function globalMiddleware(to: RouteLocationNormalized, _from: RouteLocationNormalized, next: NavigationGuardNext) {
   const auth = useAuthStore();
   const needsAuth = to.meta.requiresAuth;
   const guestOnly = to.meta.requiresGuest;

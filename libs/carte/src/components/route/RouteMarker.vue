@@ -21,20 +21,20 @@
 </template>
 
 <script setup lang="ts">
-    import { ref } from 'vue';
+    //import { ref } from 'vue';
 
-    const IndexStore = ref(0);
-
+    //const IndexStore = ref(0);
+    /*
     const props = defineProps({
       index: {
         type: Number,
         required: true,
       }
     });
-
+    
     const handleClick = () => {
         console.log("Clicked marker:", props.index);
-    };
+    };*/
 </script>
 
 <style scoped>

@@ -37,50 +37,69 @@
 </template>
 
 <script setup lang="ts">
-defineProps({modelValue: String // base64 ou URL d'image
-})
 import { ref } from 'vue'
-import VueCropper from 'vue-cropper'
+import VueCropper from 'vue-cropperjs'
 
 const emit = defineEmits(['update:modelValue'])
 
-const cropper = ref(null)
-const input = ref(null)
-const imgSrc = ref('')
+type CropperInstance = {
+    replace: (url: string) => void
+    getCroppedCanvas: () => HTMLCanvasElement | null
+}
+
+type CropperComponent = {
+  cropper: CropperInstance
+} | null
+
+const cropper = ref<CropperComponent>(null)
+
+const input = ref<HTMLInputElement | null>(null)
+const imgSrc = ref<string>('') // pas `null` ni `ArrayBuffer`
 const cropImg = ref('')
 
 // Affiche le file picker
 function showFileChooser() {
-  input.value.click()
+  input.value?.click()
 }
 
+
 // Charge et affiche l'image dans le cropper
-function loadImage(file) {
+function loadImage(file: Blob) {
   if (!file || !file.type.startsWith('image/')) {
     alert('Veuillez sélectionner un fichier image valide.')
     return
   }
   const reader = new FileReader()
   reader.onload = (event) => {
-    imgSrc.value = event.target.result
-    cropper.value.replace(event.target.result)
+    const result = event.target?.result
+    if (typeof result === 'string') {
+      imgSrc.value = result
+      cropper.value?.cropper.replace(result)
+    }
   }
   reader.readAsDataURL(file)
 }
 
 // Gère l'upload
-function setImage(event) {
-  loadImage(event.target.files[0])
+function setImage(event: Event) {
+  const target = event.target as HTMLInputElement
+  if (target.files && target.files[0]) {
+    loadImage(target.files[0])
+  }
 }
 
-// Drag & Drop
-function handleDrop(event) {
-  loadImage(event.dataTransfer.files[0])
+function handleDrop(event: DragEvent) {
+  event.preventDefault() // important pour empêcher le comportement par défaut (ex: ouvrir le fichier)
+  
+  const files = event.dataTransfer?.files
+  if (files && files.length > 0) {
+    loadImage(files[0])
+  }
 }
 
 // Crop et émet au parent
 function cropImage() {
-  const canvas = cropper.value.getCroppedCanvas()
+  const canvas = cropper.value?.cropper.getCroppedCanvas()
   if (canvas) {
     const cropped = canvas.toDataURL()
     cropImg.value = cropped

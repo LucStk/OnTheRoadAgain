@@ -5,8 +5,8 @@ import "flyonui/flyonui";
 
 import { createRouter, createWebHistory } from 'vue-router'
 
-import { useAuthStore, pinia_auth } from '@ontheroadagain/auth'
-import {routes} from '@ontheroadagain/ui'
+import { useAuthStore, pinia_auth } from '@repo/auth'
+import {routes} from '@repo/ui'
 
 console.log(routes)
 const router = createRouter({
@@ -19,5 +19,5 @@ const app = createApp(App)
 app.use(router)
 app.use(pinia_auth);
 app.mount('#app')
-const auth = useAuthStore()
+useAuthStore()
 
