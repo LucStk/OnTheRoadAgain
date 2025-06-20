@@ -3,6 +3,6 @@
   "include": ["vite.config.ts",
               "src/types/typed-router.d.ts",
             "src"
-          ]
+          ],
 }
 // {"src/**/*.ts", "src/**/*.tsx", "src/**/*.vue", "src/*.ts", "src/*.tsx", "src/*.vue","src/types"}
