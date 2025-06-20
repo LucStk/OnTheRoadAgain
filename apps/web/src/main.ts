@@ -1,21 +1,13 @@
 import { createApp } from 'vue'
-import App from './App.vue'
+import {App_UI} from '@repo/ui'
 import './main.css';
 import "flyonui/flyonui";
 
-import { createRouter, createWebHistory } from 'vue-router'
-
 import { useAuthStore, pinia_auth } from '@repo/auth'
-import {routes} from '@repo/ui'
-
-console.log(routes)
-const router = createRouter({
-  history: createWebHistory(),
-  routes,
-})
+import {router} from '@repo/ui'
 
 
-const app = createApp(App)
+const app = createApp(App_UI)
 app.use(router)
 app.use(pinia_auth);
 app.mount('#app')

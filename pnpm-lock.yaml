@@ -36,9 +36,6 @@ importers:
       '@iconify/tailwind4':
         specifier: ^1.0.6
         version: 1.0.6(tailwindcss@4.1.10)
-      '@repo/tailwindcss-config':
-        specifier: workspace:*
-        version: link:../../libs/tailwindcss-config
       '@repo/typescript-config':
         specifier: workspace:*
         version: link:../../libs/typescript-config
@@ -183,6 +180,9 @@ importers:
       axios:
         specifier: ^1.10.0
         version: 1.10.0
+      flyonui:
+        specifier: ^2.2.0
+        version: 2.2.0
       vue:
         specifier: ^3.5.13
         version: 3.5.17(typescript@5.8.3)
@@ -202,6 +202,9 @@ importers:
       '@repo/typescript-config':
         specifier: workspace:*
         version: link:../typescript-config
+      '@tailwindcss/vite':
+        specifier: ^4.1.10
+        version: 4.1.10(vite@6.3.5(@types/node@24.0.3)(jiti@2.4.2)(lightningcss@1.30.1)(sass-embedded@1.89.2)(yaml@2.8.0))
       '@types/vue-cropperjs':
         specifier: ^4.1.6
         version: 4.1.6
@@ -211,6 +214,9 @@ importers:
       '@vue/tsconfig':
         specifier: ^0.7.0
         version: 0.7.0(typescript@5.8.3)(vue@3.5.17(typescript@5.8.3))
+      tailwindcss:
+        specifier: ^4.1.10
+        version: 4.1.10
       typescript:
         specifier: ~5.8.3
         version: 5.8.3

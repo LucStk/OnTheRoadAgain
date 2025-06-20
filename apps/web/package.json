@@ -16,7 +16,6 @@
     "vue-router": "^4.5.1"
   },
   "devDependencies": {
-    "@repo/tailwindcss-config": "workspace:*",
     "@repo/typescript-config": "workspace:*",
     "@iconify/json": "^2.2.349",
     "@iconify/tailwind4": "^1.0.6",
