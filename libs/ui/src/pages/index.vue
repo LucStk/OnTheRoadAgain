@@ -5,4 +5,5 @@ import Navbar from '../components/layout/Navbar.vue';
 
 <template>
   <Navbar />
+  <div class="text-xl btn"> hello</div>
 </template>

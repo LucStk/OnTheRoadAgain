@@ -1,6 +1,6 @@
 @import "tailwindcss";
 
-/*
+
 @import "flyonui/flyonui";
 @import "flyonui/variants.css";
 @plugin "@iconify/tailwind4";
@@ -10,4 +10,4 @@
   --blue-1000: #2a8af6;
   --purple-1000: #a853ba;
   --red-1000: #e92a67;
-}*/
+}
