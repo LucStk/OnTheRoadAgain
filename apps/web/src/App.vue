@@ -6,7 +6,6 @@
     <App_UI />
 
   </div>
-
 </template>
 
 <script setup lang="ts">

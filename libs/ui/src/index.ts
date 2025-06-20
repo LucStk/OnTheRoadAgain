@@ -2,3 +2,4 @@
 
 //export default routes
 export { default as App_UI } from './App_UI.vue'
+export { default as router } from './router'
