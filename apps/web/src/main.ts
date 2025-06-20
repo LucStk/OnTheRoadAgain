@@ -4,8 +4,26 @@ import './main.css';
 import "flyonui/flyonui";
 
 import { useAuthStore, pinia_auth } from '@repo/auth'
-import {router} from '@repo/ui'
+import {buildRouter} from '@repo/ui'
 
+import { routes as allRoutes } from 'vue-router/auto-routes'
+
+function overrideRoutes(routes: any[]) {
+  // Par exemple, filtre la route /home de libs/ui
+  // puis injecte ta version locale
+  const filtered = routes.filter(r => r.path !== '/')
+
+  // Ajoute ta propre route pour /home (par exemple)
+  filtered.push({
+    path: '/',
+    component: () => import('./pages/index.vue'),
+  })
+
+  return filtered
+}
+
+const routes = overrideRoutes(allRoutes)
+const router = buildRouter(routes)
 
 const app = createApp(App_UI)
 app.use(router)

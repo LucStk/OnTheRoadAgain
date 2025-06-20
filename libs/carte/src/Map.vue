@@ -16,7 +16,6 @@
 
 <template>
   <div id="map" ></div>
-  <!-- <RouteBar /> -->vb  
 </template>
 
 <style lang="scss">

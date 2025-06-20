@@ -26,7 +26,6 @@
     "vue-router": "^4.5.1"
   },
   "devDependencies": {
-    "@repo/tailwindcss-config": "workspace:*",
     "@repo/typescript-config": "workspace:*",
     "@tailwindcss/vite": "^4.1.10",
     "@types/vue-cropperjs": "^4.1.6",

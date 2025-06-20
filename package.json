@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev:ui": "pnpm --filter ./apps/web dev",
+    "dev:web": "pnpm --filter ./apps/web dev",
+    "dev:ui": "pnpm --filter ./libs/ui dev",
     "dev": "turbo run dev",
     "lint": "turbo run lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
