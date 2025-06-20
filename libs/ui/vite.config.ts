@@ -19,7 +19,7 @@ export default defineConfig({
     }),
     tsconfigPaths(),
   ],
-  /*
+  
   server: {
     fs: {
       allow: [
@@ -27,7 +27,7 @@ export default defineConfig({
         '../libs/tailwindcss-config', // autorise accès explicite
       ]
     }
-  },*/
+  },/**/
   build: {
     rollupOptions: {
       external: ['cropperjs/dist/cropper.css','flatpickr/dist/flatpickr.css'],

@@ -5,6 +5,7 @@ import "@repo/tailwindcss-config/shared-styles.css"
 import router from './router'
 
 import { useAuthStore, pinia_auth } from '@repo/auth'
+import "@repo/tailwindcss-config/flyonui"
 
 const app = createApp(App)
 app.use(router)
