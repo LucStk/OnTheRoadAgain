@@ -19,6 +19,14 @@ export default defineConfig({
     }),
     tsconfigPaths(),
   ],
+  server: {
+    fs: {
+      allow: [
+        '..', // autorise accès au dossier parent (libs/, node_modules/, etc.)
+        '../libs/tailwindcss-config', // autorise accès explicite
+      ]
+    }
+  },
   build: {
     rollupOptions: {
       external: ['cropperjs/dist/cropper.css','flatpickr/dist/flatpickr.css'],
