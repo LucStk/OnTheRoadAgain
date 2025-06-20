@@ -4,7 +4,7 @@
   "version": "0.0.0",
   "type": "module",
   "main": "src/index.ts",
-    "files": [
+  "files": [
     "dist"
   ],
   "scripts": {
@@ -22,14 +22,11 @@
     "vue-router": "^4.5.1"
   },
   "devDependencies": {
-    "@iconify/json": "^2.2.349",
-    "@iconify/tailwind4": "^1.0.6",
-    "@tailwindcss/vite": "^4.1.10",
+    "@repo/tailwindcss-config": "workspace:*",
+    "@repo/typescript-config": "workspace:*",
     "@types/vue-cropperjs": "^4.1.6",
     "@vitejs/plugin-vue": "^5.2.3",
     "@vue/tsconfig": "^0.7.0",
-    "flyonui": "^2.2.0",
-    "tailwindcss": "^4.1.10",
     "typescript": "~5.8.3",
     "unplugin-vue-router": "^0.12.0",
     "vite": "^6.3.5",

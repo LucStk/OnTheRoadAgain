@@ -1,7 +1,8 @@
 {
-  "files": [],
-  "references": [
-    { "path": "./tsconfig.app.json" },
-    { "path": "./tsconfig.node.json" },
-  ],
+  "extends": "@repo/typescript-config/base.json",
+  "include": ["vite.config.ts",
+              "src/types/typed-router.d.ts",
+            "src"
+          ]
 }
+// {"src/**/*.ts", "src/**/*.tsx", "src/**/*.vue", "src/*.ts", "src/*.tsx", "src/*.vue","src/types"}

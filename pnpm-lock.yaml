@@ -36,6 +36,12 @@ importers:
       '@iconify/tailwind4':
         specifier: ^1.0.6
         version: 1.0.6(tailwindcss@4.1.10)
+      '@repo/tailwindcss-config':
+        specifier: workspace:*
+        version: link:../../libs/tailwindcss-config
+      '@repo/typescript-config':
+        specifier: workspace:*
+        version: link:../../libs/typescript-config
       '@tailwindcss/vite':
         specifier: ^4.1.10
         version: 4.1.10(vite@6.3.5(@types/node@24.0.3)(jiti@2.4.2)(lightningcss@1.30.1)(sass-embedded@1.89.2)(yaml@2.8.0))
@@ -135,6 +141,34 @@ importers:
         specifier: ^2.2.8
         version: 2.2.10(typescript@5.8.3)
 
+  libs/tailwindcss-config:
+    dependencies:
+      '@tailwindcss/postcss':
+        specifier: ^4.1.10
+        version: 4.1.10
+    devDependencies:
+      '@iconify/json':
+        specifier: ^2.2.349
+        version: 2.2.349
+      '@iconify/tailwind4':
+        specifier: ^1.0.6
+        version: 1.0.6(tailwindcss@4.1.10)
+      flyonui:
+        specifier: ^2.2.0
+        version: 2.2.0
+      postcss:
+        specifier: ^8.5.6
+        version: 8.5.6
+      tailwindcss:
+        specifier: ^4.1.10
+        version: 4.1.10
+
+  libs/typescript-config:
+    devDependencies:
+      '@vue/tsconfig':
+        specifier: ^0.7.0
+        version: 0.7.0(typescript@5.8.3)(vue@3.5.16(typescript@5.8.3))
+
   libs/ui:
     dependencies:
       '@repo/auth':
@@ -159,15 +193,12 @@ importers:
         specifier: ^4.5.1
         version: 4.5.1(vue@3.5.16(typescript@5.8.3))
     devDependencies:
-      '@iconify/json':
-        specifier: ^2.2.349
-        version: 2.2.349
-      '@iconify/tailwind4':
-        specifier: ^1.0.6
-        version: 1.0.6(tailwindcss@4.1.10)
-      '@tailwindcss/vite':
-        specifier: ^4.1.10
-        version: 4.1.10(vite@6.3.5(@types/node@24.0.3)(jiti@2.4.2)(lightningcss@1.30.1)(sass-embedded@1.89.2)(yaml@2.8.0))
+      '@repo/tailwindcss-config':
+        specifier: workspace:*
+        version: link:../tailwindcss-config
+      '@repo/typescript-config':
+        specifier: workspace:*
+        version: link:../typescript-config
       '@types/vue-cropperjs':
         specifier: ^4.1.6
         version: 4.1.6
@@ -177,12 +208,6 @@ importers:
       '@vue/tsconfig':
         specifier: ^0.7.0
         version: 0.7.0(typescript@5.8.3)(vue@3.5.16(typescript@5.8.3))
-      flyonui:
-        specifier: ^2.2.0
-        version: 2.2.0
-      tailwindcss:
-        specifier: ^4.1.10
-        version: 4.1.10
       typescript:
         specifier: ~5.8.3
         version: 5.8.3
@@ -200,6 +225,10 @@ importers:
         version: 2.2.10(typescript@5.8.3)
 
 packages:
+
+  '@alloc/quick-lru@5.2.0':
+    resolution: {integrity: sha512-UrcABB+4bUrFABwbluTIBErXwvbsU/V7TZWfmbgJfbkwiBuziS9gxdODUyuiecfdGQ85jglMW6juS3+z5TsKLw==}
+    engines: {node: '>=10'}
 
   '@altcha/crypto@0.0.1':
     resolution: {integrity: sha512-qZMdnoD3lAyvfSUMNtC2adRi666Pxdcw9zqfMU5qBOaJWqpN9K+eqQGWqeiKDMqL0SF+EytNG4kR/Pr/99GJ6g==}
@@ -703,6 +732,9 @@ packages:
   '@tailwindcss/oxide@4.1.10':
     resolution: {integrity: sha512-v0C43s7Pjw+B9w21htrQwuFObSkio2aV/qPx/mhrRldbqxbWJK6KizM+q7BF1/1CmuLqZqX3CeYF7s7P9fbA8Q==}
     engines: {node: '>= 10'}
+
+  '@tailwindcss/postcss@4.1.10':
+    resolution: {integrity: sha512-B+7r7ABZbkXJwpvt2VMnS6ujcDoR2OOcFaqrLIo1xbcdxje4Vf+VgJdBzNNbrAjBj/rLZ66/tlQ1knIGNLKOBQ==}
 
   '@tailwindcss/vite@4.1.10':
     resolution: {integrity: sha512-QWnD5HDY2IADv+vYR82lOhqOlS1jSCUUAmfem52cXAhRTKxpDh3ARX8TTXJTCCO7Rv7cD2Nlekabv02bwP3a2A==}
@@ -2619,6 +2651,8 @@ packages:
 
 snapshots:
 
+  '@alloc/quick-lru@5.2.0': {}
+
   '@altcha/crypto@0.0.1': {}
 
   '@ampproject/remapping@2.3.0':
@@ -3035,6 +3069,14 @@ snapshots:
       '@tailwindcss/oxide-wasm32-wasi': 4.1.10
       '@tailwindcss/oxide-win32-arm64-msvc': 4.1.10
       '@tailwindcss/oxide-win32-x64-msvc': 4.1.10
+
+  '@tailwindcss/postcss@4.1.10':
+    dependencies:
+      '@alloc/quick-lru': 5.2.0
+      '@tailwindcss/node': 4.1.10
+      '@tailwindcss/oxide': 4.1.10
+      postcss: 8.5.6
+      tailwindcss: 4.1.10
 
   '@tailwindcss/vite@4.1.10(vite@6.3.5(@types/node@24.0.3)(jiti@2.4.2)(lightningcss@1.30.1)(sass-embedded@1.89.2)(yaml@2.8.0))':
     dependencies:

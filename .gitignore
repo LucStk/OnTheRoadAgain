@@ -3,3 +3,5 @@
 
 libs/auth/node_modules
 .turbo
+libs/tailwindcss-config/node_modules
+libs/typescript-config/node_modules

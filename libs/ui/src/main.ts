@@ -1,7 +1,6 @@
 import { createApp } from 'vue'
 import App from './App.vue'
-import './main.css';
-import "flyonui/flyonui";
+import "@repo/tailwindcss-config/shared-styles.css"
 //import 'cropperjs/dist/cropper.css'
 import router from './router'
 
