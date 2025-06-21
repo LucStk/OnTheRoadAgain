@@ -9,14 +9,19 @@
     "dev": "turbo run dev",
     "lint": "turbo run lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
-    "build": "tsc && vite build"
+    "build": "tsc && vite build",
+    "story:dev": "histoire dev",
+    "story:build": "histoire build",
+    "story:preview": "histoire preview"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "packageManager": "pnpm@10.12.1",
   "devDependencies": {
+    "@histoire/plugin-vue": "1.0.0-alpha.2",
     "cypress": "^14.5.0",
+    "histoire": "1.0.0-alpha.2",
     "turbo": "^2.5.4"
   }
 }

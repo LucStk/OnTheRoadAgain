@@ -1,7 +1,8 @@
 <template>
-  <div class="btn"> Casenou</div>
+  <Navbar />
   <Map />
 </template>
 <script setup lang="ts">
 import {Map} from '@repo/carte'
+import {Navbar} from '@repo/ui'
 </script>
