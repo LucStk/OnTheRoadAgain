@@ -12,13 +12,11 @@ function overrideRoutes(routes: any[]) {
   // Par exemple, filtre la route /home de libs/ui
   // puis injecte ta version locale
   const filtered = routes.filter(r => r.path !== '/')
-
   // Ajoute ta propre route pour /home (par exemple)
   filtered.push({
     path: '/',
     component: () => import('./pages/index.vue'),
   })
-
   return filtered
 }
 
