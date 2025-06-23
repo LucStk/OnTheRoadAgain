@@ -23,6 +23,9 @@ importers:
 
   apps/web:
     dependencies:
+      '@headlessui/vue':
+        specifier: ^1.7.23
+        version: 1.7.23(vue@3.5.17(typescript@5.8.3))
       '@repo/auth':
         specifier: workspace:*
         version: link:../../libs/auth
@@ -60,9 +63,6 @@ importers:
       '@vue/tsconfig':
         specifier: ^0.7.0
         version: 0.7.0(typescript@5.8.3)(vue@3.5.17(typescript@5.8.3))
-      flyonui:
-        specifier: ^2.2.0
-        version: 2.2.0
       tailwindcss:
         specifier: ^4.1.10
         version: 4.1.10
@@ -155,6 +155,9 @@ importers:
 
   libs/ui:
     dependencies:
+      '@headlessui/vue':
+        specifier: ^1.7.23
+        version: 1.7.23(vue@3.5.17(typescript@5.8.3))
       '@repo/auth':
         specifier: workspace:*
         version: link:../auth
@@ -609,6 +612,12 @@ packages:
   '@floating-ui/utils@0.2.9':
     resolution: {integrity: sha512-MDWhGtE+eHw5JW7lq4qhc5yRLS11ERl1c7Z6Xd0a58DozHES6EnNNwUWbMiG4J9Cgj053Bhk8zvlhFYKVhULwg==}
 
+  '@headlessui/vue@1.7.23':
+    resolution: {integrity: sha512-JzdCNqurrtuu0YW6QaDtR2PIYCKPUWq28csDyMvN4zmGccmE7lz40Is6hc3LA4HFeCI7sekZ/PQMTNmn9I/4Wg==}
+    engines: {node: '>=10'}
+    peerDependencies:
+      vue: ^3.2.0
+
   '@histoire/app@1.0.0-alpha.2':
     resolution: {integrity: sha512-sGQ470fHS965pSFVtALY3sRkgBDQXzhnjshmR9gzIcqs3ZBCW4N1nyA6t7r3X++1cvgJ16ctWKQl/lFERwQLgA==}
 
@@ -946,6 +955,14 @@ packages:
     resolution: {integrity: sha512-QWnD5HDY2IADv+vYR82lOhqOlS1jSCUUAmfem52cXAhRTKxpDh3ARX8TTXJTCCO7Rv7cD2Nlekabv02bwP3a2A==}
     peerDependencies:
       vite: ^5.2.0 || ^6
+
+  '@tanstack/virtual-core@3.13.11':
+    resolution: {integrity: sha512-ORL6UyuZJ0D9X33LDR4TcgcM+K2YiS2j4xbvH1vnhhObwR1Z4dKwPTL/c0kj2Yeb4Yp2lBv1wpyVaqlohk8zpg==}
+
+  '@tanstack/vue-virtual@3.13.11':
+    resolution: {integrity: sha512-QPutNYlSATS0a2fmTEbMgaQkk/pe1p+39OJVbmQ5/l1d8Txe1IkOJeeweYXygmF1tnruCh6NKkt1kIIYDKwgVg==}
+    peerDependencies:
+      vue: ^2.7.0 || ^3.0.0
 
   '@types/chai@5.2.2':
     resolution: {integrity: sha512-8kB30R7Hwqf40JPiKhVzodJs2Qc1ZJ5zuT3uzw5Hq/dhNCl3G3l83jfpdI1e20BP348+fV7VIL/+FxaXkqBmWg==}
@@ -3497,6 +3514,11 @@ snapshots:
 
   '@floating-ui/utils@0.2.9': {}
 
+  '@headlessui/vue@1.7.23(vue@3.5.17(typescript@5.8.3))':
+    dependencies:
+      '@tanstack/vue-virtual': 3.13.11(vue@3.5.17(typescript@5.8.3))
+      vue: 3.5.17(typescript@5.8.3)
+
   '@histoire/app@1.0.0-alpha.2(vite@6.3.5(@types/node@24.0.3)(jiti@2.4.2)(lightningcss@1.30.1)(sass-embedded@1.89.2)(yaml@2.8.0))':
     dependencies:
       '@histoire/controls': 1.0.0-alpha.2(vite@6.3.5(@types/node@24.0.3)(jiti@2.4.2)(lightningcss@1.30.1)(sass-embedded@1.89.2)(yaml@2.8.0))
@@ -3852,6 +3874,13 @@ snapshots:
       '@tailwindcss/oxide': 4.1.10
       tailwindcss: 4.1.10
       vite: 6.3.5(@types/node@24.0.3)(jiti@2.4.2)(lightningcss@1.30.1)(sass-embedded@1.89.2)(yaml@2.8.0)
+
+  '@tanstack/virtual-core@3.13.11': {}
+
+  '@tanstack/vue-virtual@3.13.11(vue@3.5.17(typescript@5.8.3))':
+    dependencies:
+      '@tanstack/virtual-core': 3.13.11
+      vue: 3.5.17(typescript@5.8.3)
 
   '@types/chai@5.2.2':
     dependencies:

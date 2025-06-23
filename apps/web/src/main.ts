@@ -1,7 +1,6 @@
 import { createApp } from 'vue'
 import {App_UI} from '@repo/ui'
 import './main.css';
-import "flyonui/flyonui";
 
 import { useAuthStore, pinia_auth } from '@repo/auth'
 import {buildRouter} from '@repo/ui'

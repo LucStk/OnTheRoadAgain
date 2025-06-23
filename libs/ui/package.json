@@ -16,6 +16,7 @@
     ".": "./src/index.ts"
   },
   "dependencies": {
+    "@headlessui/vue": "^1.7.23",
     "@repo/auth": "workspace:*",
     "altcha": "^2.0.3",
     "axios": "^1.10.0",

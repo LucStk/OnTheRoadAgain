@@ -1,7 +1,6 @@
 import { createApp } from 'vue'
 import App from './App_UI.vue'
 import "./main.css"
-import "flyonui/flyonui";
 //import 'cropperjs/dist/cropper.css'
 import router from './router'
 

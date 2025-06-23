@@ -12,21 +12,21 @@
     "check-types": "tsc --noEmit"
   },
   "dependencies": {
+    "@headlessui/vue": "^1.7.23",
     "@repo/auth": "workspace:*",
-    "@repo/ui": "workspace:*",
     "@repo/carte": "workspace:*",
+    "@repo/ui": "workspace:*",
     "vue": "^3.5.13",
     "vue-router": "^4.5.1"
   },
   "devDependencies": {
-    "@repo/typescript-config": "workspace:*",
     "@iconify/json": "^2.2.349",
     "@iconify/tailwind4": "^1.0.6",
+    "@repo/typescript-config": "workspace:*",
     "@tailwindcss/vite": "^4.1.10",
     "@types/node": "^24.0.3",
     "@vitejs/plugin-vue": "^5.2.3",
     "@vue/tsconfig": "^0.7.0",
-    "flyonui": "^2.2.0",
     "tailwindcss": "^4.1.10",
     "typescript": "~5.8.3",
     "unplugin-vue-router": "^0.12.0",
