@@ -19,8 +19,11 @@
 
             <div class="avatar">
                 <div class="size-9.5 rounded-full">
+                    <span class="text-4xl icon-[solar--user-circle-bold-duotone]"></span>
+                    <!-- -
                     <img  v-if="auth.isUserLoaded && auth.photo_profil" :src="auth.photo_profil.value"></img>
                     <span v-else class="text-4xl icon-[solar--user-circle-bold-duotone]"></span>
+                    -->
                 </div>
             </div>
         </button>
@@ -36,8 +39,11 @@
         <li  class="dropdown-header gap-2">
             <div class="avatar">
                 <div class="size-9.5 rounded-full">
+                    <span class="text-4xl icon-[solar--user-circle-bold-duotone]"></span>
+                    <!--
                     <img v-if="auth.photo_profil" :src="auth.photo_profil.value"></img>
-                    <span v-else class="text-4xl icon-[solar--user-circle-bold-duotone]"></span>
+                    <span v-if="auth.photo_profil" class="text-4xl backdrop-blur-2xl icon-[solar--user-circle-bold-duotone]"></span>
+                    <span v-else class="text-4xl icon-[solar--user-circle-bold-duotone]"></span>-->
                 </div>
             </div>
             <div>

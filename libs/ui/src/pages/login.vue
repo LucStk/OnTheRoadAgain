@@ -68,7 +68,7 @@
     try {
       const success = await auth.login(email.value, password.value)
       if (success) {
-        //router.push('/profile')
+        router.push('/')
       } else {
         error.value = 'Nom d’utilisateur ou mot de passe incorrect.'
       }

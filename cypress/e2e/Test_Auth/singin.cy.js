@@ -25,7 +25,12 @@ context('Signin', () => {
     cy.get('#password').type(alice.password)
     cy.get('button[type="submit"]').click()
     cy.wait('@loginRequest').its('response.statusCode').should('eq', 200);
-    cy.url().should('include', '/profile')
     cy.getCookie('token').should('refresh');
+    cy.url().should('include', '/')
+    
+    // Vérifier que la navbar est bien updaté
+    cy.get('#dropdown-notification').click()
+    cy.get('#dropdown-notification-menu').should('be.visible')
+
   })
 })
