@@ -5,11 +5,11 @@
 
       <form @submit.prevent="handleLogin">
         <div class="mb-4">
-          <label class="block text-sm font-medium text-gray-700">Nom d'utilisateur</label>
+          <label class="block text-sm font-medium text-gray-700">Email</label>
           <input
-            v-model="username"
+            v-model="email"
             type="text"
-            id="username"
+            id="email"
             class="mt-1 text-black block w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
             autocomplete="username"
             required
@@ -17,7 +17,7 @@
         </div>
 
         <div class="mb-6">
-          <label class="block text-sm font-medium text-gray-700">Mot de passe</label>
+          <label class="block text-sm font-medium text-gray-700">Password</label>
           <input
             v-model="password"
             type="password"
@@ -51,11 +51,11 @@
   })
   import { ref } from 'vue'
   import { useAuthStore } from '@repo/auth'
-  import router from '../router';
+  //import router from '../router';
 
   const auth   = useAuthStore();
 
-  const username = ref('')
+  const email = ref('')
   const password = ref('')
   const error    = ref("")
   const loading  = ref(false)
@@ -65,9 +65,9 @@
     error.value = ""
 
     try {
-      const success = await auth.login(username.value, password.value)
+      const success = await auth.login(email.value, password.value)
       if (success) {
-        router.push('/profile')
+        //router.push('/profile')
       } else {
         error.value = 'Nom d’utilisateur ou mot de passe incorrect.'
       }
@@ -76,7 +76,5 @@
     }finally{
       loading.value = false
     }
-    
-
   }
 </script>

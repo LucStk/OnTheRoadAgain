@@ -1,8 +1,16 @@
 import axios from 'axios';
 import type { AxiosInstance } from 'axios';
+import createAuthRefreshInterceptor from 'axios-auth-refresh';
 
-export const api: AxiosInstance = axios.create({
+const api: AxiosInstance = axios.create({
   baseURL: 'http://localhost:8000/api/',
-  withCredentials: true
+  //withCredentials: true
 });
+import { requestInterceptor, refreshInterceptor } from './interceptors'
 
+api.interceptors.request.use(requestInterceptor)
+createAuthRefreshInterceptor(api, refreshInterceptor)
+
+
+
+export { api }

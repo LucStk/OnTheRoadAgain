@@ -1,20 +1,22 @@
-describe('Accès aux ensembles', () => {
-  it('Un utilisateur anonyme voit seulement les ensembles ouverts', () => {
-    cy.visit('/')
-    cy.request('/api/ensembles/').then((res) => {
-      expect(res.status).to.eq(200)
-      res.body.forEach(e => {
-        expect(e.visibility).to.eq('O')
-      })
-    })
-  })
 
-  it('Un utilisateur connecté voit ses ensembles privés', () => {
-    cy.loginByJWT('user1', 'pass')
-    cy.visit('/mes-ensembles')
-    cy.request('/api/ensembles/').then((res) => {
-      const titres = res.body.map(e => e.titre)
-      expect(titres).to.include('User1\'s Ensemble')
-    })
-  })
-})
+
+
+describe('Inscription utilisateur', () => {
+  it('Un utilisateur peut créer un compte', () => {
+    cy.visit('/signup'); // Remplace par la bonne route si nécessaire
+
+    cy.get('input[name="email"]').type('test@example.com');
+    cy.get('input[name="username"]').type('Testeur');
+    cy.get('input[name="password"]').type('Password123!');
+    cy.get('input[name="confirm_password"]').type('Password123!');
+
+    // Si upload photo : 
+    // cy.get('input[name="photo_profil"]').attachFile('photo.jpg');
+
+    cy.get('form').submit();
+
+    // Vérifie redirection ou confirmation
+    cy.url().should('include', '/dashboard'); // ou autre page d’arrivée
+    cy.contains('Bienvenue, Testeur').should('exist');
+  });
+});

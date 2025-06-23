@@ -26,7 +26,7 @@ describe('Axios interceptors', () => {
 
     const config = { headers: {} }
 
-    const { requestInterceptor } = await import('../src/intercepteur')
+    const { requestInterceptor } = await import('../src/interceptors')
     const newConfig = requestInterceptor(config as any)
 
     expect(newConfig.headers['Authorization']).toBe('Bearer my-access-token')
@@ -47,7 +47,7 @@ describe('Axios interceptors', () => {
       },
     }
 
-    const { refreshInterceptor } = await import('../src/intercepteur')
+    const { refreshInterceptor } = await import('../src/interceptors')
 
     await refreshInterceptor(failedRequest as any)
 
@@ -69,7 +69,7 @@ describe('Axios interceptors', () => {
       },
     }
 
-    const { refreshInterceptor } = await import('../src/intercepteur')
+    const { refreshInterceptor } = await import('../src/interceptors')
 
     await expect(refreshInterceptor(failedRequest as any)).rejects.toThrow('refresh failed')
     expect(auth.access).toBe('')

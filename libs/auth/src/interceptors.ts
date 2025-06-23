@@ -1,7 +1,6 @@
 import axios, {InternalAxiosRequestConfig,} from 'axios';
 import createAuthRefreshInterceptor from 'axios-auth-refresh';
 import { useAuthStore } from './auth_store'
-import {api} from "./api"
 
 
 // Intercepteur de requête : ajoute le token dynamiquement
@@ -43,6 +42,3 @@ export async function refreshInterceptor(failedRequest: any) {
     return Promise.reject(error)
   }
 }
-api.interceptors.request.use(requestInterceptor)
-createAuthRefreshInterceptor(api, refreshInterceptor)
-

@@ -1,13 +1,14 @@
 <template>
     <div class="dropdown relative inline-flex [--auto-close:inside] [--offset:8] [--placement:bottom-end]">
-    <button id="dropdown-scrollable" type="button" class="dropdown-toggle btn btn-text btn-circle dropdown-open:bg-base-content/10 size-10" aria-haspopup="menu" aria-expanded="false" aria-label="Dropdown">
+    <button id="dropdown-notification" type="button" class="dropdown-toggle btn btn-text btn-circle dropdown-open:bg-base-content/10 size-10" aria-haspopup="menu" aria-expanded="false" aria-label="Dropdown">
         <div class="indicator">
           <span class="indicator-item bg-error size-2 rounded-full"></span>
           <span class="icon-[tabler--bell] text-base-content size-5.5"></span>
         </div>
     </button>
 
-    <div class="dropdown-menu dropdown-open:opacity-100 hidden" role="menu" aria-orientation="vertical" aria-labelledby="dropdown-scrollable">
+    <div id="dropdown-notification-menu" 
+        class="dropdown-menu dropdown-open:opacity-100 hidden" role="menu" aria-orientation="vertical" aria-labelledby="dropdown-scrollable">
         <div class="dropdown-header justify-center">
             <h6 class="text-base-content text-base">Notifications</h6>
         </div>

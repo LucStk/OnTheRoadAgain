@@ -6,25 +6,26 @@
 
 
 <template>
-    <div class="dropdown relative 
+    <div id="dropdown-login" class="login dropdown relative 
                 inline-flex [--auto-close:inside] 
                 [--offset:8] [--placement:bottom-end]">
 
-    <button id="dropdown-scrollable" 
-            type="button" 
-            class="dropdown-toggle flex items-center" 
-            aria-haspopup="menu" 
-            aria-expanded="false" 
-            aria-label="Dropdown">
+        <button id="dropdown-btn" 
+                type="button" 
+                class="dropdown-toggle flex items-center" 
+                aria-haspopup="menu" 
+                aria-expanded="false" 
+                aria-label="Dropdown">
 
-        <div class="avatar">
-            <div class="size-9.5 rounded-full">
-                <img  v-if="auth.isUserLoaded && auth.photo_profil" :src="auth.photo_profil.value"></img>
-                <span v-else class="text-4xl icon-[solar--user-circle-bold-duotone]"></span>
+            <div class="avatar">
+                <div class="size-9.5 rounded-full">
+                    <img  v-if="auth.isUserLoaded && auth.photo_profil" :src="auth.photo_profil.value"></img>
+                    <span v-else class="text-4xl icon-[solar--user-circle-bold-duotone]"></span>
+                </div>
             </div>
-        </div>
-    </button>
-    <ul class="dropdown-menu 
+        </button>
+    <ul id="dropdown-login-menu"
+        class="dropdown-menu 
                 dropdown-open:opacity-100 
                 hidden min-w-60" 
         role="menu" 
@@ -60,7 +61,7 @@
     </template>
     <template v-else>
         <li class="dropdown-footer gap-2">
-            <a class="btn btn-base-100 btn-soft btn-block" href="login">
+            <a id="login-ref" class="btn btn-base-100 btn-soft btn-block" href="login">
             <span class="icon-[tabler--logout]"></span>
             Sign in
             </a>

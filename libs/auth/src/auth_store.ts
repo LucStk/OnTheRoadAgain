@@ -30,12 +30,12 @@ export const useAuthStore = defineStore("auth", () => {
   // utilisateur réactif champ par champ
   const user = reactive<User>(initialUser())
 
-  async function login(username: string, password: string): Promise<boolean> {
+  async function login(email: string, password: string): Promise<boolean> {
     try {
-        const res = await api.post<{ access: string }>('token/', {username,password});
-        console.log(res)
-        access.value = "modifié"//res.data.access;
-        console.log(access.value)
+        const data = {"email":email,"password":password};
+        const res = await api.post<{ access: string }>('token/', data);
+        access.value = res.data.access;
+        isUserLoaded.value = true
         await fetchUser();
         return true;
       } catch (err) {
