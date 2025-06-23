@@ -21,7 +21,7 @@ export function requestInterceptor(config: InternalAxiosRequestConfig) {
 
 // Intercepteur de réponse : refresh token si 401
 const plainAxios = axios.create({
-  baseURL: 'http://localhost:8000/api/',
+  baseURL: 'http://127.0.0.1:8000/api/',
   withCredentials: true,
 });
 export async function refreshInterceptor(failedRequest: any) {

@@ -51,9 +51,10 @@
   })
   import { ref } from 'vue'
   import { useAuthStore } from '@repo/auth'
-  //import router from '../router';
+  import { useRouter } from 'vue-router';
 
   const auth   = useAuthStore();
+  const router = useRouter();
 
   const email = ref('')
   const password = ref('')

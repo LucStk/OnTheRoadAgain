@@ -39,7 +39,7 @@ const fetchPlaceSuggestions = async () => {
   }
 
   try {
-    const response = await axios.get('http://localhost:3000/api/autocomplete', {  // Adjust the URL if your proxy is hosted elsewhere
+    const response = await axios.get('http://127.0.0.1:8000/api/autocomplete', {  // Adjust the URL if your proxy is hosted elsewhere
       params: {
         input: query.value,
       },
