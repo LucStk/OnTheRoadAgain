@@ -61,14 +61,12 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { useAuthStore } from '@repo/auth'
-import { useRouter } from 'vue-router'
 import { useUIStore } from '@repo/ui'
 import ButtonClose from "../layout/ButtonClose.vue";
 
 
 const auth = useAuthStore()
 const uistore = useUIStore()
-const router = useRouter()
 
 const email = ref('')
 const password = ref('')
@@ -83,7 +81,7 @@ async function handleLogin() {
   try {
     const success = await auth.login(email.value, password.value)
     if (success) {
-      router.push('/')
+      uistore.hideLoginModal()
     } else {
       error.value = 'Nom d’utilisateur ou mot de passe incorrect.'
     }

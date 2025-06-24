@@ -13,7 +13,7 @@ const uistore = useUIStore()
 
 <template>
   <Menu as="div" class="relative inline-flex">
-    <MenuButton class="flex items-center cursor-pointer" aria-label="Dropdown">
+    <MenuButton id="dropdown-login" class="flex items-center cursor-pointer" aria-label="Dropdown">
       <div class="avatar">
         <div class="size-9.5 rounded-full overflow-hidden bg-base-200">
           <img
@@ -32,6 +32,7 @@ const uistore = useUIStore()
     </MenuButton>
 
       <MenuItems
+      id="dropdown-login-menu"
         class="absolute mt-10 right-0 min-w-60 origin-top rounded-md bg-base-100 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none p-2 z-20"
       >
         <template v-if="auth.isUserLoaded">
@@ -79,7 +80,7 @@ const uistore = useUIStore()
         <template v-else>
           <MenuItem>
             <button
-              id="login"
+              id="login-button"
               class="btn btn-base-100 btn-soft btn-block flex items-center gap-2"
               @click="uistore.showLoginModal()"
                 >

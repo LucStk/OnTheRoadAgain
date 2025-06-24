@@ -7,7 +7,7 @@ import { useAuthStore } from './auth_store'
 export function requestInterceptor(config: InternalAxiosRequestConfig) {
   const auth = useAuthStore()
   const access = auth.access
-
+  if (!access) {return config; }
   // Vérifie si headers est bien de type AxiosHeaders
   if (config.headers && typeof config.headers.set === 'function') {
     config.headers.set('Authorization', `Bearer ${access}`);
@@ -24,8 +24,12 @@ const plainAxios = axios.create({
   baseURL: 'http://localhost:8000/api/',
   withCredentials: true,
 });
+
 export async function refreshInterceptor(failedRequest: any) {
-  const auth = useAuthStore() 
+  const auth = useAuthStore()
+  const access = auth.access
+  if (!access) {return }
+
   try {
     const response = await plainAxios.post<{ access: string }>('token/refresh/');
     const newAccess = response.data.access
