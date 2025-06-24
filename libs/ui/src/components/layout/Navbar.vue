@@ -3,7 +3,7 @@
               max-sm:rounded-box 
               max-sm:shadow-sm sm:border-b 
               border-base-content/25 
-              sm:z-1 relative">
+              sm:z-1 absolute">
 
     <button type="button" 
             class="btn btn-text max-sm:btn-square sm:hidden me-2" 

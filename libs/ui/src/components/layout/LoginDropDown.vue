@@ -1,15 +1,19 @@
 <script setup lang="ts">
 import { logout } from '@repo/auth'
 import { useAuthStore } from '@repo/auth'
+import { useUIStore } from '@repo/ui'
 import { Menu, MenuButton, MenuItems, MenuItem } from '@headlessui/vue'
 import { UserCircleIcon } from '@heroicons/vue/24/solid'
 
+
+
 const auth = useAuthStore()
+const uistore = useUIStore()
 </script>
 
 <template>
   <Menu as="div" class="relative inline-flex">
-    <MenuButton class="flex items-center" aria-label="Dropdown">
+    <MenuButton class="flex items-center cursor-pointer" aria-label="Dropdown">
       <div class="avatar">
         <div class="size-9.5 rounded-full overflow-hidden bg-base-200">
           <img
@@ -74,14 +78,15 @@ const auth = useAuthStore()
 
         <template v-else>
           <MenuItem>
-            <a
-              id="login-ref"
+            <button
+              id="login"
               class="btn btn-base-100 btn-soft btn-block flex items-center gap-2"
-              href="/login"
-            >
+              @click="uistore.showLoginModal()"
+                >
               <span class="icon-[tabler--logout]"></span>
               Sign in
-            </a>
+             
+            </button>
           </MenuItem>
         </template>
       </MenuItems>
