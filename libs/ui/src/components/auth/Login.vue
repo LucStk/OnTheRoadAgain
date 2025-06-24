@@ -6,31 +6,29 @@
     <div class="relative w-full max-w-sm p-8 bg-white rounded-md shadow-xl">
       
       <!-- Croix de fermeture -->
-      <button @click="uistore.hideLoginModal()" class="cursor-pointer absolute top-2 right-2 text-gray-500 hover:text-black text-xl font-bold">
-        ✖
-      </button>
+      <ButtonClose :onclick="() => uistore.hideLoginModal()"/>
 
       <form @submit.prevent="handleLogin">
         <div class="mb-4">
-          <label class="block text-sm font-medium text-gray-700">Email</label>
+          <label class="input-custom-label">Email</label>
           <input
             v-model="email"
             type="text"
             id="email"
-            class="mt-1 text-black block w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            class="input-custom"
             autocomplete="username"
             required
           />
         </div>
 
         <div class="mb-4">
-          <label class="block text-sm font-medium text-gray-700">Password</label>
+          <label class="input-custom-label">Password</label>
           <input
             v-model="password"
             :type="showPassword ? 'text' : 'password'"
             id="password"
             autocomplete="current-password"
-            class="mt-1 text-black block w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            class="input-custom"
             required
           />
           <div class="mt-2 text-sm">
@@ -65,6 +63,8 @@ import { ref } from 'vue'
 import { useAuthStore } from '@repo/auth'
 import { useRouter } from 'vue-router'
 import { useUIStore } from '@repo/ui'
+import ButtonClose from "../layout/ButtonClose.vue";
+
 
 const auth = useAuthStore()
 const uistore = useUIStore()
