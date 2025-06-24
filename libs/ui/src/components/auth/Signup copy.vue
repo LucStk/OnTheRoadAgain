@@ -1,19 +1,19 @@
-<template>
 
+<template>
   <Teleport to="body">
     <div v-show="uistore.showSignup" class="fixed inset-0 flex items-center justify-center bg-black/40 z-50 p-4">
       <div class="relative w-full max-w-2xl bg-white rounded-xl shadow-lg p-6 sm:p-8">
         <ButtonClose :onclick="() => uistore.hideSignupModal()"/>
 
         <h2 class="text-2xl font-semibold mb-6 text-center text-black">Créer un utilisateur</h2>
-        
-        <Form :validation-schema="validationSchema" @submit="onSubmit">
-          <InlineInput name= 'username'  label= 'Username' type = 'username' placeholder = 'User'/>
-          <InlineInput name= 'email'  label= 'Email' type = 'email' placeholder = 'example@example.com'/>
-          <InlineInput name= 'password'  label= 'password' type = 'password' placeholder = '***'/>
-          <InlineInput name= 'confirmpassword'  label= 'Confirm password' type = 'password' placeholder = ''/>
 
-          <div class="mt-5 flex flex-col md:flex-row md:items-center">
+        <Form @submit="onSubmit" :validation-schema="signupSchema" class="w-full">
+          <InlineInput name= 'username'  label= 'Username' type = 'text' placeholder = 'Jiji'/>
+          <InlineInput name= 'email'  label= 'Email' type = 'email' placeholder = 'example@example.com'/>
+          <InlineInputPassword />
+
+          <!-- Bouton -->
+          <div class="flex flex-col md:flex-row md:items-center">
             <div class="md:w-1/3"></div>
             <div class="md:w-2/3">
               <button
@@ -28,35 +28,41 @@
       </div>
     </div>
   </Teleport>
-
-
-
 </template>
 
-<script setup>
-import { Form, Field, ErrorMessage } from 'vee-validate';
-import { toTypedSchema } from '@vee-validate/zod';
-import * as zod from 'zod';
-import ButtonClose from "../layout/ButtonClose.vue";
-import InlineInput from "../layout/InlineInput.vue";
+<script setup lang="ts">
 
 import { useUIStore } from '@repo/ui'
+import { Form, useForm } from 'vee-validate'
+import { z } from 'zod'
+import { toTypedSchema } from '@vee-validate/zod'
+
+import ButtonClose from "../layout/ButtonClose.vue";
+import InlineInput from "../layout/InlineInput.vue";
+import InlineInputPassword from "../layout/InlineInputPassword.vue";
 
 const uistore = useUIStore()
 
-const validationSchema = toTypedSchema(
-  zod.object({
-    username : zod.string().min(1, { message: 'This is required' }),
-    email    : zod.string().min(1, { message: 'This is required' }).email({ message: 'Must be a valid email' }),
-    password : zod.string().min(1, { message: 'This is required' }).min(8, { message: 'Too short' }),
-  }).refine((data) => data.password === data.confirmpassword, {
-    path: ['confirmpassword'],
-    message: 'Les mots de passe ne correspondent pas',
-  })
-);
 
-async function onSubmit(values) {
-      const res = await api.post<{ access: string }>('signup/', {
+const signupSchema = z
+  .object({
+    username: z.string().min(1, 'Username est requis'),
+    email: z.string().email('Email invalide'),
+    password : z.string().min(6, 'Mot de passe requis'),
+  })
+
+const onSubmit = (values: any) => {
+  console.log('Formulaire valide', values)
+}
+
+
+  import { useRouter } from 'vue-router'
+import { useAuthStore, api } from '@repo/auth'
+const router = useRouter()
+  const auth = useAuthStore()
+  handleSubmit(async (values) => {
+  console.log('Formulaire valide', values)
+  const res = await api.post<{ access: string }>('signup/', {
     username: values.username,
     email: values.email,
     password: values.password,
@@ -65,6 +71,10 @@ async function onSubmit(values) {
   auth.isUserLoaded.value = true
   auth.access.value = res.data.access
   await auth.fetchUser()
-}
-
+  router.push('/profile')
+}*/
 </script>
+
+
+
+

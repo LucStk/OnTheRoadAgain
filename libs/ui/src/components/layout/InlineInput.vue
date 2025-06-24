@@ -19,9 +19,6 @@
 
 <script setup lang="ts">
 import { Field, ErrorMessage } from 'vee-validate'
-import { useForm } from 'vee-validate'
 
 defineProps<{  name: string, label: string, type: string, placeholder: string }>()
-const { handleSubmit } = useForm()  // <-- pass the `handleSubmit` method into the component props
-
 </script>

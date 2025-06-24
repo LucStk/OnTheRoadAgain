@@ -1,44 +1,72 @@
 <template>
   <div class="flex flex-col md:flex-row md:items-center gap-2">
-    <label for="password" class="input-custom-label-inline">
-      Password
-    </label>
+    <label for="password" class="input-custom-label-inline">Password</label>
     <div class="md:w-2/3 w-full">
       <Field
         name="password"
-        type="password"
+        :type="showPassword ? 'text' : 'password'"
         id="password"
         placeholder="••••••••"
         class="input-custom-inline"
         v-slot="{ field }"
       >
-        <input v-bind="field" class="input-custom-inline" />
+        <input v-bind="field" type="password" class="input-custom-inline" />
       </Field>
-
       <ErrorMessage name="password" class="text-red-500 text-sm mt-1" />
       <PasswordStrength :password="password" />
     </div>
   </div>
+
+  <div class="flex flex-col md:flex-row md:items-center gap-2">
+    <label for="confirmpassword" class="input-custom-label-inline">Confirm Password</label>
+    <div class="md:w-2/3 w-full">
+      <Field
+        name="confirmpassword"
+        :type="showPassword ? 'text' : 'password'"
+        id="confirmpassword"
+        placeholder="••••••••"
+        class="input-custom-inline"
+        v-slot="{ field }"
+      >
+        <input v-bind="field" type="password" class="input-custom-inline" />
+      </Field>
+      <ErrorMessage name="confirmpassword" class="text-red-500 text-sm mt-1" />
+    </div>
+  </div>
+
 </template>
 
 <script setup lang="ts">
-import { Field, ErrorMessage, useField } from 'vee-validate'
-import { ref, watch, computed, h } from 'vue'
+import { ref, computed, watch, h } from 'vue'
+import { Field, ErrorMessage, useForm, useField } from 'vee-validate'
+import { z } from 'zod'
+import { toTypedSchema } from '@vee-validate/zod'
 import zxcvbn from 'zxcvbn'
 
-// Réf externe
-const password = ref<string>('')
+// 🧪 Zod schema avec égalité entre les 2 champs
+const schema = z
+  .object({
+    password: z.string().min(1, 'Mot de passe requis'),
+    confirmpassword: z.string().min(1, 'Confirmation requise'),
+  })
+  .refine((data) => data.password === data.confirmpassword, {
+    path: ['confirmpassword'],
+    message: 'Les mots de passe ne correspondent pas',
+  })
 
-// Liaison avec vee-validate
-const { value } = useField('password')
+// Activation de vee-validate avec le schema
+useForm({
+  validationSchema: toTypedSchema(schema),
+})
 
-// Sync entre vee-validate et ta ref
-watch(value, 
-    (v) => {
-        (password.value = v as string)}
-)
+// Gestion du champ password pour le PasswordStrength
+const password = ref('')
+const showPassword = ref(false)
+const { value: passwordField } = useField('password')
 
-// Password strength component
+watch(passwordField, (val) => (password.value = val as string))
+
+// Composant force du mot de passe
 const PasswordStrength = {
   props: {
     password: {
