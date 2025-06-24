@@ -25,7 +25,7 @@ context('Signin', () => {
     
 
     cy.wait('@loginRequest').its('response.statusCode').should('eq', 400);
-    
+    cy.contains('email pourris').should('exist')
 
   })
 
