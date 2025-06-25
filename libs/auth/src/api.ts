@@ -2,8 +2,11 @@ import axios from 'axios';
 import type { AxiosInstance } from 'axios';
 import createAuthRefreshInterceptor from 'axios-auth-refresh';
 
+const BACKEND_API_URL = "http://localhost:8000/api" 
+const BACKEND_MEDIA_URL = "http://localhost:8000" 
+
 const api: AxiosInstance = axios.create({
-  baseURL: "http://localhost:8000/api",   //'http://127.0.0.1:8000/api/',
+  baseURL: BACKEND_API_URL,
   withCredentials: true
 });
 import { requestInterceptor, refreshInterceptor } from './interceptors'
@@ -13,4 +16,4 @@ createAuthRefreshInterceptor(api, refreshInterceptor)
 
 
 
-export { api }
+export { api, BACKEND_API_URL, BACKEND_MEDIA_URL }

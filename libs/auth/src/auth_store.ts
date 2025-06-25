@@ -1,21 +1,21 @@
 import { defineStore } from 'pinia'
 import { ref, reactive, toRefs, computed } from 'vue'
-import { api } from './api'
+import { api, BACKEND_MEDIA_URL } from './api'
 
 export interface User {
   username: string;
-  photo_profil?: string;
+  email?: string;
+  user_thumbnail?: string;
   bio?: string;
   ville?: string;
   pays?: string;
   date_naissance?: string;
-  email?: string;
 }
 
 function initialUser(): User {
   return {
     username: 'Invité',
-    photo_profil: undefined,
+    user_thumbnail: undefined,
     bio: undefined,
     ville: undefined,
     pays: undefined,
@@ -38,14 +38,16 @@ export const useAuthStore = defineStore("auth", () => {
     }
   }
 
-
   const _isUserLoaded = ref<boolean>(false)
   const isUserLoaded = computed({
     get: () => _isUserLoaded.value,
     set: (val: boolean) => { _isUserLoaded.value = val }
   })
 
-
+  const photo_profil = computed({
+    get: () => (user.user_thumbnail ? `${BACKEND_MEDIA_URL}${user.user_thumbnail}` : null),
+    set: (val: string) => { user.user_thumbnail = val }
+  })    
   // utilisateur réactif champ par champ
   
   
@@ -54,7 +56,7 @@ export const useAuthStore = defineStore("auth", () => {
   async function login(email: string, password: string): Promise<boolean> {
     try {
         const data = {"email":email,"password":password};
-        const res = await api.post<{ access: string }>('token/get/', data);
+        const res = await api.post<{ access: string }>('/token/get/', data);
         access.value = res.data.access;
         await fetchUser();
         return true;
@@ -65,7 +67,7 @@ export const useAuthStore = defineStore("auth", () => {
   }
   async function signup(values: any): Promise<boolean> {
     try {
-      const res = await api.post<{ access: string }>('signup/', values);
+      const res = await api.post<{ access: string }>('/signup/', values);
       access.value = res.data.access;
       await fetchUser();
       return true;
@@ -83,7 +85,7 @@ export const useAuthStore = defineStore("auth", () => {
 
   async function fetchUser(): Promise<void> {
         try {
-          const res = await api.get<User>('profile/me/');
+          const res = await api.get<User>('/profile/me/');
           Object.assign(user, res.data);
         } catch (err) {
           console.log("Fetch user failed");
@@ -94,7 +96,7 @@ export const useAuthStore = defineStore("auth", () => {
   async function patchUser(values: any): Promise<void> {
     try {
       console.log("ok")
-      const res = await api.patch<{ access: string }>('profile/update-profile/', values);
+      const res = await api.patch<{ access: string }>('/profile/update-profile/', values);
       console.log(res)
     } catch (err) {
       console.error('Patch user failed', err);
@@ -107,6 +109,7 @@ export const useAuthStore = defineStore("auth", () => {
     signup,
     fetchUser,
     patchUser,
+    photo_profil,
     isUserLoaded,
     _isUserLoaded,
     access,
