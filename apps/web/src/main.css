@@ -2,3 +2,5 @@
 @plugin "daisyui";
 @source "../../../libs/ui/src";
 @source "../../../libs/carte/src";
+
+@import "../../../libs/ui/src/main.css";

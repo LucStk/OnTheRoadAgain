@@ -1,8 +1,9 @@
 <template>
-  <!--<Navbar />-->
+  <Navbar />
   <RouterView />
-  <Map />
 </template>
+
 <script setup lang="ts">
+  import {Navbar} from '@repo/ui';
 
 </script>
