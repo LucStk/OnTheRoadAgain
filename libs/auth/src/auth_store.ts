@@ -78,7 +78,7 @@ export const useAuthStore = defineStore("auth", () => {
   }
 
   function resetStore() {
-    access.value = ''
+    _access.value = ''
     _isUserLoaded.value = false
     Object.assign(user, initialUser()) // reset propre du user
   }
