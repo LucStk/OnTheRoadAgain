@@ -54,7 +54,7 @@ export const useAuthStore = defineStore("auth", () => {
   async function login(email: string, password: string): Promise<boolean> {
     try {
         const data = {"email":email,"password":password};
-        const res = await api.post<{ access: string }>('token/', data);
+        const res = await api.post<{ access: string }>('token/get/', data);
         access.value = res.data.access;
         await fetchUser();
         return true;
@@ -62,6 +62,17 @@ export const useAuthStore = defineStore("auth", () => {
         console.error('Login failed', err);
         throw err
       }
+  }
+  async function signup(values: any): Promise<boolean> {
+    try {
+      const res = await api.post<{ access: string }>('signup/', values);
+      access.value = res.data.access;
+      await fetchUser();
+      return true;
+    } catch (err) {
+      console.error('Signup failed', err);
+      throw err
+    }
   }
 
   function resetStore() {
@@ -83,7 +94,8 @@ export const useAuthStore = defineStore("auth", () => {
 
 
   return {
-    login, 
+    login,
+    signup,
     fetchUser,
     isUserLoaded,
     access,

@@ -62,21 +62,17 @@ const transformDjangoErrors = (djangoErrors: { [s: string]: unknown } | ArrayLik
   
   return transformedErrors;
 };
-// Fonction de soumission
-const uistore = useUIStore()
-const auth = useAuthStore()
-const onSubmit = async (values: any, actions: any) => {
-  
-  try {
-    const res = await api.post<{ access: string }>('signup/', values)
-    if (res){
-      auth.access.value = res.data.access
+  // Fonction de soumission
+  const uistore = useUIStore()
+  const auth = useAuthStore()
+  const onSubmit = async (values: any, actions: any) => {
+    try {
+      await auth.signup(values)
+    } catch (error : any) {
+      if (!error.response) return
+        actions.setErrors(transformDjangoErrors(error.response?.data))
     }
-  } catch (error : any) {
-    if (!error.response) return
-      actions.setErrors(transformDjangoErrors(error.response?.data))
+    await auth.fetchUser()
+    uistore.hideSignupModal()
   }
-  await auth.fetchUser()
-  uistore.hideSignupModal()
-}
 </script>

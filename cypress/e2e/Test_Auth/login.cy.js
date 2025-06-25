@@ -4,6 +4,8 @@ import { alice } from '../../support/users';
 context('Navbar and User', () => {
   beforeEach(() => {
     cy.visit('/')
+    cy.clearCookies()
+    cy.clearLocalStorage()
   })
   it('Login from navbar', () => {
     cy.get('#dropdown-login').click()
@@ -11,7 +13,7 @@ context('Navbar and User', () => {
     cy.get('#dropdown-login-menu').contains('Sign in').click()
 
 
-    cy.intercept('POST', '/api/token/', (req) => {
+    cy.intercept('POST', '/api/token/get', (req) => {
       req.credentials = 'include';  // ou req.headers['credentials'] = 'include';
     }).as('loginRequest');
     cy.get('#dropdown-login-menu').should('not.exist')
@@ -24,7 +26,13 @@ context('Navbar and User', () => {
     // Vérifier que la navbar est bien updaté
     cy.get('#dropdown-login').click()
     cy.get('#dropdown-login-menu').should('be.visible')
-    cy.contains('Sign out').should('exist')
+    
+
+    //Vérifier qu'on peut bien se déconnecter
+    cy.contains('Sign out').should('exist').click()
+    cy.get('#dropdown-login').click()
+    cy.get('#dropdown-login-menu').should('be.visible')
+    cy.contains('Sign out').should('not.exist')
   })
 
 })
