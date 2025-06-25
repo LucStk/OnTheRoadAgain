@@ -93,7 +93,9 @@ export const useAuthStore = defineStore("auth", () => {
       }
   async function patchUser(values: any): Promise<void> {
     try {
+      console.log("ok")
       const res = await api.patch<{ access: string }>('profile/update-profile/', values);
+      console.log(res)
     } catch (err) {
       console.error('Patch user failed', err);
       throw err
@@ -104,6 +106,7 @@ export const useAuthStore = defineStore("auth", () => {
     login,
     signup,
     fetchUser,
+    patchUser,
     isUserLoaded,
     _isUserLoaded,
     access,

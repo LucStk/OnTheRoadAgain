@@ -25,6 +25,17 @@
   const error   = ref('')
   const loading = ref(false)
 
+  function base64ToFile(base64: string, filename: string): File {
+    const arr = base64.split(',')
+    const mime = arr[0].match(/:(.*?);/)?.[1] || 'image/png'
+    const bstr = atob(arr[1])
+    const u8arr = new Uint8Array(bstr.length)
+    for (let i = 0; i < bstr.length; i++) {
+      u8arr[i] = bstr.charCodeAt(i)
+    }
+    return new File([u8arr], filename, { type: mime })
+  }
+
   const configDate = { wrap: true, altFormat: 'Y-m-d', altInput: true, dateFormat: 'Y-m-d' }
   const userDate = auth.date_naissance ? new Date(auth.date_naissance) : new Date();
   const date_naissance = ref(userDate);
@@ -46,15 +57,17 @@
 
     const formData = new FormData()
     if (imgSrc.value) {
-      formData.append('photo_profil', imgSrc.value)
+      formData.append('photo_profil', base64ToFile(imgSrc.value, 'avatar.png'))
     }
     console.log(formData)
-    /*
+    
     try {
-      api.patch('/profile/update-profile/', formData)
+      console.log("lets")
+      await auth.patchUser(formData)
+      await auth.fetchUser()
     } catch (err) {
       error.value = 'Erreur lors de la mise à jour.'
-    }*/
+    }
 
   }
 
