@@ -1,132 +1,112 @@
 <template>
-  <div>
-    <!-- Zone de drag and drop -->
-    <div class="border-2 
-      border-dashed border-gray-400 
-      rounded-lg p-6 
-      text-center 
-      cursor-pointer"
+  <Teleport to="body">
+    <div class="fixed inset-0 z-50 bg-black/50 flex items-center justify-center p-4">
+      <div class="bg-white relative rounded-xl w-full max-w-2xl shadow-xl p-6 space-y-6">
+        <!-- Bouton fermeture -->
+          <button 
+          @click="emit('close')"
+          class="cursor-pointer 
+                absolute -top-4 -right-4  hover:text-black 
+                ">
+          <XMarkIcon class="w-5 h-5 text-black bg-white rounded-full" />
+        </button>
+        <!-- Zone de crop uniquement si une image est chargée -->
+        <div v-if="imgSrc" class="grid grid-cols-1 md:grid-cols-2 gap-4 items-start">
+          <div class="aspect-square border rounded overflow-hidden relative">
+            <Cropper
+              ref="cropperRef"
+              :src="imgSrc"
+              :stencil-Component="CircleStencil"
+              :stencil-props="{ aspectRatio: 1 }"
+              :auto-zoom="true"
+              :class="{ 'cropper-ready': isReady }"
+              @ready="onReady"
+            />
+          </div>
+          <div>
+            <p class="text-sm font-medium mb-2">Prévisualisation :</p>
+            <div
+              class="preview w-40 h-40 border rounded-full overflow-hidden"
+              v-if="croppedDataUrl"
+            >
+              <img :src="croppedDataUrl" alt="Preview" class="w-full h-full object-cover" />
+            </div>
 
-      @dragover.prevent
-      @drop.prevent="handleDrop"
-      @click="showFileChooser">
+            <button
+              class="mt-4 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 disabled:opacity-50"
+              :disabled="!isReady"
+              @click="confirmCrop"
+            >
+              Valider
+            </button>
+          </div>
+        </div>
 
-
-      <p class="text-gray-500">Glisse-dépose une image ici ou clique pour choisir</p>
-      
-      <input ref="input" 
-            type="file" 
-            name="image" 
-            class="hidden" 
-            @change="setImage" 
-            accept="image/*" />
-    
-    </div>
-    <section class="cropper-area">
-      <div class="img-cropper">
-        <VueCropper
-          ref="cropper"
-          :aspect-ratio="1 / 1"
-          :src="imgSrc"
-          preview=".preview"
-          @ready="cropImage"
-        />
+        <!-- Zone d'upload -->
+        <DropZone @file-selected="onFileSelected" />
       </div>
-    </section>
-  </div>
+    </div>
+  </Teleport>
 </template>
 
 <script setup lang="ts">
+import DropZone from './DropZone.vue'
 import { ref } from 'vue'
-import VueCropper from 'vue-cropperjs'
+import { Cropper, CircleStencil } from 'vue-advanced-cropper'
+import { XMarkIcon } from '@heroicons/vue/24/solid'
+import 'vue-advanced-cropper/dist/style.css'
 
-const emit = defineEmits(['update:modelValue'])
+const emit = defineEmits<{
+  'update:modelValue': [string]
+  'close': []
+}>()
 
-type CropperInstance = {
-    replace: (url: string) => void
-    getCroppedCanvas: () => HTMLCanvasElement | null
-}
+const cropperRef = ref<InstanceType<typeof Cropper> | null>(null)
+const imgSrc = ref<string>('')
+const croppedDataUrl = ref<string | null>(null)
+const isReady = ref(false)
 
-type CropperComponent = {
-  cropper: CropperInstance
-} | null
-
-const cropper = ref<CropperComponent>(null)
-
-const input = ref<HTMLInputElement | null>(null)
-const imgSrc = ref<string>('') // pas `null` ni `ArrayBuffer`
-const cropImg = ref('')
-
-// Affiche le file picker
-function showFileChooser() {
-  input.value?.click()
-}
-
-
-// Charge et affiche l'image dans le cropper
-function loadImage(file: Blob) {
-  if (!file || !file.type.startsWith('image/')) {
-    alert('Veuillez sélectionner un fichier image valide.')
-    return
-  }
+const onFileSelected = (file: File) => {
   const reader = new FileReader()
-  reader.onload = (event) => {
-    const result = event.target?.result
-    if (typeof result === 'string') {
-      imgSrc.value = result
-      cropper.value?.cropper.replace(result)
-    }
+  reader.onload = () => {
+    imgSrc.value = reader.result as string
+    croppedDataUrl.value = null
+    isReady.value = false
   }
   reader.readAsDataURL(file)
 }
 
-// Gère l'upload
-function setImage(event: Event) {
-  const target = event.target as HTMLInputElement
-  if (target.files && target.files[0]) {
-    loadImage(target.files[0])
-  }
+const onReady = () => {
+  isReady.value = true
 }
 
-function handleDrop(event: DragEvent) {
-  event.preventDefault() // important pour empêcher le comportement par défaut (ex: ouvrir le fichier)
-  
-  const files = event.dataTransfer?.files
-  if (files && files.length > 0) {
-    loadImage(files[0])
-  }
-}
-
-// Crop et émet au parent
-function cropImage() {
-  const canvas = cropper.value?.cropper.getCroppedCanvas()
+import { useAuthStore } from '@repo/auth'
+const auth = useAuthStore()
+const confirmCrop = () => {
+  if (!cropperRef.value) return
+  const canvas = cropperRef.value.getResult().canvas
   if (canvas) {
-    const cropped = canvas.toDataURL()
-    cropImg.value = cropped
-    emit('update:modelValue', cropped) // 🔁 Remonte l'image croppée
+    const base64 = canvas.toDataURL()
+    croppedDataUrl.value = base64
+    auth.photo_profil = base64
+    //auth.photo_profil.value = base64
+    emit('update:modelValue', base64)
+    emit("close")
   }
 }
 </script>
 
-<style>
-.preview-area {
-  width: 20px;
-}
-
-.preview-area p {
-  font-size: 1.25rem;
-  margin: 0;
-  margin-bottom: 1rem;
-}
-
-.preview-area p:last-of-type {
-  margin-top: 1rem;
-}
-
+<style scoped>
 .preview {
-  width: 20%;
-  height: 20%;
+  width: 160px;
+  height: 160px;
+  border-radius: 50%;
   overflow: hidden;
 }
 
+.cropper-ready :deep(.vue-advanced-cropper__stencil) {
+  border-radius: 50% !important;
+  border: 2px solid rgba(255, 255, 255, 0.8);
+  box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.5);
+}
 </style>

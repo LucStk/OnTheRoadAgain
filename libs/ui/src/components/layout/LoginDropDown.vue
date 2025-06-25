@@ -18,7 +18,7 @@ const uistore = useUIStore()
         <div class="size-9.5 rounded-full overflow-hidden bg-base-200">
           <img
             v-if="auth.isUserLoaded && auth.photo_profil"
-            :src="auth.photo_profil.value"
+            :src="auth.photo_profil"
             alt="User avatar"
             class="object-cover w-full h-full"
           />
@@ -41,7 +41,7 @@ const uistore = useUIStore()
               <div class="size-9.5 rounded-full overflow-hidden bg-base-200">
                 <img
                   v-if="auth.photo_profil"
-                  :src="auth.photo_profil.value"
+                  :src="auth.photo_profil"
                   alt="User avatar"
                   class="object-cover w-full h-full"
                 />
