@@ -1,21 +1,19 @@
 <script setup lang="ts">
   import { onMounted} from 'vue';
   import {Map_custom} from './map_elements';
+  import Save from './components/route/Save.vue';
+  import {useMapStore} from './stores/map_stores';
+  const mapstore = useMapStore()
 
   onMounted(() => {
-    const map = new Map_custom();
-    map.local_load();
-
-    map.on('contextmenu', (e) => {
-      map.addPoint(e.lngLat);
-      console.log(e.lngLat)
-    
-    });
+    console.log("Map mounted")  
+    mapstore.initMap()
   })
 </script>
 
 <template>
   <div id="map" ></div>
+  <Save />
 </template>
 
 <style lang="scss">
