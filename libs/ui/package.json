@@ -13,6 +13,7 @@
     "preview": "vite preview"
   },
   "exports": {
+    "./components":"./src/components/index.ts",
     ".": "./src/index.ts"
   },
   "dependencies": {

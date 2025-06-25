@@ -7,8 +7,8 @@ import {buildRouter} from '@repo/ui'
 
 import { routes as allRoutes } from 'vue-router/auto-routes'
 
-/*
-Fonction pour permettre de surcharger les routes importées 
+
+//Fonction pour permettre de surcharger les routes importées 
 
 function overrideRoutes(routes: any[]) {
   // Par exemple, filtre la route /home de libs/ui
@@ -23,8 +23,6 @@ function overrideRoutes(routes: any[]) {
 }
 
 const routes = overrideRoutes(allRoutes)  
-*/
-const routes = allRoutes
 const router = buildRouter(routes)
 
 const app = createApp(App_UI)
