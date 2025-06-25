@@ -24,7 +24,7 @@ context('Navbar and User', () => {
     // Vérifier que la navbar est bien updaté
     cy.get('#dropdown-login').click()
     cy.get('#dropdown-login-menu').should('be.visible')
-
+    cy.contains('Sign out').should('exist')
   })
 
 })

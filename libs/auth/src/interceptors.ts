@@ -5,8 +5,9 @@ import { useAuthStore } from './auth_store'
 
 // Intercepteur de requête : ajoute le token dynamiquement
 export function requestInterceptor(config: InternalAxiosRequestConfig) {
+  
   const auth = useAuthStore()
-  const access = auth.access
+  const access = auth.access.value
   if (!access) {return config; }
   // Vérifie si headers est bien de type AxiosHeaders
   if (config.headers && typeof config.headers.set === 'function') {
@@ -27,13 +28,13 @@ const plainAxios = axios.create({
 
 export async function refreshInterceptor(failedRequest: any) {
   const auth = useAuthStore()
-  const access = auth.access
-  if (!access) {return }
+  const access = auth.access.value
+  if (!access) {return Promise.reject(new Error("No access token, cannot refresh"));}
 
   try {
     const response = await plainAxios.post<{ access: string }>('token/refresh/');
     const newAccess = response.data.access
-    auth.access = newAccess
+    auth.access.value = newAccess
     auth.isUserLoaded = true
     console.warn("Access Token refreshed")
     // Met à jour la requête qui a échoué
@@ -41,7 +42,7 @@ export async function refreshInterceptor(failedRequest: any) {
     
     return Promise.resolve();
   } catch (error) {
-    auth.access = ""
+    auth.access.value = ""
     console.warn("Access Token cannot be refreshed")
     return Promise.reject(error)
   }

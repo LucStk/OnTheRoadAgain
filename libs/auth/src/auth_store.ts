@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import { ref, reactive, toRefs } from 'vue'
+import { ref, reactive, toRefs, computed } from 'vue'
 import { api } from './api'
 
 export interface User {
@@ -25,9 +25,30 @@ function initialUser(): User {
 }
 
 export const useAuthStore = defineStore("auth", () => {
-  const access = ref<string>("")
-  const isUserLoaded = ref<boolean>(false)
+  const _access = ref<string>("")
+  const access = {
+  get value() {
+    return _access.value
+  },
+  set value(val: string) {
+    if (typeof val !== 'string') {
+      console.warn("[AuthStore] Tentative d'affecter une valeur non-string à access :", val)
+    }
+    _access.value = val
+    }
+  }
+
+
+  const _isUserLoaded = ref<boolean>(false)
+  const isUserLoaded = computed({
+    get: () => _isUserLoaded.value,
+    set: (val: boolean) => { _isUserLoaded.value = val }
+  })
+
+
   // utilisateur réactif champ par champ
+  
+  
   const user = reactive<User>(initialUser())
 
   async function login(email: string, password: string): Promise<boolean> {
@@ -35,7 +56,6 @@ export const useAuthStore = defineStore("auth", () => {
         const data = {"email":email,"password":password};
         const res = await api.post<{ access: string }>('token/', data);
         access.value = res.data.access;
-        isUserLoaded.value = true
         await fetchUser();
         return true;
       } catch (err) {
@@ -46,19 +66,21 @@ export const useAuthStore = defineStore("auth", () => {
 
   function resetStore() {
     access.value = ''
-    isUserLoaded.value = false
+    _isUserLoaded.value = false
     Object.assign(user, initialUser()) // reset propre du user
   }
 
   async function fetchUser(): Promise<void> {
-    try {
-      const res = await api.get<User>('profile/me/');
-      Object.assign(user, res.data);
-    } catch (err) {
-      console.warn('User fetch failed');
-      throw err;
-    }
-  }
+        try {
+          const res = await api.get<User>('profile/me/');
+          Object.assign(user, res.data);
+        } catch (err) {
+          console.log("Fetch user failed");
+          console.error(err);
+        }
+        _isUserLoaded.value = true
+      }
+
 
   return {
     login, 
@@ -72,6 +94,6 @@ export const useAuthStore = defineStore("auth", () => {
   // @ts-ignore
   persist: {
     key: 'auth-data',
-    omit : ["email"]
+    omit : ["email", "access", "isUserLoaded"]
   }
 })

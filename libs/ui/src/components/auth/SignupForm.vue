@@ -30,8 +30,8 @@ import * as zod from 'zod'
 import { toTypedSchema } from '@vee-validate/zod'
 import InlineInput from '../layout/InlineInput.vue'
 import { useAuthStore, api } from '@repo/auth'
+import { useUIStore } from '@repo/ui'
 
-const auth = useAuthStore()
 // Schéma de validation
 const schema = toTypedSchema(
   zod.object({
@@ -63,21 +63,20 @@ const transformDjangoErrors = (djangoErrors: { [s: string]: unknown } | ArrayLik
   return transformedErrors;
 };
 // Fonction de soumission
+const uistore = useUIStore()
+const auth = useAuthStore()
 const onSubmit = async (values: any, actions: any) => {
+  
   try {
     const res = await api.post<{ access: string }>('signup/', values)
-    if (res.status === 200) {
-      auth.isUserLoaded.value = true
+    if (res){
       auth.access.value = res.data.access
     }
-    
-    // En cas de succès, vous pourriez faire :
-    // console.log('Formulaire soumis avec succès!')
-    // router.push('/dashboard')
-    
   } catch (error : any) {
     if (!error.response) return
-    actions.setErrors(transformDjangoErrors(error.response?.data))
+      actions.setErrors(transformDjangoErrors(error.response?.data))
   }
+  await auth.fetchUser()
+  uistore.hideSignupModal()
 }
 </script>

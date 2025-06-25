@@ -15,14 +15,14 @@ describe('Axios interceptors', () => {
   beforeEach(() => {
     setActivePinia(createPinia())
     const auth = useAuthStore()
-    auth.access = 'initial-access-token'
+    auth.access.value = 'initial-access-token'
     auth.isUserLoaded = false
     mockPost.mockReset()
   })
 
   it('should add Authorization header to requests', async () => {
     const auth = useAuthStore()
-    auth.access = 'my-access-token'
+    auth.access.value = 'my-access-token'
 
     const config = { headers: {} }
 
@@ -51,7 +51,7 @@ describe('Axios interceptors', () => {
 
     await refreshInterceptor(failedRequest as any)
 
-    expect(auth.access).toBe('new-access-token')
+    expect(auth.access.value).toBe('new-access-token')
     expect(auth.isUserLoaded).toBe(true)
     expect(failedRequest.response.config.headers['Authorization']).toBe('Bearer new-access-token')
   })
@@ -72,6 +72,6 @@ describe('Axios interceptors', () => {
     const { refreshInterceptor } = await import('../src/interceptors')
 
     await expect(refreshInterceptor(failedRequest as any)).rejects.toThrow('refresh failed')
-    expect(auth.access).toBe('')
+    expect(auth.access.value).toBe('')
   })
 })

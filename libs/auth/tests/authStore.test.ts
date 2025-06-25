@@ -25,7 +25,7 @@ describe('Auth Store', () => {
   it('should initialize with default values', () => {
     const auth = useAuthStore()
 
-    expect(auth.access).toBe('')
+    expect(auth.access.value).toBe('')
     expect(auth.isUserLoaded).toBe(false)
     expect(auth.username).toBe('Invité')
   })
@@ -39,9 +39,9 @@ describe('Auth Store', () => {
     const result = await auth.login('john', 'secret')
 
     expect(result).toBe(true)
-    expect(auth.access).toBe('modifié') // car tu as mis "modifié" en dur
+    expect(auth.access.value).toBe("fake-token") // car tu as mis "modifié" en dur
     expect(auth.username).toBe('John')
-    expect(auth.isUserLoaded).toBe(false) // pas modifié ici dans ton code
+    expect(auth.isUserLoaded).toBe(true) // pas modifié ici dans ton code
   })
 
   it('should throw error if login fails', async () => {
@@ -50,7 +50,7 @@ describe('Auth Store', () => {
     mockApi.post.mockRejectedValueOnce(new Error('fail'))
 
     await expect(auth.login('john', 'wrong')).rejects.toThrow('fail')
-    expect(auth.access).toBe('')
+    expect(auth.access.value).toBe('')
   })
 
   it('should fetch user and update state', async () => {
@@ -80,14 +80,14 @@ describe('Auth Store', () => {
   it('should reset store correctly', () => {
     const auth = useAuthStore()
 
-    auth.access = 'abc'
+    auth.access.value = 'abc'
     auth.isUserLoaded = true
     auth.username = 'Bob'
     auth.email = 'bob@example.com'
 
     auth.resetStore()
 
-    expect(auth.access).toBe('')
+    expect(auth.access.value).toBe('')
     expect(auth.isUserLoaded).toBe(false)
     expect(auth.username).toBe('Invité')
     expect(auth.email).toBeUndefined()

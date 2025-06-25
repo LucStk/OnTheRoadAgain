@@ -10,8 +10,8 @@ export async function globalMiddleware(to: RouteLocationNormalized, _from: Route
 
   //TODO : Remplacer avec une vérification du access et du refresh par l'api
   if (needsAuth) {
-    if (!auth.access || !auth.isUserLoaded) {
-      if (auth.access && !auth.isUserLoaded) {
+    if (!auth.access.value || !auth.isUserLoaded) {
+      if (auth.access.value && !auth.isUserLoaded) {
         try {
           await auth.fetchUser();
           return next();
@@ -24,11 +24,11 @@ export async function globalMiddleware(to: RouteLocationNormalized, _from: Route
   }
 
   if (guestOnly) {
-    if (auth.access && auth.isUserLoaded) {
+    if (auth.access.value && auth.isUserLoaded) {
       return next('/profile');
     }
 
-    if (auth.access && !auth.isUserLoaded) {
+    if (auth.access.value && !auth.isUserLoaded) {
       try {
         console.log("coucou")
         await auth.fetchUser();

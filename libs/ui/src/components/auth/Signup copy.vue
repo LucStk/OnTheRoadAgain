@@ -69,7 +69,7 @@ async function onSubmit(values: any) {
   try {
     const res = await api.post<{ access: string }>('signup/', values)
     if (res.status === 200) {
-      auth.isUserLoaded.value = true
+      auth.isUserLoaded = true
       auth.access.value = res.data.access
       //await auth.fetchUser()
     }

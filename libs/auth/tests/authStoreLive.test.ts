@@ -31,7 +31,7 @@ describe('Auth Store Live', () => {
       console.log('Success:', res)
       expect(res).toBe(true)
       expect(auth.isUserLoaded).toBe(true)
-      expect(auth.access).toBeDefined()
+      expect(auth.access.value).toBeDefined()
       expect(auth.username).toBe('alice')
 
     } catch (error: any) {

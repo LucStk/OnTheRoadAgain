@@ -34,7 +34,7 @@ describe('AuthStore persisted rehydration', () => {
       auth.$patch(JSON.parse(saved))
     }
 
-    expect(auth.access).toBe('rehydrated-token')
+    expect(auth.access.value).toBe('rehydrated-token')
     expect(auth.isUserLoaded).toBe(true)
     expect(auth.username).toBe('MockUser')
     expect(auth.email).toBe(undefined)
