@@ -91,7 +91,14 @@ export const useAuthStore = defineStore("auth", () => {
         }
         _isUserLoaded.value = true
       }
-
+  async function patchUser(values: any): Promise<void> {
+    try {
+      const res = await api.patch<{ access: string }>('profile/update-profile/', values);
+    } catch (err) {
+      console.error('Patch user failed', err);
+      throw err
+    }
+  }
 
   return {
     login,

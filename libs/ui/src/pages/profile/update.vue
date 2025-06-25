@@ -16,7 +16,7 @@ const auth = useAuthStore()
 
 const input   = ref<HTMLInputElement | null>(null)
 const cropper = ref<any>(null)
-const imgSrc  = ref(auth.photo_profil ? auth.photo_profil : "")
+const imgSrc  = ref<string | null>(auth.photo_profil ? auth.photo_profil : null)
 const cropImg = ref('') // image croppée au format base64
 const error   = ref('')
 const loading = ref(false)

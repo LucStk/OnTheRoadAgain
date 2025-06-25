@@ -1,7 +1,10 @@
 <template>
   <Teleport to="body">
     <div class="fixed inset-0 z-50 bg-black/50 flex items-center justify-center p-4">
-      <div class="bg-white relative rounded-xl w-full max-w-2xl shadow-xl p-6 space-y-6">
+      <div class="bg-white relative 
+      rounded-xl w-full max-w-2xl 
+      flex flex-col items-center justify-center space-y-4
+      shadow-xl p-6 space-y-6">
         <!-- Bouton fermeture -->
           <button 
           @click="emit('close')"
@@ -11,8 +14,7 @@
           <XMarkIcon class="w-5 h-5 text-black bg-white rounded-full" />
         </button>
         <!-- Zone de crop uniquement si une image est chargée -->
-        <div v-if="imgSrc" class="grid grid-cols-1 md:grid-cols-2 gap-4 items-start">
-          <div class="aspect-square border rounded overflow-hidden relative">
+        <div v-if="imgSrc" class="mx-auto aspect-square border rounded overflow-hidden relative">
             <Cropper
               ref="cropperRef"
               :src="imgSrc"
@@ -22,29 +24,25 @@
               :class="{ 'cropper-ready': isReady }"
               @ready="onReady"
             />
-          </div>
           <div>
-            <p class="text-sm font-medium mb-2">Prévisualisation :</p>
-            <div
-              class="preview w-40 h-40 border rounded-full overflow-hidden"
-              v-if="croppedDataUrl"
-            >
-              <img :src="croppedDataUrl" alt="Preview" class="w-full h-full object-cover" />
-            </div>
 
-            <button
-              class="mt-4 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 disabled:opacity-50"
-              :disabled="!isReady"
-              @click="confirmCrop"
-            >
-              Valider
-            </button>
           </div>
         </div>
 
         <!-- Zone d'upload -->
         <DropZone @file-selected="onFileSelected" />
-      </div>
+        <button
+          class="mt-4 px-4 py-2 
+          bg-blue-600 text-white 
+          rounded hover:bg-blue-700 
+          disabled:opacity-50
+          cursor-pointer"
+          :disabled="!isReady"
+          @click="confirmCrop"
+        >
+          Valider
+        </button>
+  </div>
     </div>
   </Teleport>
 </template>
@@ -56,10 +54,7 @@ import { Cropper, CircleStencil } from 'vue-advanced-cropper'
 import { XMarkIcon } from '@heroicons/vue/24/solid'
 import 'vue-advanced-cropper/dist/style.css'
 
-const emit = defineEmits<{
-  'update:modelValue': [string]
-  'close': []
-}>()
+const emit = defineEmits<{'close': []}>()
 
 const cropperRef = ref<InstanceType<typeof Cropper> | null>(null)
 const imgSrc = ref<string>('')
@@ -79,18 +74,22 @@ const onFileSelected = (file: File) => {
 const onReady = () => {
   isReady.value = true
 }
+import {inject} from 'vue'
+import type { Ref } from 'vue'
 
-import { useAuthStore } from '@repo/auth'
-const auth = useAuthStore()
+const injectedImgSrc = inject<Ref<string | null>>('imgSrc')
+
 const confirmCrop = () => {
   if (!cropperRef.value) return
   const canvas = cropperRef.value.getResult().canvas
   if (canvas) {
     const base64 = canvas.toDataURL()
     croppedDataUrl.value = base64
-    auth.photo_profil = base64
-    //auth.photo_profil.value = base64
-    emit('update:modelValue', base64)
+    if (!injectedImgSrc) {
+      emit("close")
+      throw new Error('LoadPhoto : imgSrc non injecté')
+    }
+    injectedImgSrc.value = base64
     emit("close")
   }
 }
