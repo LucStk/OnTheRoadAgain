@@ -1,6 +1,6 @@
 <template>
   <div class="avatar mx-auto justify-center">
-    <div class="size-15 rounded-full overflow-hidden bg-base-200 relative">
+    <div class="size-15 rounded-full bg-base-200 relative">
       <img
         v-if="imgSrc"
         :src="imgSrc"

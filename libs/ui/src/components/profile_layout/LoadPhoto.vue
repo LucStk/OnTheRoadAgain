@@ -96,12 +96,6 @@ const confirmCrop = () => {
 </script>
 
 <style scoped>
-.preview {
-  width: 160px;
-  height: 160px;
-  border-radius: 50%;
-  overflow: hidden;
-}
 
 .cropper-ready :deep(.vue-advanced-cropper__stencil) {
   border-radius: 50% !important;

@@ -2,6 +2,7 @@
   <div
     class="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center cursor-pointer"
     @dragover.prevent
+    @dragenter.prevent
     @drop.prevent="handleDrop"
     @click="openFileChooser"
   >

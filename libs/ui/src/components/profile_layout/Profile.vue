@@ -42,7 +42,7 @@
   const bio   = ref(auth.bio   || '')
   const pays  = ref(auth.pays  || '')
   const ville = ref(auth.ville || '')
-  const imgSrc  = ref(auth.photo_profil ? auth.photo_profil : "")
+  const imgSrc  = ref(auth.photo_profil)
 
   provide("imgSrc", imgSrc)
   provide("date_naissance", date_naissance)
@@ -57,7 +57,7 @@
 
     const formData = new FormData()
     if (imgSrc.value) {
-      formData.append('photo_profil', base64ToFile(imgSrc.value, 'avatar.png'))
+      formData.append('user_thumbnail', base64ToFile(imgSrc.value, 'avatar.png'))
     }
     console.log(formData)
     
