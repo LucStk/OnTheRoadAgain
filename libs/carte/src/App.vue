@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import Map from './Map.vue'
+import Carte from './Carte.vue'
 </script>
 
 <template>
-  <Map />
+  <Carte />
 </template>
 
 <style scoped>

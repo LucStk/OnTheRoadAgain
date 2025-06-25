@@ -13,10 +13,10 @@
     ".": "./src/index.ts"
   },
   "dependencies": {
+    "@repo/auth": "workspace:*",
     "maplibre-gl": "^5.6.0",
     "pinia": "^3.0.3",
-    "vue": "^3.5.13",
-    "@repo/auth": "workspace:*"
+    "vue": "^3.5.13"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^5.2.3",

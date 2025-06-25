@@ -1,28 +1,39 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
-import { Map_custom } from '../map_elements'
-
+import * as maplibregl from 'maplibre-gl'
+import { Map as MapLibreMap } from 'maplibre-gl'
+import { PMarker } from '../map_elements'
+import type { Ref } from 'vue'
 export const useMapStore = defineStore('map', () => {
-  const _map = ref<Map_custom | null>(null)
-  const _points = ref<any>(null)
+  const _map: Ref<MapLibreMap | undefined> = ref()
+  const _points: Ref<PMarker[]> = ref([])
 
   const initMap = () => {
-    if (_map.value) return;
+    if (_map.value) return
 
-    console.log('Map_store: Map is null, creating a new one');
-    const m = new Map_custom();
+    _map.value = new MapLibreMap({
+      container: 'map',
+      style: 'https://api.maptiler.com/maps/streets-v2/style.json?key=AkDXKRSgsoWbmunH5eGo',
+      center: [-4.49993133544922, 48.41040274663766],
+      zoom: 13,
+    } as maplibregl.MapOptions)
 
-    m.on('contextmenu', (e) => {
-      m.addPoint(e.lngLat);
-      console.log(e.lngLat);
-    });
+    _map.value.on('contextmenu', (e) => {
+      console.log(e.lngLat)
+    })
+    _points.value = []
+  }
 
-    _map.value = m;
+  const addPoint = (lngLat: any) => {
+    if (!_map.value) return
+    const marker = new PMarker(lngLat, _map.value)
+    _points.value.push(marker)
   }
 
   return {
     _map,
     _points,
     initMap,
+    addPoint,
   }
 })
