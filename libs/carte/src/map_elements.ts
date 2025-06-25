@@ -51,18 +51,35 @@ export class Map_custom extends Map {
 
 // Point personnalisé avec composant Vue monté dynamiquement
 export class Point extends Marker {
+	private vueApp: any;
+
 	constructor(coords: LngLatLike, map: Map, onMove? : Function, index = 0) {
 		const container = document.createElement("div");
 
 		// Monte dynamiquement le composant Vue dans le conteneur
-		createApp({
+		const app =createApp({
 			render: () => h(MyMarkerComponent, { index })
-		}).mount(container);
+		})
+		app.mount(container);
 
 		super({ element: container, draggable: true });
+		this.vueApp = app;
+
 		this.setLngLat(coords).addTo(map);
 		if (onMove) {
 			this.on("drag", () => onMove(this));
+		}
+		container.addEventListener('contextmenu', (e) => {
+		e.preventDefault();
+		console.log('contextmenu sur container');
+		this.destroy();
+		});
+	}
+
+	public destroy() {
+		this.remove(); // supprime de la carte
+		if (this.vueApp) {
+			this.vueApp.unmount(); // démonte le composant Vue proprement
 		}
 	}
 }
