@@ -98,7 +98,9 @@ export const useAuthStore = defineStore("auth", () => {
     signup,
     fetchUser,
     isUserLoaded,
+    _isUserLoaded,
     access,
+    _access,
     resetStore,
     ...toRefs(user)  // <-- rend chaque champ exporté individuellement en tant que `ref`
   }
@@ -106,6 +108,6 @@ export const useAuthStore = defineStore("auth", () => {
   // @ts-ignore
   persist: {
     key: 'auth-data',
-    omit : ["email", "access", "isUserLoaded"]
+    omit : ["email"]
   }
 })
