@@ -1,7 +1,7 @@
 
 <template>
   <Teleport to="body">
-    <div v-if="uistore.showSignup" class="fixed inset-0 flex items-center justify-center bg-black/40 z-50 p-4">
+    <div v-if="uistore.showSignup" class="overlay">
       <div class="relative w-full max-w-2xl bg-white rounded-xl shadow-lg p-6 sm:p-8">
         <ButtonClose :onclick="() => uistore.hideSignupModal()"/>
 

@@ -3,6 +3,7 @@ import { Map as MapLibreMap } from 'maplibre-gl'
 import {type LngLatLike} from "maplibre-gl";
 import { Pin } from '../map_elements'
 import { ref } from 'vue'
+import {api} from "@repo/auth"
 
 export interface CPin {
   lngLat: LngLatLike;
@@ -46,6 +47,29 @@ export const useMapStore = defineStore('map', () => {
     _pinsMarkers.set(index, m)
     _pins.value[index] = {lngLat: lnglt}
     index++
+  }
+
+  const removeAllPins = () => {
+    _pinsMarkers.forEach((m) => {
+      m.destroy()
+    })
+    _pinsMarkers.clear()
+    _pins.value = {}
+  }
+  function getPins() {
+    const ret = api.get("/pins")
+    return ret
+  }
+
+  function postPins(pin: CPin) {
+    const ret = api.post("/pins", pin)
+    return ret
+  }
+
+  const savePins = () => {
+    for (const [key, value] of Object.entries(_pins.value)) {
+      postPins(value)
+    }
   }
 
   const removePoint = (index: number) => {

@@ -1,7 +1,6 @@
 <template>
   <Teleport to="body">
-  <div v-show="uistore.showLogin" class=" 
-    absolute flex justify-center items-center h-screen w-screen bg-black/40">
+  <div v-show="uistore.showLogin" class="overlay">
 
     <div class="relative w-full max-w-sm p-8 bg-white rounded-md shadow-xl">
       

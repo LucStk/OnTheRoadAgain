@@ -11,7 +11,7 @@
 </script>
 
 <template>
-  <div id="map" ></div>
+  <div id="map" class="z-0" ></div>
   <Save />
 </template>
 

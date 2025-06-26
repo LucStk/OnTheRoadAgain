@@ -62,7 +62,7 @@ export const useAuthStore = defineStore("auth", () => {
         return true;
       } catch (err) {
         console.error('Login failed', err);
-        throw err
+        return false
       }
   }
   async function signup(values: any): Promise<boolean> {
