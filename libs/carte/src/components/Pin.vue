@@ -1,5 +1,5 @@
 <template>
-  <div class="marker-content">
+  <div class="marker-content" @click="handleClick">
     📍
     <div
       class="flex size-4.5 items-center justify-center rounded-full bg-primary/20'"
@@ -21,20 +21,22 @@
 </template>
 
 <script setup lang="ts">
-    //import { ref } from 'vue';
 
-    //const IndexStore = ref(0);
-    /*
-    const props = defineProps({
-      index: {
-        type: Number,
-        required: true,
-      }
-    });
-    
-    const handleClick = () => {
-        console.log("Clicked marker:", props.index);
-    };*/
+  import { ref } from 'vue';
+  import { useMapStore } from '../stores/map_stores';
+  const mapstore = useMapStore()
+  const props = defineProps({
+    index: {
+      type: Number,
+      required: true,
+    }
+  });
+  
+  const handleClick = () => {
+    mapstore.removePoint(props.index)
+  };
+
+  
 </script>
 
 <style scoped>

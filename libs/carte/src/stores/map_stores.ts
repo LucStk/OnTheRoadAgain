@@ -1,39 +1,70 @@
 import { defineStore } from 'pinia'
-import { ref } from 'vue'
-import * as maplibregl from 'maplibre-gl'
 import { Map as MapLibreMap } from 'maplibre-gl'
-import { PMarker } from '../map_elements'
-import type { Ref } from 'vue'
+import {type LngLatLike} from "maplibre-gl";
+import { Pin } from '../map_elements'
+import { ref } from 'vue'
+
+export interface CPin {
+  lngLat: LngLatLike;
+  title?: string;
+  description?: string;
+  isSelected?: boolean;
+  user?: string;
+  createdAt?: Date;
+  updatedAt?: Date;
+}
+
+
 export const useMapStore = defineStore('map', () => {
-  const _map: Ref<MapLibreMap | undefined> = ref()
-  const _points: Ref<PMarker[]> = ref([])
+  let _map: MapLibreMap | undefined
+  const _pins = ref<Record<number, CPin>>({})
+  const _pinsMarkers = new Map<number, Pin>()
+  let index : number = 0
 
   const initMap = () => {
-    if (_map.value) return
 
-    _map.value = new MapLibreMap({
+    _map = new MapLibreMap({
       container: 'map',
       style: 'https://api.maptiler.com/maps/streets-v2/style.json?key=AkDXKRSgsoWbmunH5eGo',
       center: [-4.49993133544922, 48.41040274663766],
       zoom: 13,
-    } as maplibregl.MapOptions)
-
-    _map.value.on('contextmenu', (e) => {
-      console.log(e.lngLat)
     })
-    _points.value = []
+
+    _map.on('contextmenu', (e) => {
+      console.log(e.lngLat)
+      addPoint(e.lngLat)
+    })
   }
 
-  const addPoint = (lngLat: any) => {
-    if (!_map.value) return
-    const marker = new PMarker(lngLat, _map.value)
-    _points.value.push(marker)
+  const addPoint = (lnglt: LngLatLike) => {
+    if (!_map) return
+    const m = new Pin(index, lnglt, _map)
+    m.on("click", () => {
+      console.log("contextmenu")
+      removePoint(index)
+    })
+    _pinsMarkers.set(index, m)
+    _pins.value[index] = {lngLat: lnglt}
+    index++
   }
+
+  const removePoint = (index: number) => {
+    if (!_map) return
+    const pm = _pinsMarkers.get(index)
+    if (pm){
+      console.log(pm.destroy)
+      pm.destroy()
+    }
+    _pinsMarkers.delete(index)
+    delete _pins.value[index]
+  }
+  
 
   return {
     _map,
-    _points,
+    _pins,
     initMap,
     addPoint,
+    removePoint
   }
 })

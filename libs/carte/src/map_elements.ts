@@ -1,33 +1,31 @@
-import { Marker, LngLatBounds, Map, type LngLatLike} from "maplibre-gl";
-import { createApp, h, type Ref } from "vue";
-import MyMarkerComponent from "./components/route/RouteMarker.vue";
+import { Marker, Map, type LngLatLike} from "maplibre-gl";
+import { createApp, h} from "vue";
+import MyPinComponent from "./components/Pin.vue";
 
 
 // Point personnalisé avec composant Vue monté dynamiquement
-export class PMarker extends Marker {
+export class Pin extends Marker {
 	private vueApp: any;
 
-	constructor(coords: LngLatLike, map: Map, onMove? : Function, index = 0) {
+	constructor(index: number, coords: LngLatLike, map: Map, onMove? : Function) {
 		const container = document.createElement("div");
 
 		// Monte dynamiquement le composant Vue dans le conteneur
 		const app =createApp({
-			render: () => h(MyMarkerComponent, { index })
+			render: () => 
+				h(MyPinComponent, { 
+					index
+				})
 		})
-		app.mount(container);
 
+		app.mount(container);
 		super({ element: container, draggable: true });
 		this.vueApp = app;
 
 		this.setLngLat(coords).addTo(map);
-		if (onMove) {
-			this.on("drag", () => onMove(this));
-		}
-		container.addEventListener('contextmenu', (e) => {
-		e.preventDefault();
-		console.log('contextmenu sur container');
-		this.destroy();
-		});
+		
+		if (onMove) {	this.on("drag", () => onMove(this));}
+		
 	}
 
 	public destroy() {
