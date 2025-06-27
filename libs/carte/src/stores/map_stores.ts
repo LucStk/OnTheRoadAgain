@@ -1,12 +1,13 @@
 import { defineStore } from 'pinia'
 import { Map as MapLibreMap } from 'maplibre-gl'
-import {type LngLatLike} from "maplibre-gl";
+import {type LngLatLike, LngLat} from "maplibre-gl";
 import { Pin } from '../map_elements'
 import { ref } from 'vue'
 import {api} from "@repo/auth"
 
 export interface CPin {
-  lngLat: LngLatLike;
+  lnglat: LngLatLike;
+  api_id?: number;
   title?: string;
   description?: string;
   isSelected?: boolean;
@@ -35,9 +36,11 @@ export const useMapStore = defineStore('map', () => {
       console.log(e.lngLat)
       addPoint(e.lngLat)
     })
+
+    getPins()
   }
 
-  const addPoint = (lnglt: LngLatLike) => {
+  const addPoint = (lnglt: LngLatLike, api_id?: number, title?: string, description?: string) => {
     if (!_map) return
     const m = new Pin(index, lnglt, _map)
     m.on("click", () => {
@@ -45,8 +48,9 @@ export const useMapStore = defineStore('map', () => {
       removePoint(index)
     })
     _pinsMarkers.set(index, m)
-    _pins.value[index] = {lngLat: lnglt}
+    _pins.value[index] = {lnglat: lnglt, api_id, title, description}
     index++
+    return m
   }
 
   const removeAllPins = () => {
@@ -56,30 +60,62 @@ export const useMapStore = defineStore('map', () => {
     _pinsMarkers.clear()
     _pins.value = {}
   }
-  function getPins() {
-    const ret = api.get("/pins")
-    return ret
+  async function getPins() {
+    const ret = await api.get("/ensembles/close_ensemble/pins/")
+    if (ret.status === 200) {
+      ret.data.features.forEach((e: any) => {
+        let coord = LngLat.convert(e.geometry.coordinates.reverse())
+        addPoint(coord, e.id, e.properties.title, e.properties.description)
+      })
+    }
   }
 
-  function postPins(pin: CPin) {
-    const ret = api.post("/pins", pin)
+  async function postPins(pin: CPin) {
+    const { lng, lat } = LngLat.convert(pin.lnglat)
+    const data = {
+      latlng: {
+        type: "Point",
+        coordinates: [lat, lng]
+      },
+      title: pin.title ?? "New Pin",
+      description: pin.description ?? "No description",
+    }
+
+    const ret = await api.post("/ensembles/close_ensemble/pins/", data)
+    if (ret.status === 201) {
+      const id = ret.data.id
+      pin.api_id = id
+    }
     return ret
   }
-
   const savePins = () => {
     for (const [key, value] of Object.entries(_pins.value)) {
       postPins(value)
     }
   }
 
-  const removePoint = (index: number) => {
+  async function removePoint(index: number) {
     if (!_map) return
+    
+    // On supprime graphiquement le point
     const pm = _pinsMarkers.get(index)
     if (pm){
       console.log(pm.destroy)
       pm.destroy()
     }
     _pinsMarkers.delete(index)
+
+    // On essaie de supprimer le point dans la base de données
+    const pin = _pins.value[index]
+    console.log(pin)
+    if (pin.api_id){
+      const ret = await api.delete(`/pins/${pin.api_id}/`)
+      if (ret.status === 204){
+        console.log("Pin supprimé")
+      }else{
+        console.log("Erreur lors de la suppression du pin sur le serveur")
+      }
+    }
     delete _pins.value[index]
   }
   
@@ -89,6 +125,7 @@ export const useMapStore = defineStore('map', () => {
     _pins,
     initMap,
     addPoint,
-    removePoint
+    removePoint,
+    savePins
   }
 })

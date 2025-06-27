@@ -1,5 +1,5 @@
 <template>
-  <div class="btn bg-white w-15 h-15 p-3 rounded-full absolute right-4 bottom-4" @click="">
+  <div class="btn bg-white w-15 h-15 p-3 rounded-full absolute right-4 bottom-4" @click="handleClick">
     <svg
       class="w-full h-full"
       viewBox="0 0 24 24"
@@ -17,6 +17,11 @@
 </template>
 
 <script setup lang="ts">
-  import { ref } from 'vue'
-  
+  import { useMapStore } from '../stores/map_stores';
+  const mapstore = useMapStore()
+
+  function handleClick() {
+    console.log("Save")
+    mapstore.savePins()
+  }
 </script>

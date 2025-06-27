@@ -1,6 +1,6 @@
 <script setup lang="ts">
   import { onMounted} from 'vue';
-  import Save from './components/route/Save.vue';
+  import Save from './components/Save.vue';
   import {useMapStore} from './stores/map_stores';
   const mapstore = useMapStore()
 
