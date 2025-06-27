@@ -24,42 +24,80 @@ export const useMapStore = defineStore('map', () => {
   let index : number = 0
 
   const initMap = () => {
-
     _map = new MapLibreMap({
       container: 'map',
       style: 'https://api.maptiler.com/maps/streets-v2/style.json?key=AkDXKRSgsoWbmunH5eGo',
       center: [-4.49993133544922, 48.41040274663766],
       zoom: 13,
     })
-
     _map.on('contextmenu', (e) => {
-      console.log(e.lngLat)
-      addPoint(e.lngLat)
+      createPin(e.lngLat)
     })
-
     getPins()
   }
 
-  const addPoint = (lnglt: LngLatLike, api_id?: number, title?: string, description?: string) => {
+  async function createPin(lnglt: LngLatLike) {
     if (!_map) return
-    const m = new Pin(index, lnglt, _map)
-    m.on("click", () => {
-      console.log("contextmenu")
-      removePoint(index)
-    })
-    _pinsMarkers.set(index, m)
-    _pins.value[index] = {lnglat: lnglt, api_id, title, description}
-    index++
-    return m
+    const { lng, lat } = LngLat.convert(lnglt)
+    const data = {
+      latlng: {
+        type: "Point",
+        coordinates: [lat, lng]
+      },
+      title: "New Pin",
+      description: "No description yet",
+    }
+
+    const ret = await api.post("/ensembles/close_ensemble/pins/", data)
+    if (ret.status === 201) {
+      const id = ret.data.id
+      addPoint(lnglt, id, data.title, data.description)
+    }
   }
 
-  const removeAllPins = () => {
-    _pinsMarkers.forEach((m) => {
-      m.destroy()
-    })
-    _pinsMarkers.clear()
-    _pins.value = {}
+  async function patchPin(index: number) {
+    if (!_map) return
+    
+    const pin = _pins.value[index]
+    const Mpin = _pinsMarkers.get(index)
+    if (!Mpin) return
+    console.log(_pins.value[index])
+    const { lng, lat } = LngLat.convert(Mpin.getLngLat())
+    const data = {
+      latlng: {
+        type: "Point",
+        coordinates: [lat, lng]
+      },
+      title: pin.title ?? "No title",
+      description: pin.description ?? "No description",
+    }
+    if (!pin.api_id) return
+    const ret = await api.patch(`/pins/${pin.api_id}/`, data)
+    if (ret.status === 200) {
+      console.log("Pin updated")
+    }
+    return ret
   }
+
+  async function addPoint(lnglt: LngLatLike, api_id?: number, title?: string, description?: string){
+    if (!_map) return
+    const currentIndex = index 
+    const m = new Pin(currentIndex, lnglt, _map)
+    _pinsMarkers.set(currentIndex, m)
+    _pins.value[currentIndex] = {lnglat: lnglt, api_id, title, description}
+
+    m.on("click", () => {
+      console.log("contextmenu")
+      removePoint(currentIndex)
+    })
+    m.on("dragend", () => {
+      console.log("dragend ",currentIndex)
+      patchPin(currentIndex)
+    })
+    
+    index++
+  }
+
   async function getPins() {
     const ret = await api.get("/ensembles/close_ensemble/pins/")
     if (ret.status === 200) {
