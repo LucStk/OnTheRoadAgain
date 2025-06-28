@@ -61,7 +61,7 @@ export class Pin extends Marker {
 	}
 	public serialize() {
 		return {
-			latlng: toGeoDjango(this.getLngLat().toArray()),
+			lnglat: toGeoDjango(this.getLngLat().toArray()),
 			titre: this.data.titre ?? "New Pin",
 			description: this.data.description ?? "No description",
 			api_id: this.data.api_id

@@ -1,10 +1,13 @@
-export function fromGeoDjango(point: { type: "Point", coordinates: [number, number] }): [number, number] {
-  return point.coordinates; // déjà [lng, lat]
-}
+import { LngLat} from "maplibre-gl";
 
 export function toGeoDjango([lng, lat]: [number, number]) {
-  return {
-    type: "Point",
-    coordinates: [lng, lat]
-  };
+	return {
+		type: "Point",
+		coordinates: [lng, lat]
+	};
+}
+
+export function fromGeoDjango(geoDjango: any) {
+	console.log(geoDjango)
+	return LngLat.convert(geoDjango.coordinates)
 }

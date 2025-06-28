@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia'
 import { Map as MapLibreMap } from 'maplibre-gl'
 import { Pin } from '../elements/pin'
-import {api} from "@repo/auth"
+import {api, useAuthStore} from "@repo/auth"
 
 
 export const useMapStore = defineStore('map', () => {
@@ -15,17 +15,20 @@ export const useMapStore = defineStore('map', () => {
       zoom: 13,
     })
     _map.on('contextmenu', (e) => {
-      new Pin(e.lngLat, _map)
+      const p = new Pin(e.lngLat, _map)
+      p.create_to_api()
     })
-    init_Pins_from_api()
+    const auth = useAuthStore()
+    if (auth.isUserLoaded) {
+      init_Pins_from_api()
+    }
   }
 
   async function init_Pins_from_api() {
     const ret = await api.get("/ensembles/close_ensemble/pins/")
     if (ret.status === 200) {
       ret.data.features.forEach((e: any) => {
-        console.log(e)
-        const p = new Pin(e.geometry.coordinates.reverse(), _map)
+        const p = new Pin(e.geometry.coordinates, _map)
         p.de_serialize(e)
       })
     }
