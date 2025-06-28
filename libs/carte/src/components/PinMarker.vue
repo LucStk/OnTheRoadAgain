@@ -21,22 +21,15 @@
 </template>
 
 <script setup lang="ts">
-
-  import { ref } from 'vue';
-  import { useMapStore } from '../stores/map_stores';
-  const mapstore = useMapStore()
-  const props = defineProps({
-    index: {
-      type: Number,
-      required: true,
-    }
-  });
+  import type {PinDataLike} from "../types/pin-types.ts";
+  const props = defineProps<{
+    data: PinDataLike;
+    destroy: () => void;
+  }>();
   
   const handleClick = () => {
-    mapstore.removePoint(props.index)
+    props.destroy()
   };
-
-  
 </script>
 
 <style scoped>

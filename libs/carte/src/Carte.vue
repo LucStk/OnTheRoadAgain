@@ -1,6 +1,5 @@
 <script setup lang="ts">
   import { onMounted} from 'vue';
-  import Save from './components/Save.vue';
   import {useMapStore} from './stores/map_stores';
   const mapstore = useMapStore()
 
@@ -12,7 +11,6 @@
 
 <template>
   <div id="map" class="z-0" ></div>
-  <Save />
 </template>
 
 <style lang="scss">
