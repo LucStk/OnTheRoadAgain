@@ -7,9 +7,13 @@ import type {
 } from "geojson"
 
 export class Route {
-  constructor(coords: Array<[number, number]>, map: Map) {
+  bbox: [LngLat, LngLat]
+  map: Map
+  constructor(coords: Array<[number, number]>, bbox: [LngLat,LngLat], map: Map) {
+    
     const segmentedRoute = this.buildSegmentedGeoJSON(coords)
-
+    this.bbox = bbox
+    this.map = map
     map.addSource("segmented-route", {
       type: "geojson",
       data: segmentedRoute, // ✅ maintenant bien typé
@@ -42,6 +46,12 @@ export class Route {
     map.on("mouseleave", "segmented-route-layer", () => {
       map.getCanvas().style.cursor = ""
     })
+  }
+
+  private de_serialize(request: any) {
+    this.bbox = request.bbox
+    const properties = request.properties
+    
   }
 
   private buildSegmentedGeoJSON(
