@@ -1,6 +1,6 @@
 import { Marker, Map, type LngLatLike, LngLat} from "maplibre-gl";
 import { createApp, h, reactive} from "vue";
-import MyPinComponent from "../components/PinMarker.vue";
+import MyPinComponent from "../components/PinNote.vue";
 import { api } from "@repo/auth";
 import {type PinDataLike} from "../types/pin-types.ts";
 import {fromGeoDjango, toGeoDjango} from "./map.ts";

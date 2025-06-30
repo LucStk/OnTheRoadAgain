@@ -7,16 +7,30 @@ import type {
   GeoJsonProperties,
 } from "geojson"
 
+import { RoutingEngine } from "./routing_engine";
+import { useMapStore } from "../stores/map_stores";
+import {api} from '@repo/auth'
 
 export class Route {
   geometry: string;
   bbox: number[];
   segments: any;
+  api_id: number | null = null;
 
   constructor(geometry: string, bbox: number[], segments: any) {
     this.geometry = geometry;
     this.bbox = bbox;
     this.segments = segments;
+  }
+
+  public static async FetchRoute(start: LngLat, end: LngLat): Promise<void>{
+    const routingEngine = new RoutingEngine();
+    const ret = await routingEngine.fetch_route([start, end]);
+    const data = ret.routes[0];
+    if (!data.geometry || !data.bbox) throw new Error("Invalid route response");
+    const route = new Route(data.geometry, data.bbox, data.segments);
+    const map = useMapStore().getMap()
+    route.addToMap(map);
   }
 
   addToMap(map: maplibregl.Map) {
@@ -57,7 +71,30 @@ export class Route {
 
     map.fitBounds(this.bbox as [number, number, number, number], { padding: 40 });
   }
+  private serialize(){
+    return "coucou"
+  } 
 
+  private async update_to_api() {
+    if (!this.api_id) {
+			const ret0 = await this.create_to_api()
+			if (!ret0) return false}
+    const ret = await api.patch(`/route/${this.api_id}/`, this.serialize())
+		if (ret.status === 200) {
+			console.log("Pin updated")
+			return true
+    	}
+		return false
+  }
+  public async create_to_api() {
+		const ret = await api.post("/ensembles/close_ensemble/route/", this.serialize())
+		if (ret.status === 201) {
+			const id = ret.data.id
+			this.api_id = id
+			return true
+		}
+		return false
+	}
 }
     
     /*
