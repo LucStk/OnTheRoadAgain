@@ -80,8 +80,10 @@ export class Route {
     if (!auth.isUserLoaded) { return }
     const ret = await api.get("/ensembles/close_ensemble/routes/")
     if (ret.status === 200) {
-    ret.data.features.forEach((e: any) => {
-      Route.de_serialize(e)
+    console.log(ret.data)
+    ret.data.forEach((e: any) => {
+      const route = Route.de_serialize(e)
+      route.addToMap()
     })
     }
   }
@@ -98,7 +100,7 @@ export class Route {
 		return false
   }
   public async create_to_api(): Promise<boolean> {
-		const ret = await api.post("/ensembles/close_ensemble/route/", this.serialize())
+		const ret = await api.post("/ensembles/close_ensemble/routes/", this.serialize())
 		if (ret.status === 201) {
 			const id = ret.data.id
 			this.api_id = id
@@ -112,6 +114,7 @@ export class Route {
     const bbox = geoJSONPolygonToBbox(request.bbox)
     const route = new Route(geometry, bbox, null)
     route.api_id = api_id
+    return route
 	}
 	private serialize() {
 		return {

@@ -6,6 +6,7 @@
 import { onMounted, ref } from 'vue';
 import { useMapStore } from './stores/map_stores';
 import {Pin} from './elements/pin'
+import {Route} from './elements/route'
 import {MarkerMenu} from './elements/markerMenu'
 const mapContainer = ref<HTMLElement | null>(null);
 const mapstore = useMapStore();
@@ -13,10 +14,14 @@ const mapstore = useMapStore();
 onMounted(() => {
   if (mapContainer.value) {
     mapstore.initMap(mapContainer.value);
-    mapstore.init_roads_from_api()
+    //mapstore.init_roads_from_api()
     new MarkerMenu()
     //Pin.setMapEvents()
     Pin.loads_Pins_from_api()
+    mapstore.getMap().on('load', () => {
+      Route.loads_Routes_from_api()
+      
+    }); 
 
   } else {
     console.error("Map container not found");
