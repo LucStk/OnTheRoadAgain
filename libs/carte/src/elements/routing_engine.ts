@@ -24,7 +24,7 @@ export class RoutingEngine {
         coordinates: coordinates.map(e => [e.lng, e.lat]),
     }
     console.log(data)
-    const response = await api.post("/ors/v2/directions/cycling-regular/", data)
+    const response = await api.post("/ors/v2/directions/cycling-regular/json/", data)
     if (response.status === 200) {
       const geojson = await response.data
       return geojson

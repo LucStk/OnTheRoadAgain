@@ -1,41 +1,53 @@
-import { defineStore } from 'pinia'
-import { Map as MapLibreMap } from 'maplibre-gl'
-import { Pin } from '../elements/pin'
-import {api, useAuthStore} from "@repo/auth"
-
+// stores/map_stores.ts
+import { defineStore } from 'pinia';
+import { Map } from '../elements/map';
+import { LngLat } from 'maplibre-gl';
+import { RoutingEngine } from '../elements/routing_engine';
+import { Route } from '../elements/route';
+import { ref, type Ref } from 'vue';
+import type maplibregl from 'maplibre-gl';
 
 export const useMapStore = defineStore('map', () => {
-  let _map: MapLibreMap
+  let _map : maplibregl.Map | null = null;
 
-  const initMap = () => {
-    _map = new MapLibreMap({
-      container: 'map',
-      style: 'https://api.maptiler.com/maps/streets-v2/style.json?key=AkDXKRSgsoWbmunH5eGo',
-      center: [-4.49993133544922, 48.41040274663766],
-      zoom: 13,
-    })
-    _map.on('contextmenu', (e) => {
-      const p = new Pin(e.lngLat, _map)
-      p.create_to_api()
-    })
-    const auth = useAuthStore()
-    if (auth.isUserLoaded) {
-      init_Pins_from_api()
-    }
+  function initMap(container: HTMLElement) {
+    _map = new Map(container);
   }
 
-  async function init_Pins_from_api() {
-    const ret = await api.get("/ensembles/close_ensemble/pins/")
-    if (ret.status === 200) {
-      ret.data.features.forEach((e: any) => {
-        const p = new Pin(e.geometry.coordinates, _map)
-        p.de_serialize(e)
-      })
+async function init_roads_from_api() {
+  const start = new LngLat(-4.49993133544922, 48.41040274663766);
+  const inter = new LngLat(-4.49993133544922, 48.40540274663766);
+  const end = new LngLat(-4.49993133544922, 48.40040274663766);
+
+  const routingEngine = new RoutingEngine();
+  const ret = await routingEngine.fetch_route([start, inter, end]);
+
+  if (ret.routes?.length > 0) {
+    const data = ret.routes[0];
+    if (!data.geometry || !data.bbox) throw new Error("Invalid route response");
+
+    const route = new Route(data.geometry, data.bbox, data.segments);
+
+    // ✅ Ajout à la carte ici
+    
+    if (_map) {
+      console.log("map loaded")
+      route.addToMap(_map as unknown as maplibregl.Map);
+      /*
+      _map.value.on('load', () => {
+        
+      });*/
     }
+    } else {
+      throw new Error("No routes found");
+    }
+    
   }
 
 
   return {
+    _map,
     initMap,
-  }
-})
+    init_roads_from_api
+  };
+});

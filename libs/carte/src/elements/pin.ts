@@ -4,13 +4,14 @@ import MyPinComponent from "../components/PinMarker.vue";
 import { api } from "@repo/auth";
 import {type PinDataLike} from "../types/pin-types.ts";
 import {fromGeoDjango, toGeoDjango} from "./map.ts";
-
+import { useMapStore } from "../stores/map_stores.ts";
+import { useAuthStore } from "@repo/auth";
 // Point personnalisé avec composant Vue monté dynamiquement
 export class Pin extends Marker {
 	private vueApp: any;
 	public data: PinDataLike;
 
-	constructor(coords: LngLatLike, map: Map) {
+	constructor(coords: LngLatLike) {
 		const container = document.createElement("div");
 
 		// Rendre "data" réactif
@@ -25,10 +26,9 @@ export class Pin extends Marker {
 		super({ element: container, draggable: true });
 		// Monte dynamiquement le composant Vue dans le conteneur
 
-		
-		
+		const mapstore = useMapStore()
 		this.data = data;
-		this.setLngLat(coords).addTo(map);
+		this.setLngLat(coords).addTo(mapstore._map);
 		this.setEvents()
 
 		const app =createApp({
@@ -42,6 +42,13 @@ export class Pin extends Marker {
 		this.vueApp = app;
 	}
 
+	private setMapEvents() {
+		this.map.on('contextmenu', (e) => {
+			  const p = new Pin(e.lngLat, _map)
+			  p.create_to_api()
+			})
+	}
+
 	private setEvents() {
 		this.on("click", () => {
 			console.log("contextmenu")
@@ -51,6 +58,18 @@ export class Pin extends Marker {
 			console.log("dragend ",this.data.api_id)
 			this.update_to_api()
 		})
+	}
+
+	public async init_Pins_from_api() {
+		const auth = useAuthStore()
+		if (!auth.isUserLoaded) { return }
+		const ret = await api.get("/ensembles/close_ensemble/pins/")
+		if (ret.status === 200) {
+		ret.data.features.forEach((e: any) => {
+			const p = new Pin(e.geometry.coordinates, _map)
+			p.de_serialize(e)
+		})
+		}
 	}
 
 	public de_serialize(request: any) {

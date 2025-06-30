@@ -1,17 +1,23 @@
-<script setup lang="ts">
-  import { onMounted} from 'vue';
-  import {useMapStore} from './stores/map_stores';
-  const mapstore = useMapStore()
-
-  onMounted(() => {
-    console.log("Map mounted")  
-    mapstore.initMap()
-  })
-</script>
-
 <template>
-  <div id="map" class="z-0" ></div>
+  <div ref="mapContainer" id="map" class="z-0"></div>
 </template>
+
+<script setup lang="ts">
+import { onMounted, ref } from 'vue';
+import { useMapStore } from './stores/map_stores';
+
+const mapContainer = ref<HTMLElement | null>(null);
+const mapstore = useMapStore();
+
+onMounted(() => {
+  if (mapContainer.value) {
+    mapstore.initMap(mapContainer.value);
+    mapstore.init_roads_from_api()
+  } else {
+    console.error("Map container not found");
+  }
+});
+</script>
 
 <style lang="scss">
   @import "maplibre-gl/dist/maplibre-gl.css";

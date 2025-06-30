@@ -1,4 +1,5 @@
 import { LngLat, Map } from "maplibre-gl"
+import {default as googlePolyline} from "google-polyline" 
 import type {
   FeatureCollection,
   Feature,
@@ -6,11 +7,60 @@ import type {
   GeoJsonProperties,
 } from "geojson"
 
+
 export class Route {
-  bbox: [LngLat, LngLat]
-  map: Map
-  constructor(coords: Array<[number, number]>, bbox: [LngLat,LngLat], map: Map) {
+  geometry: string;
+  bbox: number[];
+  segments: any;
+
+  constructor(geometry: string, bbox: number[], segments: any) {
+    this.geometry = geometry;
+    this.bbox = bbox;
+    this.segments = segments;
+  }
+
+  addToMap(map: maplibregl.Map) {
+    const coords = googlePolyline.decode(this.geometry).map(([lat, lng]) => [lng, lat]);
+
+    const geojson: Feature<LineString> = {
+      type: "Feature",
+      properties: {},
+      geometry: {
+        type: "LineString",
+        coordinates: coords,
+      },
+    };
+
+    if (!map.getSource("route")) {
+      map.addSource("route", {
+        type: "geojson",
+        data: geojson,
+      });
+
+      map.addLayer({
+        id: "route-line",
+        type: "line",
+        source: "route",
+        layout: {
+          "line-join": "round",
+          "line-cap": "round",
+        },
+        paint: {
+          "line-color": "#FF0000",
+          "line-width": 4,
+        },
+      });
+    } else {
+      const source = map.getSource("route") as maplibregl.GeoJSONSource;
+      source.setData(geojson);
+    }
+
+    map.fitBounds(this.bbox as [number, number, number, number], { padding: 40 });
+  }
+
+}
     
+    /*
     const segmentedRoute = this.buildSegmentedGeoJSON(coords)
     this.bbox = bbox
     this.map = map
@@ -79,3 +129,4 @@ export class Route {
     }
   }
 }
+*/
