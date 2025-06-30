@@ -12,6 +12,50 @@ export function fromGeoDjango(geoDjango: any) {
 	return LngLat.convert(geoDjango.coordinates)
 }
 
+export function geoJSONPolygonToBbox(polygon : any) {
+  if (!polygon || polygon.type !== "Polygon" || !Array.isArray(polygon.coordinates)) {
+    throw new Error("Invalid GeoJSON Polygon");
+  }
+
+  // On suppose que polygon.coordinates est un tableau de tableaux, fermé,
+  // avec exactement 5 points (premier = dernier)
+  const coords = polygon.coordinates[0];
+  if (coords.length !== 5) {
+    throw new Error("Polygon coordinates must have 5 points (closed rectangle)");
+  }
+
+  // Extraire les longitudes et latitudes séparément
+  const lngs = coords.map((coord: any[]) => coord[0]);
+  const lats = coords.map((coord: any[]) => coord[1]);
+
+  const minLng = Math.min(...lngs);
+  const maxLng = Math.max(...lngs);
+  const minLat = Math.min(...lats);
+  const maxLat = Math.max(...lats);
+
+  return [minLng, minLat, maxLng, maxLat];
+}
+
+export function bboxToGeoJSONPolygon(bbox : number[]) {
+  if (!Array.isArray(bbox) || bbox.length !== 4) {
+    throw new Error("bbox must be an array of 4 numbers: [minLng, minLat, maxLng, maxLat]");
+  }
+
+  const [minLng, minLat, maxLng, maxLat] = bbox;
+
+  return {
+    type: "Polygon",
+    coordinates: [[
+      [minLng, minLat],
+      [minLng, maxLat],
+      [maxLng, maxLat],
+      [maxLng, minLat],
+      [minLng, minLat] // Fermeture du polygone
+    ]]
+  };
+}
+
+
 export class Map extends maplibregl.Map {
 	constructor(container: HTMLElement) {
 		const options = {

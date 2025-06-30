@@ -44,13 +44,14 @@ export class MarkerMenu extends Marker {
 		this.origin = pin
 		console.log(pin)
 	}
-	public setDestination(){
+	public async setDestination(){
 		const pin = new PinRoute(this.getLngLat())
 		if (this.destination) {this.destination.destroy()}
 		this.destination = pin
 		console.log(pin)
 		if (this.origin && this.destination) {
-			const route = Route.FetchRoute(this.origin.getLngLat(), this.destination.getLngLat())
+			const route = await Route.FetchRoute(this.origin.getLngLat(), this.destination.getLngLat())
+			const ret = await route.create_to_api()
 		}
 	}
 

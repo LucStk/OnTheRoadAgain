@@ -10,30 +10,33 @@ import type {
 import { RoutingEngine } from "./routing_engine";
 import { useMapStore } from "../stores/map_stores";
 import {api} from '@repo/auth'
-
+import {fromGeoDjango, toGeoDjango, bboxToGeoJSONPolygon, geoJSONPolygonToBbox} from "./map.ts";
+import { useAuthStore } from "@repo/auth";
 export class Route {
   geometry: string;
   bbox: number[];
   segments: any;
   api_id: number | null = null;
 
-  constructor(geometry: string, bbox: number[], segments: any) {
+  constructor(geometry: string, bbox: number[], segments?: any) {
     this.geometry = geometry;
     this.bbox = bbox;
     this.segments = segments;
   }
 
-  public static async FetchRoute(start: LngLat, end: LngLat): Promise<void>{
+  public static async FetchRoute(start: LngLat, end: LngLat): Promise<Route>{
     const routingEngine = new RoutingEngine();
     const ret = await routingEngine.fetch_route([start, end]);
     const data = ret.routes[0];
     if (!data.geometry || !data.bbox) throw new Error("Invalid route response");
     const route = new Route(data.geometry, data.bbox, data.segments);
-    const map = useMapStore().getMap()
-    route.addToMap(map);
+    route.addToMap();
+    return route
   }
 
-  addToMap(map: maplibregl.Map) {
+  addToMap() {
+    const map = useMapStore().getMap()
+
     const coords = googlePolyline.decode(this.geometry).map(([lat, lng]) => [lng, lat]);
 
     const geojson: Feature<LineString> = {
@@ -71,11 +74,19 @@ export class Route {
 
     map.fitBounds(this.bbox as [number, number, number, number], { padding: 40 });
   }
-  private serialize(){
-    return "coucou"
-  } 
 
-  private async update_to_api() {
+  public static async loads_Routes_from_api() {
+    const auth = useAuthStore()
+    if (!auth.isUserLoaded) { return }
+    const ret = await api.get("/ensembles/close_ensemble/routes/")
+    if (ret.status === 200) {
+    ret.data.features.forEach((e: any) => {
+      Route.de_serialize(e)
+    })
+    }
+  }
+
+  public async update_to_api() {
     if (!this.api_id) {
 			const ret0 = await this.create_to_api()
 			if (!ret0) return false}
@@ -86,7 +97,7 @@ export class Route {
     	}
 		return false
   }
-  public async create_to_api() {
+  public async create_to_api(): Promise<boolean> {
 		const ret = await api.post("/ensembles/close_ensemble/route/", this.serialize())
 		if (ret.status === 201) {
 			const id = ret.data.id
@@ -94,6 +105,20 @@ export class Route {
 			return true
 		}
 		return false
+	}
+  public static de_serialize(request: any) {
+    const api_id = request.id
+    const geometry = request.geometry
+    const bbox = geoJSONPolygonToBbox(request.bbox)
+    const route = new Route(geometry, bbox, null)
+    route.api_id = api_id
+	}
+	private serialize() {
+		return {
+			geometry: this.geometry,
+			api_id: this.api_id,
+      bbox : bboxToGeoJSONPolygon(this.bbox)
+		}
 	}
 }
     

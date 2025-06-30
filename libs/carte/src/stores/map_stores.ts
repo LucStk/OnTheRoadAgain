@@ -19,7 +19,7 @@ export const useMapStore = defineStore('mapstore', () => {
     _map = new Map(container);
   }
 
-async function init_roads_from_api() {
+async function test_init_roads_from_api() {
   const start = new LngLat(-4.49993133544922, 48.41040274663766);
   const inter = new LngLat(-4.49993133544922, 48.40540274663766);
   const end = new LngLat(-4.49993133544922, 48.40040274663766);
@@ -37,7 +37,7 @@ async function init_roads_from_api() {
     
     if (_map) {
       console.log("map loaded")
-      route.addToMap(_map as unknown as maplibregl.Map);
+      route.addToMap();
       /*
       _map.value.on('load', () => {
         
@@ -53,6 +53,6 @@ async function init_roads_from_api() {
   return {
     getMap,
     initMap,
-    init_roads_from_api
+    test_init_roads_from_api
   };
 });

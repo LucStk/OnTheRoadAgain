@@ -4,6 +4,7 @@ import MyPinComponent from "../components/PinRoute.vue";
 import { useMapStore } from "../stores/map_stores.ts";
 import {Pin} from "./pin"
 
+
 // Point personnalisé avec composant Vue monté dynamiquement
 export class PinRoute extends Marker {
     public map: maplibregl.Map;
