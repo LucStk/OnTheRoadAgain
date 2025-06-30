@@ -44,8 +44,10 @@ export class Pin extends Marker {
 		this.vueApp = app;
 	}
 
-	private setMapEvents() {
-		this.map.on('contextmenu', (e) => {
+	public static setMapEvents() {
+		const mapstore = useMapStore()
+		const map = mapstore.getMap()
+		map.on('contextmenu', (e) => {
 			  const p = new Pin(e.lngLat)
 			  p.create_to_api()
 			})
@@ -62,7 +64,7 @@ export class Pin extends Marker {
 		})
 	}
 
-	public async init_Pins_from_api() {
+	public static async loads_Pins_from_api() {
 		const auth = useAuthStore()
 		if (!auth.isUserLoaded) { return }
 		const ret = await api.get("/ensembles/close_ensemble/pins/")
