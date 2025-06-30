@@ -22,4 +22,5 @@ export class Map extends maplibregl.Map {
 		}
 		super(options)
 	}
+	
 }

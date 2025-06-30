@@ -10,6 +10,7 @@ import { useAuthStore } from "@repo/auth";
 export class Pin extends Marker {
 	private vueApp: any;
 	public data: PinDataLike;
+	public map: maplibregl.Map;
 
 	constructor(coords: LngLatLike) {
 		const container = document.createElement("div");
@@ -28,7 +29,8 @@ export class Pin extends Marker {
 
 		const mapstore = useMapStore()
 		this.data = data;
-		this.setLngLat(coords).addTo(mapstore._map);
+		this.map = mapstore.getMap();
+		this.setLngLat(coords).addTo(this.map);
 		this.setEvents()
 
 		const app =createApp({
@@ -44,7 +46,7 @@ export class Pin extends Marker {
 
 	private setMapEvents() {
 		this.map.on('contextmenu', (e) => {
-			  const p = new Pin(e.lngLat, _map)
+			  const p = new Pin(e.lngLat)
 			  p.create_to_api()
 			})
 	}
@@ -66,7 +68,7 @@ export class Pin extends Marker {
 		const ret = await api.get("/ensembles/close_ensemble/pins/")
 		if (ret.status === 200) {
 		ret.data.features.forEach((e: any) => {
-			const p = new Pin(e.geometry.coordinates, _map)
+			const p = new Pin(e.geometry.coordinates)
 			p.de_serialize(e)
 		})
 		}

@@ -7,8 +7,13 @@ import { Route } from '../elements/route';
 import { ref, type Ref } from 'vue';
 import type maplibregl from 'maplibre-gl';
 
-export const useMapStore = defineStore('map', () => {
-  let _map : maplibregl.Map | null = null;
+export const useMapStore = defineStore('mapstore', () => {
+  let _map: maplibregl.Map | null = null;
+
+  function getMap(): maplibregl.Map {
+    if (!_map) throw new Error("Map not loaded");
+    return _map;
+  }
 
   function initMap(container: HTMLElement) {
     _map = new Map(container);
@@ -46,7 +51,7 @@ async function init_roads_from_api() {
 
 
   return {
-    _map,
+    getMap,
     initMap,
     init_roads_from_api
   };
