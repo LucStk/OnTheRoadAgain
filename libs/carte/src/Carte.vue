@@ -19,7 +19,7 @@ onMounted(() => {
     //Pin.setMapEvents()
     Pin.loads_Pins_from_api()
     mapstore.getMap().on('load', () => {
-      Route.loads_Routes_from_api()
+      //Route.loads_Routes_from_api()
       
     }); 
 

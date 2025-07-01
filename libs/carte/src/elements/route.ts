@@ -1,42 +1,29 @@
 import { LngLat, Map } from "maplibre-gl"
 import {default as googlePolyline} from "google-polyline" 
-import type {
-  FeatureCollection,
-  Feature,
-  LineString,
-  GeoJsonProperties,
-} from "geojson"
-
-import { RoutingEngine } from "./routing_engine";
+import {PinRoute} from "./pinRoute"
+import type {FeatureCollection,Feature,LineString,GeoJsonProperties,} from "geojson"
 import { useMapStore } from "../stores/map_stores";
 import {api} from '@repo/auth'
 import {fromGeoDjango, toGeoDjango, bboxToGeoJSONPolygon, geoJSONPolygonToBbox} from "./map.ts";
 import { useAuthStore } from "@repo/auth";
+
 export class Route {
-  geometry: string;
-  bbox: number[];
+  geometry: string | null = null;
+  bbox: number[] | null = null;
   segments: any;
   api_id: number | null = null;
+  private markers: PinRoute[] = [];
 
-  constructor(geometry: string, bbox: number[], segments?: any) {
-    this.geometry = geometry;
-    this.bbox = bbox;
-    this.segments = segments;
-  }
-
-  public static async FetchRoute(start: LngLat, end: LngLat): Promise<Route>{
-    const routingEngine = new RoutingEngine();
-    const ret = await routingEngine.fetch_route([start, end]);
-    const data = ret.routes[0];
-    if (!data.geometry || !data.bbox) throw new Error("Invalid route response");
-    const route = new Route(data.geometry, data.bbox, data.segments);
-    route.addToMap();
-    return route
+  constructor(geometry?: string, bbox?: number[], segments?: any) {
+    if (geometry) this.geometry = geometry;
+    if (bbox) this.bbox = bbox;
+    if (segments) this.segments = segments;
   }
 
   addToMap() {
     const map = useMapStore().getMap()
 
+    if (!this.geometry) return
     const coords = googlePolyline.decode(this.geometry).map(([lat, lng]) => [lng, lat]);
 
     const geojson: Feature<LineString> = {
@@ -72,7 +59,15 @@ export class Route {
       source.setData(geojson);
     }
 
-    map.fitBounds(this.bbox as [number, number, number, number], { padding: 40 });
+    //map.fitBounds(this.bbox as [number, number, number, number], { padding: 40 });
+  }
+
+  public async addMarker(lngLat: LngLat) {
+    const marker = new PinRoute(lngLat)
+    marker.setEvents([["dragend", () => this.fetch_route()]])
+    this.markers.push(marker)
+    await this.fetch_route()
+    //this.update_to_api()
   }
 
   public static async loads_Routes_from_api() {
@@ -88,10 +83,32 @@ export class Route {
     }
   }
 
+  public async fetch_route() {
+    if (this.markers.length < 2) return
+    const coordinates = this.markers.map((e: PinRoute) => {
+      const lnglat = e.getLngLat()
+      return [lnglat.lng, lnglat.lat]
+    })
+    const data = {
+        coordinates: coordinates
+    }
+    console.log(data)
+    const response = await api.post("/ors/v2/directions/cycling-regular/json/", data)
+    if (response.status === 200) {
+      const data = response.data.routes[0]
+      this.geometry = data.geometry
+      this.bbox = data.bbox
+      this.addToMap()
+    }
+  }
+
+
   public async update_to_api() {
     if (!this.api_id) {
 			const ret0 = await this.create_to_api()
-			if (!ret0) return false}
+			if (!ret0) return false
+      return true
+    }
     const ret = await api.patch(`/route/${this.api_id}/`, this.serialize())
 		if (ret.status === 200) {
 			console.log("Pin updated")
@@ -108,21 +125,26 @@ export class Route {
 		}
 		return false
 	}
-  public static de_serialize(request: any) {
-    const api_id = request.id
-    const geometry = request.geometry
-    const bbox = geoJSONPolygonToBbox(request.bbox)
-    const route = new Route(geometry, bbox, null)
-    route.api_id = api_id
-    return route
-	}
-	private serialize() {
-		return {
-			geometry: this.geometry,
-			api_id: this.api_id,
+  public de_serialize(data: any) {
+    console.log(data)
+    this.api_id = data.id;
+    this.geometry = data.geometry;
+    this.bbox = geoJSONPolygonToBbox(data.bbox);
+    return this;
+  }
+  // Static method
+  public static de_serialize(data: any) {
+    const route = new Route("", [], []);
+    return route.de_serialize(data); // utilise la méthode d’instance
+  }
+
+  private serialize() {
+    return {
+      geometry: this.geometry,
+      api_id: this.api_id,
       bbox : bboxToGeoJSONPolygon(this.bbox)
-		}
-	}
+    }
+  }
 }
     
     /*

@@ -36,7 +36,8 @@ export function geoJSONPolygonToBbox(polygon : any) {
   return [minLng, minLat, maxLng, maxLat];
 }
 
-export function bboxToGeoJSONPolygon(bbox : number[]) {
+export function bboxToGeoJSONPolygon(bbox : number[] | null) {
+  if (!bbox) return null
   if (!Array.isArray(bbox) || bbox.length !== 4) {
     throw new Error("bbox must be an array of 4 numbers: [minLng, minLat, maxLng, maxLat]");
   }

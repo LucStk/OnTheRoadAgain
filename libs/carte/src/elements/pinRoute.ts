@@ -26,6 +26,12 @@ export class PinRoute extends Marker {
         })
         this.vueApp = app.mount(container);
     }
+    public setEvents(Events: Array<[string, any]>) {
+        for (const [ev, f] of Events) {
+            this.on(ev, (e:any) => f(e))
+        }
+    }
+
     public destroy() {
 		this.remove(); // supprime de la carte
 		if (this.vueApp) {

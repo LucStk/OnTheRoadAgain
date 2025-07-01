@@ -11,8 +11,8 @@ export class MarkerMenu extends Marker {
 	public map: maplibregl.Map;
 	private vueApp: any;
 	private visible: Ref<boolean>;
-	private origin: PinRoute | null = null;
-	private destination: PinRoute | null = null;
+	private route: Route | null = null;
+	
 
 	constructor() {
 		const container = document.createElement("div");
@@ -39,19 +39,17 @@ export class MarkerMenu extends Marker {
 		this.setMapEvents()
 	}
 	public setOrigin(){
-		const pin = new PinRoute(this.getLngLat())
-		if (this.origin) {this.origin.destroy()}
-		this.origin = pin
-		console.log(pin)
+		if (!this.route){
+			this.route = new Route("", [])
+			this.route.addMarker(this.getLngLat())
+		}
 	}
 	public async setDestination(){
-		const pin = new PinRoute(this.getLngLat())
-		if (this.destination) {this.destination.destroy()}
-		this.destination = pin
-		console.log(pin)
-		if (this.origin && this.destination) {
-			const route = await Route.FetchRoute(this.origin.getLngLat(), this.destination.getLngLat())
-			const ret = await route.create_to_api()
+		if (this.route){
+			this.route.addMarker(this.getLngLat())
+		}
+		else{
+			throw new Error("Error MarkerMenu :Route not set")
 		}
 	}
 
