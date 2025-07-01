@@ -118,9 +118,15 @@ importers:
 
   libs/carte:
     dependencies:
+      '@headlessui/vue':
+        specifier: ^1.7.23
+        version: 1.7.23(vue@3.5.17(typescript@5.8.3))
       '@repo/auth':
         specifier: workspace:*
         version: link:../auth
+      '@vueuse/core':
+        specifier: ^13.4.0
+        version: 13.4.0(vue@3.5.17(typescript@5.8.3))
       google-polyline:
         specifier: ^1.0.3
         version: 1.0.3
@@ -173,6 +179,9 @@ importers:
 
   libs/ui:
     dependencies:
+      '@headlessui/vue':
+        specifier: ^1.7.23
+        version: 1.7.23(vue@3.5.17(typescript@5.8.3))
       '@heroicons/vue':
         specifier: ^2.2.0
         version: 2.2.0(vue@3.5.17(typescript@5.8.3))
@@ -1068,6 +1077,9 @@ packages:
   '@types/vue-cropperjs@4.1.6':
     resolution: {integrity: sha512-uXvfow8psskKj3rZjUvxNb9lKhWk/+JtumlDK3vJ405BFwGwRgKHpodUX+SmCrvH9BqaUJ4Jt0wyZGtzi+hGQw==}
 
+  '@types/web-bluetooth@0.0.21':
+    resolution: {integrity: sha512-oIQLCGWtcFZy2JW77j9k8nHzAOpqMHLQejDA48XXMWH6tjCQHz5RCFz1bzsmROyL6PUm+LLnUiI4BCn221inxA==}
+
   '@types/yauzl@2.10.3':
     resolution: {integrity: sha512-oJoftv0LSuaDZE3Le4DbKX+KS9G36NzOeSap90UIK0yMA/NhKJhqlSGtNDORNRaIbQfzjXDrQa0ytJ6mNRGz/Q==}
 
@@ -1206,6 +1218,19 @@ packages:
         optional: true
       vue:
         optional: true
+
+  '@vueuse/core@13.4.0':
+    resolution: {integrity: sha512-OnK7zW3bTq/QclEk17+vDFN3tuAm8ONb9zQUIHrYQkkFesu3WeGUx/3YzpEp+ly53IfDAT9rsYXgGW6piNZC5w==}
+    peerDependencies:
+      vue: ^3.5.0
+
+  '@vueuse/metadata@13.4.0':
+    resolution: {integrity: sha512-CPDQ/IgOeWbqItg1c/pS+Ulum63MNbpJ4eecjFJqgD/JUCJ822zLfpw6M9HzSvL6wbzMieOtIAW/H8deQASKHg==}
+
+  '@vueuse/shared@13.4.0':
+    resolution: {integrity: sha512-+AxuKbw8R1gYy5T21V5yhadeNM7rJqb4cPaRI9DdGnnNl3uqXh+unvQ3uCaA2DjYLbNr1+l7ht/B4qEsRegX6A==}
+    peerDependencies:
+      vue: ^3.5.0
 
   acorn@8.15.0:
     resolution: {integrity: sha512-NZyJarBfL7nWwIq+FDL6Zp/yHEhePMNnnJ0y3qfieCrmNvYct8uvtiV41UvlSe6apAfk0fY1FbWx+NwfmpvtTg==}
@@ -4023,6 +4048,8 @@ snapshots:
     dependencies:
       vue: 2.7.16
 
+  '@types/web-bluetooth@0.0.21': {}
+
   '@types/yauzl@2.10.3':
     dependencies:
       '@types/node': 24.0.4
@@ -4224,6 +4251,19 @@ snapshots:
   '@vue/tsconfig@0.7.0(typescript@5.8.3)(vue@3.5.17(typescript@5.8.3))':
     optionalDependencies:
       typescript: 5.8.3
+      vue: 3.5.17(typescript@5.8.3)
+
+  '@vueuse/core@13.4.0(vue@3.5.17(typescript@5.8.3))':
+    dependencies:
+      '@types/web-bluetooth': 0.0.21
+      '@vueuse/metadata': 13.4.0
+      '@vueuse/shared': 13.4.0(vue@3.5.17(typescript@5.8.3))
+      vue: 3.5.17(typescript@5.8.3)
+
+  '@vueuse/metadata@13.4.0': {}
+
+  '@vueuse/shared@13.4.0(vue@3.5.17(typescript@5.8.3))':
+    dependencies:
       vue: 3.5.17(typescript@5.8.3)
 
   acorn@8.15.0: {}

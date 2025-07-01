@@ -30,7 +30,6 @@ export async function globalMiddleware(to: RouteLocationNormalized, _from: Route
 
     if (auth.access.value && !auth.isUserLoaded) {
       try {
-        console.log("coucou")
         await auth.fetchUser();
         return next('/profile');
       } catch (e) {

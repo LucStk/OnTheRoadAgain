@@ -20,11 +20,6 @@
         On the Road Again
       </a>
     </div>
-    <!--
-    <div class="navbar-center">
-      <Searchbar />
-    </div>
-    -->
     <div class="navbar-end flex items-center gap-4">
       <Notification />
       <LoginDropDown />
