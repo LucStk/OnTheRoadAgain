@@ -6,13 +6,16 @@ import { useMapStore } from "../stores/map_stores";
 import {api} from '@repo/auth'
 import {fromGeoDjango, toGeoDjango, bboxToGeoJSONPolygon, geoJSONPolygonToBbox} from "./map.ts";
 import { useAuthStore } from "@repo/auth";
-
+import {point, lineString, nearestPointOnLine} from "@turf/turf"
 export class Route {
   geometry: string | null = null;
   bbox: number[] | null = null;
   segments: any;
   api_id: number | null = null;
+  coords: number[][] = [];
   private markers: PinRoute[] = [];
+  private flagDragging: boolean = false;
+  private flagTireRoute: boolean = false;
 
   constructor(geometry?: string, bbox?: number[], segments?: any) {
     if (geometry) this.geometry = geometry;
@@ -25,7 +28,7 @@ export class Route {
 
     if (!this.geometry) return
     const coords = googlePolyline.decode(this.geometry).map(([lat, lng]) => [lng, lat]);
-
+    this.coords = coords
     const geojson: Feature<LineString> = {
       type: "Feature",
       properties: {},
@@ -54,20 +57,67 @@ export class Route {
           "line-width": 4,
         },
       });
+      map.on('mouseenter', 'route-line', () => {
+        map.getCanvas().style.cursor = 'pointer'
+      })
+
+      map.on('mouseleave', 'route-line', () => {
+        map.getCanvas().style.cursor = ''
+      })
     } else {
       const source = map.getSource("route") as maplibregl.GeoJSONSource;
       source.setData(geojson);
     }
-
+    this.set_grab_line()
     //map.fitBounds(this.bbox as [number, number, number, number], { padding: 40 });
   }
 
+  public async set_grab_line(){
+    const map = useMapStore().getMap()
+    map.on('mousedown', 'route-line', (e) => {
+      e.preventDefault()
+      if (this.flagDragging || this.flagTireRoute) return
+      this.flagTireRoute = true
+
+      console.log('Mouse down')
+      map.once('mouseup', (e) => {
+        console.log('mouseup', e)
+        console.log("nouveau marker")
+        this.addMarker(e.lngLat)
+        this.flagTireRoute = false
+      })
+    })
+  }
+
+  public updateLineOnMap(){
+  }
+
   public async addMarker(lngLat: LngLat) {
-    const marker = new PinRoute(lngLat)
-    marker.setEvents([["dragend", () => this.fetch_route()]])
-    this.markers.push(marker)
-    await this.fetch_route()
-    //this.update_to_api()
+    const marker = new PinRoute(lngLat);
+
+    const el = marker.getElement()
+    el.addEventListener('mouseover', () => {
+      this.flagDragging = true
+    })
+
+    el.addEventListener('mouseout', () => {
+      this.flagDragging = false
+    })
+
+    marker.on("dragstart", (e) => {
+      console.log('Flag taken');
+      this.flagDragging = true;
+    });
+
+    marker.on("dragend", async (e) => {
+      console.log('Flag released');
+      this.flagDragging = false;
+      this.updateLineOnMap();
+      await this.fetch_route();
+    });
+
+    this.markers.push(marker);
+    await this.fetch_route();
   }
 
   public static async loads_Routes_from_api() {
@@ -146,74 +196,3 @@ export class Route {
     }
   }
 }
-    
-    /*
-    const segmentedRoute = this.buildSegmentedGeoJSON(coords)
-    this.bbox = bbox
-    this.map = map
-    map.addSource("segmented-route", {
-      type: "geojson",
-      data: segmentedRoute, // ✅ maintenant bien typé
-    })
-
-    map.addLayer({
-      id: "segmented-route-layer",
-      type: "line",
-      source: "segmented-route",
-      paint: {
-        "line-color": "#3b82f6",
-        "line-width": 6,
-        "line-opacity": 0.8,
-      },
-    })
-
-    map.on("click", "segmented-route-layer", (e) => {
-      const feature = map.queryRenderedFeatures(e.point, {
-        layers: ["segmented-route-layer"],
-      })[0]
-      if (feature) {
-        alert(`Segment cliqué : ${feature.properties?.name}`)
-        console.log("Feature cliquée :", feature)
-      }
-    })
-
-    map.on("mouseenter", "segmented-route-layer", () => {
-      map.getCanvas().style.cursor = "pointer"
-    })
-    map.on("mouseleave", "segmented-route-layer", () => {
-      map.getCanvas().style.cursor = ""
-    })
-  }
-
-  private de_serialize(request: any) {
-    this.bbox = request.bbox
-    const properties = request.properties
-    
-  }
-
-  private buildSegmentedGeoJSON(
-    coords: [number, number][]
-  ): FeatureCollection<LineString, GeoJsonProperties> {
-    const features: Feature<LineString, GeoJsonProperties>[] = []
-
-    for (let i = 0; i < coords.length - 1; i++) {
-      features.push({
-        type: "Feature",
-        geometry: {
-          type: "LineString",
-          coordinates: [coords[i], coords[i + 1]],
-        },
-        properties: {
-          segment_id: i,
-          name: `Segment ${i + 1}`,
-        },
-      })
-    }
-
-    return {
-      type: "FeatureCollection",
-      features,
-    }
-  }
-}
-*/

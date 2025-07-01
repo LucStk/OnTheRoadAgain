@@ -1,7 +1,11 @@
 <template>
   <div class="" @click="">
     <div
-      class="flex size-4.5 items-center justify-center rounded-full bg-black"
+      class="flex 
+          cursor-pointer
+          size-7 items-center 
+          justify-center 
+          rounded-full bg-black"
     >
         x
     </div>

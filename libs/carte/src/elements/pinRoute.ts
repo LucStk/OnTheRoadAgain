@@ -25,11 +25,15 @@ export class PinRoute extends Marker {
                 })
         })
         this.vueApp = app.mount(container);
-    }
-    public setEvents(Events: Array<[string, any]>) {
-        for (const [ev, f] of Events) {
-            this.on(ev, (e:any) => f(e))
-        }
+        container.addEventListener('onclick', (e) => {
+            e.stopPropagation()
+        })
+        container.addEventListener('onmousedown', (e) => {
+            e.stopPropagation()
+        })
+        container.addEventListener('onmousehover', (e) => {
+            e.stopPropagation()
+        })
     }
 
     public destroy() {
