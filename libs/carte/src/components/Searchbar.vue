@@ -93,7 +93,7 @@ watchDebounced(
       console.error('Erreur lors de la recherche avec Photon:', error)
     }
   },
-  { debounce: 400, maxWait: 1000 }
+  { debounce: 100, maxWait: 1000 }
 )
 
 const onSelect = (feature: PhotonFeature | null) => {

@@ -81,8 +81,6 @@ export class Route {
 
       console.log('Mouse down')
       map.once('mouseup', (e) => {
-        console.log('mouseup', e)
-        console.log("nouveau marker")
         this.addMarker(e.lngLat)
         this.flagTireRoute = false
       })

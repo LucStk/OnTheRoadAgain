@@ -1,9 +1,6 @@
 // stores/map_stores.ts
 import { defineStore } from 'pinia';
 import { Map } from '../elements/map';
-import { LngLat } from 'maplibre-gl';
-import { Route } from '../elements/route';
-import { ref, type Ref } from 'vue';
 import type maplibregl from 'maplibre-gl';
 
 export const useMapStore = defineStore('mapstore', () => {
