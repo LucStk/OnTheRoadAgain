@@ -61,14 +61,13 @@ export const useEnsembleStore = defineStore('ensemble', () => {
     const updated = await response?.data
     for (const item of updated) {
         await db.ensemble.put(item)
-        console.log("item.id:", item.id)
+        console.log("pull : item.id:", item.id)
     }
     await setLastSyncTime(new Date().toISOString());
   }
 
   const pushToBackend = async () => {
     // 2. Push local vers backend
-    console.log("pushToBackend")
     let localDirty = await db.ensemble.where('dirty').equals(1).toArray();
     if (localDirty.length > 0) {
       const response = await api.post('/ensembles/push/', localDirty);
@@ -77,10 +76,17 @@ export const useEnsembleStore = defineStore('ensemble', () => {
       
       await Promise.all(response.data.map((item: Ensemble) =>{
         db.ensemble.update(item.id, { dirty: 0})
-        console.log("item.id:", item.id)
+        console.log("push : item.id:", item.id)
       }));
-      
+      await setLastSyncTime(new Date().toISOString());
+    }else{
+      console.log("everything is up to date")
     }
+  }
+
+  const syncBackend = async () => {
+    await pushToBackend()
+    await pullFromBackend()
   }
 
   async function createLocalEnsemble() {

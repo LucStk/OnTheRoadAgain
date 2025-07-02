@@ -20,9 +20,8 @@
   import { useEnsembleStore } from '../stores/ensembleStores';
   const ensStore = useEnsembleStore()
 
-  function handleClick() {
-    console.log("Save")
-    //ensStore.pullFromBackend()
-    ensStore.pushToBackend()
+  async function handleClick() {
+    await ensStore.pushToBackend()
+    await ensStore.pullFromBackend()
   }
 </script>
