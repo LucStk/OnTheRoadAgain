@@ -17,11 +17,12 @@
 </template>
 
 <script setup lang="ts">
-  import { useMapStore } from '../stores/map_stores';
-  const mapstore = useMapStore()
+  import { useEnsembleStore } from '../stores/ensembleStores';
+  const ensStore = useEnsembleStore()
 
   function handleClick() {
     console.log("Save")
-    mapstore.savePins()
+    //ensStore.pullFromBackend()
+    ensStore.pushToBackend()
   }
 </script>

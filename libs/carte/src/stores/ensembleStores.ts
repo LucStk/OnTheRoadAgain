@@ -1,10 +1,11 @@
 // stores/ensembleStore.ts
-import { liveQuery } from 'dexie'
 import { from } from 'rxjs'
-import { computed, ref, watchEffect } from 'vue'
+import { computed, DeprecationTypes, ref, watchEffect } from 'vue'
 import { defineStore } from 'pinia'
 import { db, type Ensemble } from '../db/ensembleDB'
-
+import { getLastSyncTime, setLastSyncTime } from '../db/syncMetaDB'
+import { type IndexableType,liveQuery  } from 'dexie';
+import { api } from '@repo/auth';
 
 export const useEnsembleStore = defineStore('ensemble', () => {
   const ensemblesList = ref<Ensemble[]>([])
@@ -39,33 +40,45 @@ export const useEnsembleStore = defineStore('ensemble', () => {
     onInvalidate(() => subscription.unsubscribe())
   })
 
-  const addOrUpdateEnsemble = async (item: Ensemble) => {
-    await db.ensemble.put(item)
-  }
-
   async function renameEnsemble(item_id: string, newName: string) {
     await db.ensemble.update(item_id, { titre: newName });
   }
 
-
-  const syncWithBackend = async () => {
-    const lastSync = localStorage.getItem('last_sync') || '1970-01-01T00:00:00Z'
-    const response = await fetch(`/api/ensembles?updated_after=${lastSync}`)
-    const updated = await response.json()
+  const pullFromBackend = async () => {
+    const lastSync = await getLastSyncTime();
+    const response = await api.get(`/ensembles/pull/?since=${lastSync}`)
+    const updated = await response?.data
     for (const item of updated) {
         await db.ensemble.put(item)
     }
-    localStorage.setItem('last_sync', new Date().toISOString())
+    await setLastSyncTime(new Date().toISOString());
+  }
+  const pushToBackend = async () => {
+    // 2. Push local vers backend
+    console.log("pushToBackend")
+    let localDirty = await db.ensemble.where('dirty').equals(1).toArray();
+    if (localDirty.length > 0) {
+      console.log("localDirty:", localDirty)
+      await api.post('/ensembles/push/', localDirty);
+      // Marque comme propre
+      await Promise.all(localDirty.map(item =>
+        db.ensemble.update(item.id, { dirty: 0})
+      ));
+    }
   }
 
   async function createLocalEnsemble() {
+    const visibility: 'C' | 'O' | 'R' = 'C';
+    
     const ensemble = {
       id: crypto.randomUUID(), // UUID temporaire
       titre: 'Nouvel ensemble local',
       description: 'Créé hors-ligne',
-      visibility: 'Close',
+      visibility,
       created_at: new Date().toISOString(),
       updated_at: new Date().toISOString(),
+      dirty : 1,
+      deleted : 0
     }
     await db.ensemble.add(ensemble)
     return ensemble.id
@@ -83,9 +96,9 @@ export const useEnsembleStore = defineStore('ensemble', () => {
     ensemblesList ,
     ensemblesMap,
     loading,
+    pullFromBackend,
+    pushToBackend,
     createLocalEnsemble,
-    syncWithBackend,
-    addOrUpdateEnsemble,
     renameEnsemble,
     deleteEnsemble,
     clear,

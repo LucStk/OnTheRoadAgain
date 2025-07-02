@@ -1,11 +1,11 @@
 <template>
   <Searchbar />
   <Bibliotheque />
+  <Save />
   <div ref="mapContainer" id="map" class="z-0"></div>
 </template>
 
 <script setup lang="ts">
-
 import { onMounted, ref } from 'vue';
 import { useMapStore } from './stores/map_stores';
 import {Pin} from './elements/pin'
@@ -13,6 +13,7 @@ import {Route} from './elements/route'
 import Bibliotheque from './components/Bibliotheque.vue'
 import {MarkerMenu} from './elements/markerMenu'
 import Searchbar from './components/Searchbar.vue';
+import Save from './components/Save.vue';
 /*
 const mapContainer = ref<HTMLElement | null>(null);
 const mapstore = useMapStore();

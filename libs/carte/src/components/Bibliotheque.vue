@@ -13,7 +13,7 @@
         <ul class="menu menu-vertical rounded-box ">
            <li v-for="e in ensStore.ensemblesList" :key="e.id">
             <input
-              v-if ="lastCreatedId === e.id && renameOpen"
+              v-if ="focusId === e.id && renameOpen"
               class="input input-sm input-bordered w-full"
               v-focus
               placeholder="New ensemble"
@@ -21,7 +21,7 @@
               @blur="renameEnsemble(e.id)"
               v-model="editName"
             />
-            <span v-else class="text-sm">{{ e.titre }}</span>
+            <div v-else class="text-sm" @click="openRenameEnsemble(e.id)">{{ e.titre }}</div>
             <button class="btn btn-xs btn-error" @click="deleteEnsemble(e.id)">
               *
             </button>
@@ -64,8 +64,13 @@
     const ensStore = useEnsembleStore()
     const editName = ref("")
     const renameOpen = ref(false)
-    const lastCreatedId = ref<string>("")
+    const focusId = ref<string>("")
     // directives
+
+    function openRenameEnsemble(id: string) {
+      renameOpen.value = true
+      focusId.value = id
+    }
 
     async function renameEnsemble(id: string) {
       renameOpen.value = false
@@ -76,7 +81,7 @@
       ensStore.deleteEnsemble(id)
     }
     async function createEnsemble() {
-      lastCreatedId.value = await ensStore.createLocalEnsemble()
+      focusId.value = await ensStore.createLocalEnsemble()
       renameOpen.value = true
     }
 
