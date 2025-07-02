@@ -40,8 +40,19 @@ export const useEnsembleStore = defineStore('ensemble', () => {
     onInvalidate(() => subscription.unsubscribe())
   })
 
+  function now() {return new Date().toISOString();}
+
   async function renameEnsemble(item_id: string, newName: string) {
-    await db.ensemble.update(item_id, { titre: newName });
+    await updateEnsemble(item_id, { titre: newName });
+  }
+
+  async function updateEnsemble(items_id: string, items: Partial<Ensemble>) {
+    const _items = {
+      ...items,
+      updated_at: now(),
+      dirty: 1
+    };
+    await db.ensemble.update(items_id, _items)
   }
 
   const pullFromBackend = async () => {
@@ -50,26 +61,31 @@ export const useEnsembleStore = defineStore('ensemble', () => {
     const updated = await response?.data
     for (const item of updated) {
         await db.ensemble.put(item)
+        console.log("item.id:", item.id)
     }
     await setLastSyncTime(new Date().toISOString());
   }
+
   const pushToBackend = async () => {
     // 2. Push local vers backend
     console.log("pushToBackend")
     let localDirty = await db.ensemble.where('dirty').equals(1).toArray();
     if (localDirty.length > 0) {
-      console.log("localDirty:", localDirty)
-      await api.post('/ensembles/push/', localDirty);
+      const response = await api.post('/ensembles/push/', localDirty);
+      console.log("response:", response)
       // Marque comme propre
-      await Promise.all(localDirty.map(item =>
+      
+      await Promise.all(response.data.map((item: Ensemble) =>{
         db.ensemble.update(item.id, { dirty: 0})
-      ));
+        console.log("item.id:", item.id)
+      }));
+      
     }
   }
 
   async function createLocalEnsemble() {
     const visibility: 'C' | 'O' | 'R' = 'C';
-    
+
     const ensemble = {
       id: crypto.randomUUID(), // UUID temporaire
       titre: 'Nouvel ensemble local',

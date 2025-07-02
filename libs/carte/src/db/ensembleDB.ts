@@ -31,15 +31,6 @@ db.open().catch((err) => {
 })
 
 
-db.ensemble.hook('updating', (modifications, primKey, obj, transaction) => {
-  const now = new Date().toISOString();
-  return {
-    ...modifications,
-    updated_at: now,
-    dirty: 1
-  };
-});
-
 // Auto-set timestamps on creation
 db.ensemble.hook('creating', (primKey, obj) => {
   const now = new Date().toISOString();
@@ -47,8 +38,6 @@ db.ensemble.hook('creating', (primKey, obj) => {
   obj.updated_at = now;
   obj.dirty = 1;
 });
-
-
 
 
 export type { Ensemble };
