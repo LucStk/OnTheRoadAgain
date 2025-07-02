@@ -1,6 +1,24 @@
-import Dexie, { type EntityTable } from 'dexie';
+import Dexie, { type Table } from 'dexie'
 
-interface Ensemble {
+export interface EnsembleElement {
+    id : string;
+    user : string;
+    ensemble : string;
+
+    created_at : string;
+    updated_at : string;
+
+    dirty : number;
+    deleted : number;
+}
+
+export interface Pin extends EnsembleElement {
+    lnglat : string;
+    titre : string;
+    description : string;
+}
+
+export interface Ensemble {
   id: string;
 
   titre: string;
@@ -14,31 +32,22 @@ interface Ensemble {
   deleted: number;
 }
 
-const db = new Dexie('EnsembleDB') as Dexie & {
-  ensemble: EntityTable<
-    Ensemble,
-    'id' // primary key "id" (for the typings only)
-  >;
-};
+// Classe Dexie
+class AppDB extends Dexie {
+  ensemble!: Table<Ensemble, string>
+  pin!: Table<Pin, number>
 
-// Schema declaration:
-db.version(1).stores({
-  ensemble: 'id, titre, description, visibility, updated_at, created_at, dirty, deleted' // primary key "id" (for the runtime!)
-});
+  constructor() {
+    super('AppDB')
+    this.version(1).stores({
+      ensemble: 'id, updated_at, dirty, deleted',
+      pin: 'id, ensemble, updated_at, dirty, deleted'
+    })
+  }
+}
+
+export const db = new AppDB()
 
 db.open().catch((err) => {
   console.error("Erreur lors de l'ouverture de Dexie:", err)
 })
-
-
-// Auto-set timestamps on creation
-db.ensemble.hook('creating', (primKey, obj) => {
-  const now = new Date().toISOString();
-  obj.created_at = now;
-  obj.updated_at = now;
-  obj.dirty = 1;
-});
-
-
-export type { Ensemble };
-export { db };

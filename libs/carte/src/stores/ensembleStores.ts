@@ -57,12 +57,24 @@ export const useEnsembleStore = defineStore('ensemble', () => {
 
   const pullFromBackend = async () => {
     const lastSync = await getLastSyncTime();
+
+    // 1. Pull des ensembles
     const response = await api.get(`/ensembles/pull/?since=${lastSync}`)
     const updated = await response?.data
     for (const item of updated) {
         await db.ensemble.put(item)
         console.log("pull : item.id:", item.id)
     }
+
+    // 2. Pull des pins
+    const response2 = await api.get(`/pins/pull/?since=${lastSync}`)
+    const updated2 = await response2?.data
+    console.log("pull : updated.length:", updated2)
+    for (const item of updated2) {
+        await db.pin.put(item)
+        console.log("pull : item.id:", item.id)
+    }
+
     await setLastSyncTime(new Date().toISOString());
   }
 
@@ -106,14 +118,6 @@ export const useEnsembleStore = defineStore('ensemble', () => {
     return ensemble.id
   }
 
-  const deleteEnsemble = async (id: string) => {
-    await db.ensemble.delete(id)
-  }
-
-  const clear = async () => {
-    await db.ensemble.clear()
-  }
-
   return {
     ensemblesList ,
     ensemblesMap,
@@ -121,8 +125,6 @@ export const useEnsembleStore = defineStore('ensemble', () => {
     pullFromBackend,
     pushToBackend,
     createLocalEnsemble,
-    renameEnsemble,
-    deleteEnsemble,
-    clear,
+    renameEnsemble
   }
 })
