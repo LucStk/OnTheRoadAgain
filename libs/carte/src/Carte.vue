@@ -5,6 +5,7 @@
 </template>
 
 <script setup lang="ts">
+
 import { onMounted, ref } from 'vue';
 import { useMapStore } from './stores/map_stores';
 import {Pin} from './elements/pin'
@@ -12,6 +13,7 @@ import {Route} from './elements/route'
 import Bibliotheque from './components/Bibliotheque.vue'
 import {MarkerMenu} from './elements/markerMenu'
 import Searchbar from './components/Searchbar.vue';
+/*
 const mapContainer = ref<HTMLElement | null>(null);
 const mapstore = useMapStore();
 
@@ -30,7 +32,7 @@ onMounted(() => {
   } else {
     console.error("Map container not found");
   }
-});
+});*/
 </script>
 
 <style lang="scss">
