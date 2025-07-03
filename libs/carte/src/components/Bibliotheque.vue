@@ -11,7 +11,7 @@
         </div>
 
         <ul class="menu menu-vertical rounded-box ">
-           <li v-for="e in items." :key="e.id"></li>
+           <li v-for="e in ensembleList" :key="e.id">
             <input
               v-if ="focusId === e.id && renameOpen"
               class="input input-sm input-bordered w-full"
@@ -59,10 +59,11 @@
 <script setup lang="ts">
     import { ref, type Ref, type Directive } from 'vue'
     import { TransitionRoot } from '@headlessui/vue'
-    import { useSyncStore } from '../stores/appDB_stores'
+    import { useEnsembleStore } from "../stores/ensembleStore";
+    import {EnsembleClass } from "../db/appDB";
 
-    const syncStore = useSyncStore()
-    const items = syncStore.enrichedObjects
+    const syncStore = useEnsembleStore()
+    const ensembleList = syncStore.ensembleList
 
     const editName = ref("")
     const renameOpen = ref(false)
@@ -76,14 +77,15 @@
 
     async function renameEnsemble(id: string) {
       renameOpen.value = false
-      syncStore.updateObject(id, { titre: editName.value })
+      syncStore.get(id)?.update({ titre: editName.value })
     }
     async function deleteEnsemble(id: string) {
       renameOpen.value = false
-      syncStore.deleteObject(id)
+      //syncStore.deleteObject(id)
     }
     async function createEnsemble() {
-      focusId.value = await syncStore.addObject({ type: 'ensemble' })
+      const newEns = await EnsembleClass.create({ type: 'ensemble' })
+      focusId.value = newEns.id
       renameOpen.value = true
     }
 

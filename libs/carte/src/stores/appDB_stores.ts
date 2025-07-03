@@ -17,11 +17,5 @@ export const useSyncStore = defineStore('sync', () => {
     ensembles,
     pins,
     routes,
-    enrichedObjects,
-    addObject,
-    updateObject,
-    deleteObject,
-    pushChanges,
-    pullChanges,
   }
 })

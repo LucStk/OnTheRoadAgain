@@ -7,7 +7,7 @@
 </template>
 
 <script setup lang="ts">
-  import type {PinDataLike} from "../types/pin-types.ts";
+  import type {PinDataLike} from "../types/db-types.ts";
   const props = defineProps<{
     data: PinDataLike;
     destroy: () => void;
