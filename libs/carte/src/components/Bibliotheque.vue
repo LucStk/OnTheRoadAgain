@@ -11,7 +11,7 @@
         </div>
 
         <ul class="menu menu-vertical rounded-box ">
-           <li v-for="e in ensembleList" :key="e.id">
+           <li v-for="e in visibleEnsembles" :key="e.id">
             <input
               v-if ="focusId === e.id && renameOpen"
               class="input input-sm input-bordered w-full"
@@ -57,13 +57,14 @@
 </script>
 
 <script setup lang="ts">
-    import { ref, type Ref, type Directive } from 'vue'
+    import { ref, type Ref, type Directive, computed } from 'vue'
     import { TransitionRoot } from '@headlessui/vue'
     import { useDBStore } from "../stores/storesDB";
     import {EnsembleClass } from "../db/appDB";
 
     const syncStore = useDBStore()
     const ensembleList = syncStore.ensembleList
+    const visibleEnsembles = computed(() => ensembleList.value.filter(e => !e.is_deleted))
 
     const editName = ref("")
     const renameOpen = ref(false)

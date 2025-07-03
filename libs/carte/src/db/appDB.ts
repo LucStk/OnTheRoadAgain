@@ -43,13 +43,17 @@ abstract class BaseModel implements BaseInterface {
   static async push<T extends { getTable(): Table<any, string, any> }>(this: T)  {
     // 2. Push local vers backend
     const dbtable = this.getTable();
-    let localDirty = await dbtable.where('dirty').equals(1).toArray();
+    //let localDirty = await dbtable.where('dirty').equals(1).toArray();
+    let localDirty = await dbtable.toArray();
     if (localDirty.length > 0) {
       const response = await api.post('/sync/push/', localDirty);
       console.log("response:", response)
       // Marque comme propre
       
       await Promise.all(response.data.map((item: BaseModel) =>{
+        if (item.is_deleted) {
+          dbtable.delete(item.id)
+        }
         dbtable.update(item.id, { dirty: 0})
         console.log("push : item.id:", item.id)
       }));
@@ -159,7 +163,7 @@ export class AppDB extends Dexie {
   constructor() {
     super('AppDB');
     this.version(1).stores({
-      ensembles : 'id, visibility, updated_at, dirty',
+      ensembles : 'id, visibility,  updated_at, dirty',
       pins      : 'id, ensemble_fk, updated_at, dirty',
       routes    : 'id, ensemble_fk, updated_at, dirty'
     });
