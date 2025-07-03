@@ -6,12 +6,16 @@ const ensembleDict = reactive<Record<string, EnsembleClass>>({})
 const pinDict = reactive<Record<string, PinClass>>({})
 const routeDict = reactive<Record<string, RouteClass>>({})
 
-async function loadAllEnsembles() {
-  const all = await db.ensembles.toArray()
+async function loadAll(
+    dbtable :Table<any, string, any> ,
+    dict: Record<string, any>,
+    classe: any) {
+  const all = await dbtable.toArray()
   for (const obj of all) {
-    ensembleDict[obj.id] = new EnsembleClass(obj)
+    dict[obj.id] = new classe(obj)
   }
 }
+
 function createhooks( 
     dbtable :Table<any, string, any> ,
     dict: Record<string, any>,
@@ -41,7 +45,12 @@ createhooks(db.routes, routeDict, RouteClass)
 const ensembleList = computed(() => Object.values(ensembleDict))
 const pinList = computed(() => Object.values(ensembleDict))
 const routeList = computed(() => Object.values(ensembleDict))
-export function useEnsembleStore() {
+
+export function useDBStore() {
+  loadAll(db.ensembles, ensembleDict, EnsembleClass)
+  loadAll(db.pins, pinDict, PinClass)
+  loadAll(db.routes, routeDict, RouteClass)
+
   return {
     ensembles: ensembleDict,
     pins: pinDict,
@@ -49,7 +58,6 @@ export function useEnsembleStore() {
     ensembleList,
     pinList,
     routeList,
-    loadAllEnsembles,
     get: (id: string) => ensembleDict[id],
   }
 }

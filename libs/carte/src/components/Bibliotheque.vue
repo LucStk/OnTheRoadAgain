@@ -59,11 +59,12 @@
 <script setup lang="ts">
     import { ref, type Ref, type Directive } from 'vue'
     import { TransitionRoot } from '@headlessui/vue'
-    import { useEnsembleStore } from "../stores/ensembleStore";
+    import { useDBStore } from "../stores/storesDB";
     import {EnsembleClass } from "../db/appDB";
 
-    const syncStore = useEnsembleStore()
+    const syncStore = useDBStore()
     const ensembleList = syncStore.ensembleList
+    console.log("ensembleList:", syncStore.ensembleList.value)
 
     const editName = ref("")
     const renameOpen = ref(false)
