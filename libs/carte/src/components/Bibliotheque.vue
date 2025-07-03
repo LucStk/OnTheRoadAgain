@@ -64,7 +64,6 @@
 
     const syncStore = useDBStore()
     const ensembleList = syncStore.ensembleList
-    console.log("ensembleList:", syncStore.ensembleList.value)
 
     const editName = ref("")
     const renameOpen = ref(false)
@@ -77,7 +76,6 @@
     }
 
     async function renameEnsemble(e : EnsembleClass) {
-      console.log("renameEnsemble")
       renameOpen.value = false
       e.update({ titre: editName.value })
     }

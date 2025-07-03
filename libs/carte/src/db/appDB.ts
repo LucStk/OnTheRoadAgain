@@ -1,7 +1,8 @@
 import Dexie, { type Table } from 'dexie';
 import 'dexie-relationships'; // il faut l'importer pour activer le plugin
 import { type Pin, type Route, type Ensemble, type BaseInterface } from "../types/db-types.ts";
-
+import { api } from '@repo/auth';
+import { setLastSyncTime, getLastSyncTime} from '../db/syncMetaDB';
 
 abstract class BaseModel implements BaseInterface {
   id!: string;
@@ -20,7 +21,7 @@ abstract class BaseModel implements BaseInterface {
     }
   }
 
-  abstract getTable(): any;
+  abstract getTable(): Table<any, string, any>;
 
   async update(data: Partial<this>) {
     const now = new Date().toISOString();
@@ -39,13 +40,40 @@ abstract class BaseModel implements BaseInterface {
     });
   }
 
+  static async push<T extends { getTable(): Table<any, string, any> }>(this: T)  {
+    // 2. Push local vers backend
+    const dbtable = this.getTable();
+    let localDirty = await dbtable.where('dirty').equals(1).toArray();
+    if (localDirty.length > 0) {
+      const response = await api.post('/sync/push/', localDirty);
+      console.log("response:", response)
+      // Marque comme propre
+      
+      await Promise.all(response.data.map((item: BaseModel) =>{
+        dbtable.update(item.id, { dirty: 0})
+        console.log("push : item.id:", item.id)
+      }));
+      await setLastSyncTime(new Date().toISOString());
+    }else{
+      console.log("everything is up to date")
+    }
+  }
+
   async save(): Promise<void> {
     const table = this.getTable();
     await table.put(this as any);
   }
   async delete(): Promise<void> {
     const table = this.getTable();
-    await table.delete(this.id);
+    const lastSync = await getLastSyncTime(); 
+    if (new Date(lastSync) < new Date(this.created_at)) {
+      // L'objet n'a pas été crée sur le serveur
+      await table.delete(this.id);
+    }
+    else {
+      // L'objet a été créé sur le serveur, on dempande la suppression à la prochaine synchronisation
+      await table.update(this.id, { is_deleted: 1 });
+    }
   }
     // Méthode statique générique pour créer une instance et l'insérer en base
   static async create<T extends BaseModel>(
@@ -64,7 +92,6 @@ abstract class BaseModel implements BaseInterface {
     await instance.save();
     return instance;
   }
-
 }
 
 export class EnsembleClass extends BaseModel implements Ensemble {
@@ -84,13 +111,24 @@ export class EnsembleClass extends BaseModel implements Ensemble {
 
 
   getTable() {return db.ensembles;}
+  static getTable() {return db.ensembles;}
 }
 
 export class PinClass  extends BaseModel implements Pin{
   ensemble_fk!: string;
   lnglat!: string;
 
+  constructor(data?: Partial<Pin>) {super(data);}
+
+  static async create(data: Partial<Pin>): Promise<PinClass> {
+    const defaults = {
+      type: 'pin' as const,
+    };
+    return BaseModel.create.call(this, { ...defaults, ...data });
+  }
+
   getTable() {return db.pins;}
+  static getTable() {return db.pins;}
 }
 
 export class RouteClass extends BaseModel  implements Route {
@@ -100,7 +138,17 @@ export class RouteClass extends BaseModel  implements Route {
   origine!: string;
   destination!: string;
 
+  constructor(data?: Partial<Route>) {super(data);}
+
+  static async create(data: Partial<Route>): Promise<RouteClass> {
+    const defaults = {
+      type: 'route' as const,
+    };
+    return BaseModel.create.call(this, { ...defaults, ...data });
+  }
+
   getTable() {return db.routes;}
+  static getTable() {return db.routes;}
 }
 
 export class AppDB extends Dexie {
@@ -120,6 +168,40 @@ export class AppDB extends Dexie {
     this.pins.mapToClass(PinClass);
     this.routes.mapToClass(RouteClass);
   }
+  async pushChanges() {
+    EnsembleClass.push()
+    PinClass.push()
+    RouteClass.push()
+  }
+
+  async pullChanges() {
+    const lastSync = await getLastSyncTime();
+
+    // 1. Pull des ensembles
+    const response = await api.get(`/sync/pull/?since=${lastSync}`)
+    //const response = await api.get(`/sync/pull/`)
+    const updated = await response?.data
+    console.log("pull : updated.length:", updated.length)
+    for (const item of updated) {
+        if (!item.type) console.error('Pulled item without type', item)
+        switch(item.type) {
+          case 'ensemble':
+            await this.ensembles.put(item)
+            break;
+          case 'pin':
+            await this.pins.put(item)
+            break;
+          case 'route':
+            await this.routes.put(item)
+            break;
+          default:
+            console.error('Pull : unknown type ' + item.type)
+        }
+        console.log("pull : item.id:", item.id)
+    }
+    await setLastSyncTime(new Date().toISOString());
+  }
+
 }
 
 export const db = new AppDB();

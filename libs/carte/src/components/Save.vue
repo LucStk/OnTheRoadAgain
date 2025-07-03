@@ -17,9 +17,10 @@
 </template>
 
 <script setup lang="ts">
-
+  import {db} from "../db/appDB";
 
   async function handleClick() {
-
+    await db.pushChanges()
+    await db.pullChanges()
   }
 </script>
