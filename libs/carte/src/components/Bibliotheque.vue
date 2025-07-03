@@ -17,12 +17,12 @@
               class="input input-sm input-bordered w-full"
               v-focus
               placeholder="New ensemble"
-              @keydown.enter="renameEnsemble(e.id)"
-              @blur="renameEnsemble(e.id)"
+              @keydown.enter="renameEnsemble(e)"
+              @blur="renameEnsemble(e)"
               v-model="editName"
             />
             <div v-else class="text-sm" @click="openRenameEnsemble(e.id)">{{ e.titre }}</div>
-            <button class="btn btn-xs btn-error" @click="deleteEnsemble(e.id)">
+            <button class="btn btn-xs btn-error" @click="deleteEnsemble(e)">
               *
             </button>
           </li>
@@ -75,13 +75,14 @@
       focusId.value = id
     }
 
-    async function renameEnsemble(id: string) {
+    async function renameEnsemble(e : EnsembleClass) {
+      console.log("renameEnsemble")
       renameOpen.value = false
-      syncStore.get(id)?.update({ titre: editName.value })
+      e.update({ titre: editName.value })
     }
-    async function deleteEnsemble(id: string) {
+    async function deleteEnsemble(e : EnsembleClass) {
       renameOpen.value = false
-      //syncStore.deleteObject(id)
+      e.delete()
     }
     async function createEnsemble() {
       const newEns = await EnsembleClass.create({ type: 'ensemble' })

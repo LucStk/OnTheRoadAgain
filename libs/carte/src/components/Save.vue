@@ -17,11 +17,9 @@
 </template>
 
 <script setup lang="ts">
-  import { useEnsembleStore } from '../stores/appDB_stores';
-  const ensStore = useEnsembleStore()
+
 
   async function handleClick() {
-    await ensStore.pushToBackend()
-    await ensStore.pullFromBackend()
+
   }
 </script>
