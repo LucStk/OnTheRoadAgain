@@ -3,7 +3,6 @@ import Dexie from 'dexie';
 import { createApp} from "vue";
 import PinMarker from "../components/PinMarker.vue";
 import {db, type PinClass} from '../db/appDB';
-import { useDBStore } from '../stores/storesDB';
 
 const pinMarkers = new Map<string, maplibregl.Marker>();
 
