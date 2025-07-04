@@ -31,6 +31,15 @@
           <SquareX class="w-3.5 h-3.5 text-red-500 hover:text-red-700" @click.stop="emit('delete', pin);" />
           <PenLine class="w-3.5 h-3.5 text-white hover:text-green-700" @click.stop="openRenamePin(pin)" />
         </div>
+        <RouteDropdown
+          v-if="pin.type === 'route'"
+          :points="pin.pins.map(id => syncStore.pins[id]).filter(p => p)"
+          :routeId="pin.id"
+          :open="openMap[pin.id]"
+          @dragstartPoint="onDragStartPoint"
+          @removePoint="removePointFromRoute"
+        />
+
       </li>
     </ul>
   </Transition>
@@ -38,8 +47,9 @@
 
 <script setup lang="ts">
 import { ref, watch, type PropType } from 'vue';
+import RouteDropdown from "./RouteDropdown.vue";
 import { MapPin, SquareX, PenLine,Route } from 'lucide-vue-next';
-import type { BaseModel } from '../db/appDB';
+import type { BaseModel } from '../db/dbApp';
 
 const props = defineProps({
   pins: {

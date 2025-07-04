@@ -17,7 +17,7 @@
 </template>
 
 <script setup lang="ts">
-  import {db} from "../db/appDB";
+  import {db} from "../db/dbApp";
 
   async function handleClick() {
     await db.pushChanges()

@@ -105,8 +105,10 @@
     import { ref, type Ref, type Directive, computed } from 'vue'
     import { SquareX, PenLine, Plus, ChevronRight, MapPin, Route } from 'lucide-vue-next';
     import { TransitionRoot } from '@headlessui/vue'
-    import { useDBStore } from "../stores/storesDB";
-    import {EnsembleClass, BaseModel, PinClass, RouteClass } from "../db/appDB";
+    import { useDBStore } from "../db/usedbStores";
+    import { EnsembleModel, PinModel, RouteModel } from "../db/dbModels";
+    import type { BaseModelInstanceMethods, BaseModelShape } from "../db/dbTypes/withBase.Model";
+import type { BaseType } from '@/db/dbTypes/Classes';
 
     const syncStore = useDBStore()
     const visibleEnsembles = computed(() => syncStore.ensembleList.value.filter(e => !e.is_deleted))
@@ -121,7 +123,7 @@
 
     const createRoute = () => {
       console.log("createRoute")
-      const newRoute = RouteClass.create({})
+      const newRoute = RouteModel.create({})
     }
 
     function toggleEnsemble(id: string) {
@@ -144,24 +146,24 @@
       }
     }
 
-    async function renameItems(e : Partial<BaseModel>) {
+    async function renameItems(e : Partial<BaseModelInstanceMethods<BaseType>>) {
       renameOpen.value = false
       if (e.update) {await e.update({ titre: editName.value })}
       editName.value = "Paris-Brest"
     }
 
-    async function deleteItems(e : Partial<BaseModel>) {
+    async function deleteItems(e : Partial<BaseModelInstanceMethods<BaseType>>) {
       renameOpen.value = false
       if (e.delete) {e.delete()}
     }
 
     async function createEnsemble() {
-      const newEns = await EnsembleClass.create({ type: 'ensemble' })
+      const newEns = await EnsembleModel.create({ type: 'ensemble' })
       focusId.value = newEns.id
       renameOpen.value = true
     }
 
-    const draggedItem = ref<null | PinClass | RouteClass>()
+    const draggedItem = ref<null | PinModel | RouteModel>()
 
     async function onDropOutside() {
       if (!draggedItem.value) return;
@@ -173,7 +175,7 @@
       }
     draggedItem.value = null;
     }
-    function onDragStart(item: PinClass | RouteClass) {
+    function onDragStart(item: PinModel | RouteModel) {
       draggedItem.value = item
       console.log("onDragStart", item)
     }
@@ -188,7 +190,7 @@
       draggedItem.value = null;
     }
 
-    function onClick(item: PinClass | RouteClass) {
+    function onClick(item: PinModel | RouteModel) {
       console.log("onClick", item)
     }
 

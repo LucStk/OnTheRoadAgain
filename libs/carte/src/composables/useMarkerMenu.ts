@@ -1,7 +1,7 @@
 import maplibregl from 'maplibre-gl';
 import { createApp, h, ref } from "vue";
 import MarkerMenu from "../components/MarkerMenu.vue";
-import { PinClass } from "../db/appDB";
+import { PinModel } from "../db/dbModels";
 
 export function useMarkerMenu(map: maplibregl.Map) {
   if (!map) throw new Error("Components MarkerMenu not mounted: map not found");
@@ -24,7 +24,7 @@ export function useMarkerMenu(map: maplibregl.Map) {
             onClose: () => (appVisible.value = false),
             onSetPin: (lnglat: [number, number]) => {
               console.log("📍 Set pin at", lnglat.join(','));
-              PinClass.create({ lnglat: lnglat.join(',') });
+              PinModel.create({ lnglat: lnglat.join(',') });
               appVisible.value = false;
             },
           });

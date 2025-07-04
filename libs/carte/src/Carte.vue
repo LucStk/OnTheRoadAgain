@@ -1,11 +1,13 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue';
 import { useMapStore } from './stores/storesMap';
-import Bibliotheque from './components/Bibliotheque.vue'
+//import Bibliotheque from './components/Bibliotheque.vue'
 import Save from './components/Save.vue';
 import { usePinMarkers } from './composables/usePinMarkers';
 import { useMarkerMenu } from './composables/useMarkerMenu';
+import { useDBStore } from './db/usedbStores';
 
+useDBStore()
 const mapContainer = ref<HTMLElement | null>(null);
 const mapstore = useMapStore();
 mapstore.registerComposable(usePinMarkers);
@@ -23,8 +25,8 @@ onMounted(() => {
 </script>
 
 <template>
-  <!-- <Searchbar /> -->
-  <Bibliotheque />
+  <!-- <Searchbar /> 
+  <Bibliotheque />-->
   <Save />
   <div ref="mapContainer" id="map" class="z-0"></div>
 </template>
