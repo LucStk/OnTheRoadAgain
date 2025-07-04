@@ -4,7 +4,7 @@ import { type Pin, type Route, type Ensemble, type BaseInterface } from "../type
 import { api } from '@repo/auth';
 import { setLastSyncTime, getLastSyncTime} from '../db/syncMetaDB';
 
-abstract class BaseModel implements BaseInterface {
+export abstract class BaseModel implements BaseInterface {
   id!: string;
   user!: string;
   titre!: string;
@@ -138,6 +138,7 @@ export class PinClass extends BaseModel implements Pin{
     const defaults = {
       type: 'pin' as const,
       lnglat : '0,0',
+      titre : "New pin"
     };
     return BaseModel.create.call(this, { ...defaults, ...data });
   }
