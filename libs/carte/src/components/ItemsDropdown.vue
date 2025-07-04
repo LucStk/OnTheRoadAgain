@@ -6,14 +6,15 @@
         :key="pin.id"
         class="flex flex-row items-center justify-between cursor-pointer"
         draggable="true"
-        @dragstart="onDragStart(pin)"
+        @dragstart="emit('dragstart', pin)"
       >
         <div class="
           flex items-center 
           gap-2 text-white
           hover:text-gray-300 grow"
           @click="emit('clickPin', pin)">
-          <MapPin class="w-3.5 h-3.5" />
+          <MapPin v-if="pin.type === 'pin'" class="w-3.5 h-3.5" />
+          <Route v-if="pin.type === 'route'" class="w-3.5 h-3.5" />
           <input
             v-if="renameOpen && focusId === pin.id"
             class="italic bg-transparent border-b border-white w-full"
@@ -27,7 +28,7 @@
           <span v-else class="font-bold truncate w-full">{{ pin.titre }}</span>
         </div>
         <div class="flex gap-1">
-          <SquareX class="w-3.5 h-3.5 text-red-500 hover:text-red-700" @click.stop="deletePin(pin)" />
+          <SquareX class="w-3.5 h-3.5 text-red-500 hover:text-red-700" @click.stop="emit('delete', pin);" />
           <PenLine class="w-3.5 h-3.5 text-white hover:text-green-700" @click.stop="openRenamePin(pin)" />
         </div>
       </li>
@@ -37,7 +38,7 @@
 
 <script setup lang="ts">
 import { ref, watch, type PropType } from 'vue';
-import { MapPin, SquareX, PenLine } from 'lucide-vue-next';
+import { MapPin, SquareX, PenLine,Route } from 'lucide-vue-next';
 import type { BaseModel } from '../db/appDB';
 
 const props = defineProps({
@@ -59,13 +60,6 @@ const emit = defineEmits([
   'update:editName'
 ]);
 
-function onDragStart(pin: BaseModel) {
-  emit('dragstart', pin);
-}
-
-function deletePin(pin: BaseModel) {
-  emit('delete', pin);
-}
 
 function openRenamePin(pin: BaseModel) {
   emit('rename', pin.id);

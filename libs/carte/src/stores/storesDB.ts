@@ -47,6 +47,9 @@ createhooks(db.routes, routeDict, RouteClass)
 const ensembleList = computed(() => Object.values(ensembleDict))
 const pinList = computed(() => Object.values(pinDict))
 const routeList = computed(() => Object.values(routeDict))
+const itemsList = computed<(PinClass | RouteClass)[]>(() => [
+      ...Object.values(pinDict), 
+      ...Object.values(routeDict)])
 
 export function useDBStore() {
   loadAll(db.ensembles, ensembleDict, EnsembleClass)
@@ -57,6 +60,7 @@ export function useDBStore() {
     ensembles: ensembleDict,
     pins: pinDict,
     routes: routeDict,
+    itemsList,
     ensembleList,
     pinList,
     routeList,

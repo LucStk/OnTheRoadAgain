@@ -28,7 +28,6 @@ export interface Pin extends BaseEnsembleElement {
 }
 export interface Route extends BaseEnsembleElement {
   geometry: string;
-  bbox: string;
-  origine: string;
-  destination: string;
+  bbox: number[];
+  pins: string[];
 }

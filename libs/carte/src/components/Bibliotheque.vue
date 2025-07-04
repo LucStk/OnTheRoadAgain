@@ -48,8 +48,8 @@
 
             <!-- Sous-menu des pins de l’ensemble -->
             <div class="border-l border-gray-200 ml-2 pl-2">
-            <PinsDropdown
-              :pins="visiblePins.filter(p => p.ensemble_fk === e.id)"
+            <ItemsDropdown
+              :pins="visibleItems.filter(p => p.ensemble_fk === e.id)"
               :open="openMap[e.id]"
               :renameOpen="renameOpen"
               :focusId="focusId"
@@ -61,9 +61,9 @@
             </div>
           </li>
         </ul>
-        <PinsDropdown
+        <ItemsDropdown
           class="mt-4"
-          :pins="visiblePins.filter(p => !p.ensemble_fk)"
+          :pins="visibleItems.filter(p => !p.ensemble_fk)"
           :open="true"
           :renameOpen="renameOpen"
           :focusId="focusId"
@@ -75,7 +75,7 @@
           @update:editName="val => editName = val"
         />
         <Plus class=" w-4 h-4 mt-5 mx-auto cursor-pointer text-white hover:text-gray-700" @click="createEnsemble()" />
-          
+        <Route class=" w-4 h-4 mt-5 mx-auto cursor-pointer text-white hover:text-gray-700" @click="createRoute()" />
       </div>
     </TransitionRoot>
   </div>
@@ -101,16 +101,16 @@
 </script>
 
 <script setup lang="ts">
-    import PinsDropdown from './PinsDropdown.vue';
+    import ItemsDropdown from './ItemsDropdown.vue';
     import { ref, type Ref, type Directive, computed } from 'vue'
-    import { SquareX, PenLine, Plus, ChevronRight, MapPin } from 'lucide-vue-next';
+    import { SquareX, PenLine, Plus, ChevronRight, MapPin, Route } from 'lucide-vue-next';
     import { TransitionRoot } from '@headlessui/vue'
     import { useDBStore } from "../stores/storesDB";
-    import {EnsembleClass, BaseModel, PinClass } from "../db/appDB";
+    import {EnsembleClass, BaseModel, PinClass, RouteClass } from "../db/appDB";
 
     const syncStore = useDBStore()
     const visibleEnsembles = computed(() => syncStore.ensembleList.value.filter(e => !e.is_deleted))
-    const visiblePins = computed(() => syncStore.pinList.value.filter(e => !e.is_deleted))
+    const visibleItems = computed(() => syncStore.itemsList.value.filter(e => !e.is_deleted))
 
     const editName = ref("Paris-Brest")
     const renameOpen = ref(false)
@@ -118,6 +118,11 @@
     // directives
 
     const openMap = ref<Record<string, boolean>>({})
+
+    const createRoute = () => {
+      console.log("createRoute")
+      const newRoute = RouteClass.create({})
+    }
 
     function toggleEnsemble(id: string) {
       openMap.value[id] = !openMap.value[id]
@@ -156,33 +161,35 @@
       renameOpen.value = true
     }
 
-    const draggedPin = ref<null | { id: string }>()
+    const draggedItem = ref<null | PinClass | RouteClass>()
 
     async function onDropOutside() {
-      if (!draggedPin.value) return;
-      const pin = syncStore.pins[draggedPin.value.id];
-      if (pin && pin.update) {
-        await pin.update({ ensemble_fk: undefined });
+      if (!draggedItem.value) return;
+
+      const item = draggedItem.value;
+      if (item) {
+        await item.update({ ensemble_fk: undefined });
         console.log('Pin détaché d\'un ensemble (ensemble_fk mis à null)');
       }
-      draggedPin.value = null;
+    draggedItem.value = null;
     }
-    function onDragStart(pin: { id: string }) {
-      draggedPin.value = pin
+    function onDragStart(item: PinClass | RouteClass) {
+      draggedItem.value = item
+      console.log("onDragStart", item)
     }
 
     async function onDrop(ensemble: { id: string }) {
-      if (!draggedPin.value) return
-      const pin = syncStore.pins[draggedPin.value.id]
-      if (pin && pin.update) {
-        await pin.update({ ensemble_fk: ensemble.id })
-        console.log('pin updated')
+      if (!draggedItem.value) return
+      const item = draggedItem.value;
+      if (item) {
+        await item.update({ ensemble_fk:  ensemble.id  });
+        console.log('Pin détaché d\'un ensemble (ensemble_fk mis à null)');
       }
-      draggedPin.value = null
+      draggedItem.value = null;
     }
 
-    function onClick(pin: PinClass) {
-      console.log("onClick", pin)
+    function onClick(item: PinClass | RouteClass) {
+      console.log("onClick", item)
     }
 
 </script>

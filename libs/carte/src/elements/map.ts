@@ -12,6 +12,18 @@ export function fromGeoDjango(geoDjango: any) {
 	return LngLat.convert(geoDjango.coordinates)
 }
 
+export function computeBBox(points: number[][]): number[] {
+  const lats = points.map(p => p[1]);
+  const lngs = points.map(p => p[0]);
+
+  const minLat = Math.min(...lats);
+  const maxLat = Math.max(...lats);
+  const minLng = Math.min(...lngs);
+  const maxLng = Math.max(...lngs);
+
+  return [minLng, minLat, maxLng, maxLat];
+}
+
 export function geoJSONPolygonToBbox(polygon : any) {
   if (!polygon || polygon.type !== "Polygon" || !Array.isArray(polygon.coordinates)) {
     throw new Error("Invalid GeoJSON Polygon");

@@ -3,6 +3,9 @@ import 'dexie-relationships'; // il faut l'importer pour activer le plugin
 import { type Pin, type Route, type Ensemble, type BaseInterface } from "../types/db-types.ts";
 import { api } from '@repo/auth';
 import { setLastSyncTime, getLastSyncTime} from '../db/syncMetaDB';
+import {default as googlePolyline} from "google-polyline" 
+import {computeBBox} from "../elements/map.ts";
+import { bbox } from '@turf/turf';
 
 export abstract class BaseModel implements BaseInterface {
   id!: string;
@@ -150,11 +153,10 @@ export class PinClass extends BaseModel implements Pin{
 export class RouteClass extends BaseModel  implements Route {
   ensemble_fk!: string;
   geometry!: string;
-  bbox!: string;
-  origine!: string;
-  destination!: string;
+  bbox!: number[];
+  pins!: string[];
 
-    constructor(data?: Partial<Route>) {
+  constructor(data?: Partial<Route>) {
     super(data);
     if (data) {
       Object.assign(this, data);
@@ -164,12 +166,30 @@ export class RouteClass extends BaseModel  implements Route {
   static async create(data: Partial<Route>): Promise<RouteClass> {
     const defaults = {
       type: 'route' as const,
+      pins : [],
+      bbox : [],
+      geometry : "",
+      titre : "New route"
     };
     return BaseModel.create.call(this, { ...defaults, ...data });
   }
 
   getTable() {return db.routes;}
   static getTable() {return db.routes;}
+
+  async updateGeometryFromPoints(pins: PinClass[]) {
+    const coords = pins.map<[number, number]>(pin => {
+      const [lng, lat] = pin.lnglat.split(',').map(Number);
+      return [lat, lng];
+    });
+
+    this.geometry = googlePolyline.encode(coords);
+
+    const bboxCoords = coords.map(([lat, lng]) => [lng, lat]); // pour bbox [lng, lat]
+    this.bbox = computeBBox(bboxCoords);
+    await this.save();
+  }
+
 }
 
 export class AppDB extends Dexie {
