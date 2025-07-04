@@ -3,12 +3,12 @@ import { reactive, computed } from 'vue'
 import { type Table } from 'dexie'
 
 export function useTableStore<T extends object>(
-  Model: new (data?: Partial<T>) => T,
-  dbtable: Table<T, string>
+  dbtable: Table<T, string>,
+  Model?: new (data?: Partial<T>) => T,
 ) {
   const dict = reactive<Record<string, T>>({})
   const list = computed(() => Object.values(dict))
-  dbtable.mapToClass(Model)
+  if (Model) dbtable.mapToClass(Model)
 
   async function loadAll() {
     const all = await dbtable.toArray()
@@ -20,7 +20,7 @@ export function useTableStore<T extends object>(
   function createHooks() {
     dbtable.hook('creating', (_, obj, tx) => {
       tx.on('complete', () => {
-        dict[(obj as any).id] = new Model(obj)
+        dict[(obj as any).id] = Model ? new Model(obj) : obj
       })
     })
     dbtable.hook('updating', (mods, key, _, tx) => {

@@ -1,7 +1,7 @@
 // models/EnsembleModel.ts
 import { EnsembleClass } from '../dbClasses';
 import { db } from '../dbApp';
-import { withBaseModel } from './dbBaseModelMixin';
+import { withBaseModel } from './BaseModelMixin';
 
 const _EnsembleModel = withBaseModel(EnsembleClass, db.ensembles);
 export class EnsembleModel extends _EnsembleModel {

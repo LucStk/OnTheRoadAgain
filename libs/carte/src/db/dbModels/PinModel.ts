@@ -1,7 +1,7 @@
 // models/PinModel.ts
 import { PinClass } from '../dbClasses';
 import { db } from '../dbApp';
-import { withBaseModel } from './dbBaseModelMixin';
+import { withBaseModel } from './BaseModelMixin';
 
 const _PinModel = withBaseModel(PinClass, db.pins);
 export class PinModel extends _PinModel {

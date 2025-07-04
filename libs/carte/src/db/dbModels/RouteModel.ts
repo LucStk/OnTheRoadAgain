@@ -1,10 +1,10 @@
 // models/RouteModel.ts
 import { RouteClass } from '../dbClasses';
 import { db } from '../dbApp';
-import { withBaseModel } from './dbBaseModelMixin';
+import { withBaseModel } from './BaseModelMixin';
 import { computeBBox } from '../../elements/map';
 import googlePolyline from 'google-polyline';
-import { PinModel } from './dbPinModel';
+import { PinModel } from './PinModel';
 
 const _RouteModel = withBaseModel(RouteClass, db.routes);
 export class RouteModel extends _RouteModel {

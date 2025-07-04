@@ -105,7 +105,7 @@
     import { ref, type Ref, type Directive, computed } from 'vue'
     import { SquareX, PenLine, Plus, ChevronRight, MapPin, Route } from 'lucide-vue-next';
     import { TransitionRoot } from '@headlessui/vue'
-    import { useDBStore } from "../db/usedbStores";
+    import { useDBStore } from "../db/dbStores";
     import { EnsembleModel, PinModel, RouteModel } from "../db/dbModels";
     import type { BaseModelInstanceMethods, BaseModelShape } from "../db/dbTypes/withBase.Model";
 import type { BaseType } from '@/db/dbTypes/Classes';

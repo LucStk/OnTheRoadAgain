@@ -1,4 +1,5 @@
 import { type PinType, type RouteType, type EnsembleType, type BaseType } from "./dbTypes/Classes.d";
+import type { PinInRouteType, ItemInEnsembleType} from './dbTypes/Classes'
 
 export abstract class BaseClass implements BaseType {
   id!: string;
@@ -46,6 +47,29 @@ export class RouteClass extends BaseClass  implements RouteType {
 
   constructor(data?: Partial<RouteType>) {
     super(data);
+    if (data) {Object.assign(this, data);}
+  }
+}
+
+export class PinInRouteClass implements PinInRouteType {
+  id!: string;
+  pin_id!: string;
+  route_id!: string;
+  order!: number;
+
+  constructor(data?: Partial<PinInRouteType>) {
+    if (data) {Object.assign(this, data);}
+  }
+}
+
+export class ItemInEnsembleClass implements ItemInEnsembleType {
+  id!: string;
+  ensemble_id!: string;
+  item_id!: string;
+  item_type!: 'pin' | 'route' | 'ensemble';
+  order?: number;
+
+  constructor(data?: Partial<ItemInEnsembleType>) {
     if (data) {Object.assign(this, data);}
   }
 }

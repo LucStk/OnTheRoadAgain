@@ -5,7 +5,7 @@ import { useMapStore } from './stores/storesMap';
 import Save from './components/Save.vue';
 import { usePinMarkers } from './composables/usePinMarkers';
 import { useMarkerMenu } from './composables/useMarkerMenu';
-import { useDBStore } from './db/usedbStores';
+import { useDBStore } from './db/dbStores';
 
 useDBStore()
 const mapContainer = ref<HTMLElement | null>(null);
