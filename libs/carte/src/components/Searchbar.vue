@@ -38,7 +38,7 @@
 import { ref } from 'vue'
 import { watchDebounced } from '@vueuse/core'
 import { Combobox, ComboboxInput, ComboboxOptions, ComboboxOption } from '@headlessui/vue'
-import { useMapStore } from '../stores/map_stores'
+import { useMapStore } from '../stores/storesMap'
 import { Pin } from '../elements/pin'
 
 interface PhotonFeature {

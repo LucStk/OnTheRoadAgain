@@ -43,8 +43,8 @@ abstract class BaseModel implements BaseInterface {
   static async push<T extends { getTable(): Table<any, string, any> }>(this: T)  {
     // 2. Push local vers backend
     const dbtable = this.getTable();
-    //let localDirty = await dbtable.where('dirty').equals(1).toArray();
-    let localDirty = await dbtable.toArray();
+    let localDirty = await dbtable.where('dirty').equals(1).toArray();
+    //let localDirty = await dbtable.toArray(); // Pour test
     if (localDirty.length > 0) {
       const response = await api.post('/sync/push/', localDirty);
       console.log("response:", response)
@@ -102,7 +102,12 @@ export class EnsembleClass extends BaseModel implements Ensemble {
   visibility!: 'C' | 'O';
   is_global!: number;
 
-  constructor(data?: Partial<Ensemble>) {super(data);}
+  constructor(data?: Partial<Ensemble>) {
+    super(data);
+    if (data) {
+      Object.assign(this, data);
+    }
+  }
 
   static async create(data: Partial<Ensemble>): Promise<EnsembleClass> {
     const defaults = {
@@ -118,15 +123,21 @@ export class EnsembleClass extends BaseModel implements Ensemble {
   static getTable() {return db.ensembles;}
 }
 
-export class PinClass  extends BaseModel implements Pin{
+export class PinClass extends BaseModel implements Pin{
   ensemble_fk!: string;
   lnglat!: string;
 
-  constructor(data?: Partial<Pin>) {super(data);}
+  constructor(data?: Partial<Pin>) {
+    super(data);
+    if (data) {
+      Object.assign(this, data);
+    }
+  }
 
   static async create(data: Partial<Pin>): Promise<PinClass> {
     const defaults = {
       type: 'pin' as const,
+      lnglat : '0,0',
     };
     return BaseModel.create.call(this, { ...defaults, ...data });
   }
@@ -142,7 +153,12 @@ export class RouteClass extends BaseModel  implements Route {
   origine!: string;
   destination!: string;
 
-  constructor(data?: Partial<Route>) {super(data);}
+    constructor(data?: Partial<Route>) {
+    super(data);
+    if (data) {
+      Object.assign(this, data);
+    }
+  }
 
   static async create(data: Partial<Route>): Promise<RouteClass> {
     const defaults = {

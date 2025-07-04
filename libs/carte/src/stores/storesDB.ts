@@ -16,6 +16,8 @@ async function loadAll(
   }
 }
 
+
+// Hooks pour joindre les changements de la base de données à la vue
 function createhooks( 
     dbtable :Table<any, string, any> ,
     dict: Record<string, any>,
@@ -43,8 +45,8 @@ createhooks(db.pins, pinDict, PinClass)
 createhooks(db.routes, routeDict, RouteClass)
 
 const ensembleList = computed(() => Object.values(ensembleDict))
-const pinList = computed(() => Object.values(ensembleDict))
-const routeList = computed(() => Object.values(ensembleDict))
+const pinList = computed(() => Object.values(pinDict))
+const routeList = computed(() => Object.values(routeDict))
 
 export function useDBStore() {
   loadAll(db.ensembles, ensembleDict, EnsembleClass)

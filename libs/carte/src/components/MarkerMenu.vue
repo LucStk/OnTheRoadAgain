@@ -1,16 +1,23 @@
 <script setup lang="ts">
-  import { defineProps , type Ref} from 'vue'
-  defineProps<{ 
-    visible: Ref<boolean>
-    setPin: () => void
-    setOrigin: () => void
-    setDestination: () => void
-  }>()
+  const props = defineProps<{
+    visible: boolean;
+    lngLat: [number, number];
+  }>();
 
+  const emit = defineEmits<{
+    (e: 'close'): void;
+    (e: 'set-pin', lngLat: [number, number]): void;
+    (e: 'set-origin', lngLat: [number, number]): void;
+    (e: 'set-destination', lngLat: [number, number]): void;
+  }>();
+
+  const setPin = () => emit('set-pin', props.lngLat);
+  const setOrigin = () => emit('set-origin', props.lngLat);
+  const setDestination = () => emit('set-destination', props.lngLat);
 </script>
 
 <template>
-  <div v-show="visible.value" class="marker-menu">
+  <div v-show="visible" class="marker-menu">
     <div class="menu bg-amber-50 text-black flex flex-row rounded-md">
       <button class=" 
         cursor-pointer 

@@ -1,7 +1,7 @@
 import { Marker, Map, type LngLatLike, LngLat} from "maplibre-gl";
 import { createApp, h, type Ref,ref} from "vue";
 import MyPinComponent from "../components/PinRoute.vue";
-import { useMapStore } from "../stores/map_stores.ts";
+import { useMapStore } from "../stores/storesMap.ts";
 import {Pin} from "./pin"
 
 

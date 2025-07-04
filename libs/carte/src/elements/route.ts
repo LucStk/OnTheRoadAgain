@@ -2,7 +2,7 @@ import { LngLat, Map } from "maplibre-gl"
 import {default as googlePolyline} from "google-polyline" 
 import {PinRoute} from "./pinRoute"
 import type {FeatureCollection,Feature,LineString,GeoJsonProperties,} from "geojson"
-import { useMapStore } from "../stores/map_stores";
+import { useMapStore } from "../stores/storesMap.ts";
 import {api} from '@repo/auth'
 import {fromGeoDjango, toGeoDjango, bboxToGeoJSONPolygon, geoJSONPolygonToBbox} from "./map.ts";
 import { useAuthStore } from "@repo/auth";
