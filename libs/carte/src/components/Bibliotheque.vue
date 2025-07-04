@@ -2,7 +2,9 @@
   <div class="flex h-screen absolute z-50">
     <!-- Sidebar -->
     <TransitionRoot :show="true" as="template">
-      <div class="w-64 bg-base-200 p-4 overflow-y-auto">
+      <div class="w-64 bg-base-200 p-4 overflow-y-auto"
+        @dragover.prevent
+        @drop="onDropOutside">
         <div class="flex justify-between items-center mb-4">
           <h2 class="text-lg font-semibold">Menu</h2>
           <button class="btn btn-sm btn-ghost">
@@ -14,6 +16,7 @@
           <li v-for="e in visibleEnsembles" :key="e.id" 
             class="flex flex-col"
               @dragover.prevent
+              @drop.stop.prevent="onDrop(e)"
               @drop="onDrop(e)"
             >
             <!-- Ligne principale de l’ensemble -->
@@ -37,72 +40,42 @@
                 />
                 <span v-else class="font-bold">{{ e.titre }}</span>
               </div>
-              <div class="flex gap-2">
+              <div class="flex gap-1">
                 <SquareX class="w-3.5 h-3.5 text-red-500 hover:text-red-700" @click.stop="deleteItems(e)" />
                 <PenLine class="w-3.5 h-3.5 text-white hover:text-green-700" @click.stop="openRename(e.id)" />
               </div>
             </div>
 
             <!-- Sous-menu des pins de l’ensemble -->
-            <Transition name="fade" mode="out-in">
-              <ul v-if="openMap[e.id]" class="ml-6 mt-2 space-y-1">
-                <li
-                  v-for="p in visiblePins.filter(p => p.ensemble_fk === e.id)"
-                  :key="p.id"
-                  class="flex flex-row items-center justify-between cursor-pointer"
-                  draggable="true"
-                  @dragstart="onDragStart(p)"
-                >
-                  <div class="flex items-center gap-2 text-white hover:text-gray-300">
-                    <MapPin class="w-3.5 h-3.5" />
-                    <span>{{ p.titre }}</span>
-                  </div>
-                  <div class="flex gap-1">
-                    <SquareX class="w-3.5 h-3.5 text-red-500 hover:text-red-700" @click.stop="deleteItems(p)" />
-                    <PenLine class="w-3.5 h-3.5 text-white hover:text-green-700" @click.stop="openRename(p.id)" />
-                  </div>
-                </li>
-              </ul>
-            </Transition>
-          </li>
-
-        
-        </ul>
-
-        <Plus class=" w-4 h-4 mt-5 mx-auto cursor-pointer text-white hover:text-gray-700" @click="createEnsemble()" />
-          <ul id="Items" class="flex flex-col ">
-            <li v-for="p in visiblePins.filter(p => !p.ensemble_fk)"
-              :key="p.id"
-              class="flex flex-row items-end justify-between"
-              draggable="true"
-              @dragstart="onDragStart(p)">
-            
-           <div class="
-            text-sm h-5 
-            overflow-clip grow 
-            flex flex-row 
-            items-center
-            text-white hover:text-gray-300
-            cursor-pointer">
-            <MapPin class="w-3.5 h-3.5 mr-2" />
-            <input
-              v-if ="focusId === p.id && renameOpen"
-              class="italic"
-              v-focus
-              placeholder="New ensemble"
-              @keydown.enter="renameItems(p)"
-              @blur="renameItems(p)"
-              v-model="editName"
+            <div class="border-l border-gray-200 ml-2 pl-2">
+            <PinsDropdown
+              :pins="visiblePins.filter(p => p.ensemble_fk === e.id)"
+              :open="openMap[e.id]"
+              :renameOpen="renameOpen"
+              :focusId="focusId"
+              :editName="editName"
+              @dragstart="onDragStart"
+              @delete="deleteItems"
+              @rename="handleRename"
             />
-                <span v-else class="font-bold" >{{ p.titre }}</span>
             </div>
-            <div class="text-sm flex flex-row items-center cursor-pointer">
-              <SquareX class="w-3.5 h-3.5 text-red-500 hover:text-red-700" @click="deleteItems(p)" />
-              <PenLine class="w-3.5 h-3.5 text-white hover:text-green-700" @click="openRename(p.id)" />
-            </div>
-
-            </li>
-          </ul>
+          </li>
+        </ul>
+        <PinsDropdown
+          class="mt-4"
+          :pins="visiblePins.filter(p => !p.ensemble_fk)"
+          :open="true"
+          :renameOpen="renameOpen"
+          :focusId="focusId"
+          :editName="editName"
+          @dragstart="onDragStart"
+          @delete="deleteItems"
+          @rename="handleRename"
+          @clickPin="onClick"
+          @update:editName="val => editName = val"
+        />
+        <Plus class=" w-4 h-4 mt-5 mx-auto cursor-pointer text-white hover:text-gray-700" @click="createEnsemble()" />
+          
       </div>
     </TransitionRoot>
   </div>
@@ -128,16 +101,16 @@
 </script>
 
 <script setup lang="ts">
+    import PinsDropdown from './PinsDropdown.vue';
     import { ref, type Ref, type Directive, computed } from 'vue'
-    import { SquareX, PenLine, Plus, ChevronRight,MapPin } from 'lucide-vue-next';
+    import { SquareX, PenLine, Plus, ChevronRight, MapPin } from 'lucide-vue-next';
     import { TransitionRoot } from '@headlessui/vue'
     import { useDBStore } from "../stores/storesDB";
-    import {EnsembleClass, BaseModel } from "../db/appDB";
+    import {EnsembleClass, BaseModel, PinClass } from "../db/appDB";
 
     const syncStore = useDBStore()
     const visibleEnsembles = computed(() => syncStore.ensembleList.value.filter(e => !e.is_deleted))
     const visiblePins = computed(() => syncStore.pinList.value.filter(e => !e.is_deleted))
-    console.log("VisiblePins", visiblePins.value)
 
     const editName = ref("Paris-Brest")
     const renameOpen = ref(false)
@@ -156,15 +129,27 @@
       editName.value = syncStore.ensembles[id].titre
     }
 
+    function handleRename(id: string | null) {
+      if (id === null) {
+        renameOpen.value = false;
+        focusId.value = '';
+      } else {
+        renameOpen.value = true;
+        focusId.value = id;
+      }
+    }
+
     async function renameItems(e : Partial<BaseModel>) {
       renameOpen.value = false
       if (e.update) {await e.update({ titre: editName.value })}
       editName.value = "Paris-Brest"
     }
+
     async function deleteItems(e : Partial<BaseModel>) {
       renameOpen.value = false
       if (e.delete) {e.delete()}
     }
+
     async function createEnsemble() {
       const newEns = await EnsembleClass.create({ type: 'ensemble' })
       focusId.value = newEns.id
@@ -173,6 +158,15 @@
 
     const draggedPin = ref<null | { id: string }>()
 
+    async function onDropOutside() {
+      if (!draggedPin.value) return;
+      const pin = syncStore.pins[draggedPin.value.id];
+      if (pin && pin.update) {
+        await pin.update({ ensemble_fk: undefined });
+        console.log('Pin détaché d\'un ensemble (ensemble_fk mis à null)');
+      }
+      draggedPin.value = null;
+    }
     function onDragStart(pin: { id: string }) {
       draggedPin.value = pin
     }
@@ -185,6 +179,10 @@
         console.log('pin updated')
       }
       draggedPin.value = null
+    }
+
+    function onClick(pin: PinClass) {
+      console.log("onClick", pin)
     }
 
 </script>
