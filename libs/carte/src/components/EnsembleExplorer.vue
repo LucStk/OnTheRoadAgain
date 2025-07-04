@@ -1,97 +1,164 @@
-<script setup lang="ts">
-import { computed, ref } from 'vue'
-import draggable from 'vuedraggable'
-import { useDBStore } from "../db/dbStores";
-import { ItemInEnsembleClass } from '@/db/dbClasses';
-import { ItemInEnsembleModel } from '@/db/dbModels';
-
-const props = defineProps({
-  ensembleId: String
-})
-
-// Récupère tous les items d’un ensemble, triés par ordre
-const items = computed(() => {
-  return useDBStore().itemInEnsembleList.value
-    .filter(rel => rel.ensemble_id === props.ensembleId)
-    .sort((a, b) => (a.order ?? 0) - (b.order ?? 0))
-    .map(rel => {
-      if (rel.item_type === 'pin') return useDBStore().pinDict[rel.item_id]
-      if (rel.item_type === 'route') return useDBStore().routeDict[rel.item_id]
-      if (rel.item_type === 'ensemble') return useDBStore().ensembleDict[rel.item_id]
-    })
-    .filter(Boolean)
-})
-// Handle drop : mettre à jour la relation item <-> ensemble
-async function onMove(event: any) {
-  // event est l’événement Drag & Drop de vuedraggable
-  // event.item contient l’élément déplacé
-  // event.to, event.from contiennent les containers
-  // Ici on fait simple: on recalcule les ordres dans le nouvel ensemble
-  const newItems = event.to.__draggable_context.element
-  for (let i = 0; i < newItems.length; i++) {
-    const item = newItems[i]
-    // Trouver la relation itemInEnsemble
-    const rel = useDBStore().itemInEnsembleList.value.find(r => r.item_id === item.id && r.ensemble_id === props.ensembleId)
-    if (rel) {
-      if (props.ensembleId) await ItemInEnsembleModel.addItemToEnsemble(item.id, props.ensembleId, item.type, i) // Met à jour l’ordre
-    }
-  }
-}
-
-// Drag & Drop entre ensembles : gérer déplacer un item d’un ensemble à un autre
-async function onDrop(event : any) {
-  const draggedItem = event.item._underlying_vm_
-  const oldEnsembleId = event.from.dataset.ensembleId
-  const newEnsembleId = event.to.dataset.ensembleId
-
-  if (oldEnsembleId !== newEnsembleId) {
-    await ItemInEnsembleModel.removeItemFromEnsemble(draggedItem.id, oldEnsembleId)
-    await ItemInEnsembleModel.addItemToEnsemble(draggedItem.id, newEnsembleId, draggedItem.type)
-  }
-}
-</script>
-
 <template>
-  <div class="ensemble-explorer">
-    <h3 v-if = "ensembleId">{{ useDBStore().ensembleDict[ensembleId]?.titre || 'Ensemble' }}</h3>
-    <draggable
-      :list="items"
-      group="items"
-      :data-ensemble-id="ensembleId"
-      item-key="id"
-      @end="onDrop"
-      @change="onMove"
-    >
-      <template #item="{element}">
-        <div class="item" :class="element.type">
-          <template v-if="element.type === 'ensemble'">
-            <EnsembleExplorer :ensembleId="element.id" />
-          </template>
-          <template v-else>
-            <div>{{ element.titre }} ({{ element.type }})</div>
-          </template>
+  <div class="flex h-screen absolute z-50">
+    <!-- Sidebar -->
+    <TransitionRoot :show="true" as="template">
+      <div class="w-64 bg-base-200 p-4 overflow-y-auto"
+        @dragover.prevent
+        @drop="onDropOutside"
+      >
+        <div class="flex justify-between items-center mb-4">
+          <h2 class="text-lg font-semibold">Menu</h2>
+          <button class="btn btn-sm btn-ghost">
+            ✕
+          </button>
         </div>
-      </template>
-    </draggable>
+
+        <ul class="flex flex-col">
+          <EnsembleItem
+            v-for="e in visibleEnsembles"
+            :key="e.id"
+            :ensemble="e"
+            :openMap="openMap"
+            :focusId="focusId"
+            :renameOpen="renameOpen"
+            :editName="editName"
+            @toggleEnsemble="toggleEnsemble"
+            @deleteItems="deleteItems"
+            @openRename="openRename"
+            @renameItems="renameItems"
+            @dragstart="onDragStart"
+            @drop="onDrop"
+            @clickPin="onClick"
+            @update:editName="(val: string) => editName = val"
+          />
+        </ul>
+        <Plus class=" w-4 h-4 mt-5 mx-auto cursor-pointer text-white hover:text-gray-700" @click="createEnsemble()" />
+        <Route class=" w-4 h-4 mt-5 mx-auto cursor-pointer text-white hover:text-gray-700" @click="createRoute()" />
+      </div>
+    </TransitionRoot>
   </div>
 </template>
 
+<script lang="ts">
+  // auto-focus + auto-select
+  const vFocus: Directive = {
+    mounted(el: HTMLInputElement) {
+      el.focus()
+    },
+    updated(el: HTMLInputElement) {
+      el.focus()
+    }
+  }
+  export default {
+    directives: {
+      focus: vFocus
+    }
+  }
+
+</script>
+
+<script setup lang="ts">
+    import ItemsDropdown from './ItemsDropdown.vue';
+    import { ref, type Ref, type Directive, computed } from 'vue'
+    import { SquareX, PenLine, Plus, ChevronRight, MapPin, Route } from 'lucide-vue-next';
+    import { TransitionRoot } from '@headlessui/vue'
+    import { useDBStore } from "../db/dbStores";
+    import { EnsembleModel, PinModel, RouteModel } from "../db/dbModels";
+    import type { BaseModelInstanceMethods, BaseModelShape } from "../db/dbTypes/withBase.Model";
+import type { BaseType } from '@/db/dbTypes/Classes';
+
+    const syncStore = useDBStore()
+    const visibleEnsembles = computed(() => syncStore.ensembleList.value.filter(e => !e.is_deleted))
+    const visibleItems = computed(() => syncStore.itemsList.value.filter(e => !e.is_deleted))
+
+    const editName = ref("Paris-Brest")
+    const renameOpen = ref(false)
+    const focusId = ref<string>("")
+    // directives
+
+    const openMap = ref<Record<string, boolean>>({})
+
+    const createRoute = () => {
+      console.log("createRoute")
+      const newRoute = RouteModel.create({})
+    }
+
+    function toggleEnsemble(id: string) {
+      openMap.value[id] = !openMap.value[id]
+    }
+
+    function openRename(id: string) {
+      renameOpen.value = true
+      focusId.value = id
+      editName.value = syncStore.ensembleDict[id].titre
+    }
+
+    function handleRename(id: string | null) {
+      if (id === null) {
+        renameOpen.value = false;
+        focusId.value = '';
+      } else {
+        renameOpen.value = true;
+        focusId.value = id;
+      }
+    }
+
+    async function renameItems(e : Partial<BaseModelInstanceMethods<BaseType>>) {
+      renameOpen.value = false
+      if (e.update) {await e.update({ titre: editName.value })}
+      editName.value = "Paris-Brest"
+    }
+
+    async function deleteItems(e : Partial<BaseModelInstanceMethods<BaseType>>) {
+      renameOpen.value = false
+      if (e.delete) {e.delete()}
+    }
+
+    async function createEnsemble() {
+      const newEns = await EnsembleModel.create({ type: 'ensemble' })
+      focusId.value = newEns.id
+      renameOpen.value = true
+    }
+
+    const draggedItem = ref<null | PinModel | RouteModel>()
+
+    async function onDropOutside() {
+      if (!draggedItem.value) return;
+
+      const item = draggedItem.value;
+      if (item) {
+        await item.update({ ensemble_fk: undefined });
+        console.log('Pin détaché d\'un ensemble (ensemble_fk mis à null)');
+      }
+    draggedItem.value = null;
+    }
+    function onDragStart(item: PinModel | RouteModel) {
+      draggedItem.value = item
+      console.log("onDragStart", item)
+    }
+
+    async function onDrop(ensemble: { id: string }) {
+      if (!draggedItem.value) return
+      const item = draggedItem.value;
+      if (item) {
+        await item.update({ ensemble_fk:  ensemble.id  });
+        console.log('Pin détaché d\'un ensemble (ensemble_fk mis à null)');
+      }
+      draggedItem.value = null;
+    }
+
+    function onClick(item: PinModel | RouteModel) {
+      console.log("onClick", item)
+    }
+
+</script>
 <style scoped>
-.ensemble-explorer {
-  border: 1px solid #ccc;
-  padding: 8px;
-  margin-bottom: 10px;
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.2s;
 }
-.item {
-  padding: 5px;
-  border: 1px solid #ddd;
-  margin-bottom: 4px;
-  cursor: grab;
-  background-color: white;
-}
-.item.ensemble {
-  background-color: #eef;
-  padding-left: 15px;
-  border-left: 4px solid #88f;
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
 }
 </style>

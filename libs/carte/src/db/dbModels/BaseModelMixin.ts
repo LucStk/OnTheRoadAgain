@@ -1,6 +1,7 @@
 // models/BaseModelMixin.ts
 import { getLastSyncTime } from '../syncMetaDB';
 import { type Table } from 'dexie';
+import type { BaseModelShape } from '../dbTypes/withBase.Model';
 
 export function withBaseModel<TBase extends new (...args: any[]) => { 
   id: string; 
@@ -43,7 +44,7 @@ export function withBaseModel<TBase extends new (...args: any[]) => {
         is_deleted: 0,
         ...data}
     }
-    static async create<T>(data: Partial<T>){
+    static async create<T>(data: Partial<T>): Promise<BaseModelShape> {
       throw new Error("Create method not implemented")
       const instance = new this(this.enrich(data));
       await (instance as any).save();

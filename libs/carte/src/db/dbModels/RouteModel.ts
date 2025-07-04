@@ -5,21 +5,21 @@ import { withBaseModel } from './BaseModelMixin';
 import { computeBBox } from '../../elements/map';
 import googlePolyline from 'google-polyline';
 import { PinModel } from './PinModel';
+import type { BaseModelShape } from '../dbTypes/withBase.Model';
 
 const _RouteModel = withBaseModel(RouteClass, db.routes);
 export class RouteModel extends _RouteModel {
-   static override async create<T>(
-    this: new (data: Partial<T>) => T,
-    data: Partial<T>) {
+   static override async create(data: Partial<RouteClass>): Promise<BaseModelShape> {
       const defaults = {
-        type: 'route',
+        type: 'route' as const,
         pins: [],
         bbox: [],
         geometry: '',
         titre: 'New route',
-        ...data,
-      }    
-      super.create.call(this, { ...defaults, ...data }) as T;
+      }
+      const instance = new this(this.enrich({ ...defaults, ...data }));
+      await (instance as any).save();
+      return instance;
   }
 
   async updateGeometryFromPoints(pins: PinModel[]) {
@@ -32,5 +32,6 @@ export class RouteModel extends _RouteModel {
     const bboxCoords = coords.map(([lat, lng]) => [lng, lat]);
     this.bbox = computeBBox(bboxCoords);
     await this.save();
+    
   }
 }
