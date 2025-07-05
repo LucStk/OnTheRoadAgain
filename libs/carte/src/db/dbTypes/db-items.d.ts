@@ -35,10 +35,10 @@ export interface PinInRouteType {
   order: number;
 }
 
-export interface ItemInEnsembleType {
+export interface FamilyTreeType {
   id: string;
-  ensemble_id: string;
-  item_id: string;
-  item_type: 'pin' | 'route' | 'ensemble';
+  child_id: string;
+
+  parent_id?: string; 
   order?: number;
 }

@@ -3,6 +3,7 @@ import { EnsembleClass } from '../dbClasses';
 import { db } from '../dbApp';
 import { withBaseModel } from './BaseModelMixin';
 import type { BaseModelShape } from '../dbTypes/withBase.Model';
+import { FamilyTreeModel } from './FamilyTreeModel';
 
 const _EnsembleModel = withBaseModel(EnsembleClass, db.ensembles);
 export class EnsembleModel extends _EnsembleModel {
@@ -15,6 +16,10 @@ export class EnsembleModel extends _EnsembleModel {
     };
     const instance = new this(this.enrich({ ...defaults, ...data }));
     await (instance as any).save();
+
+    // Ajoute une relation par defaut 
+    await FamilyTreeModel.addChildtoParent(instance.id, undefined, 0)
+
     return instance;
   }
 }

@@ -5,21 +5,21 @@ import { useTableStore } from './useTableStore'
 
 import { db } from './dbApp'
 import { EnsembleModel, PinModel, RouteModel } from './dbModels'
-import type { PinInRouteType, ItemInEnsembleType} from './dbTypes/db-items'
+import type { PinInRouteType, FamilyTreeType} from './dbTypes/db-items'
 
 // Crée les 3 stores
 const ensembleStore = useTableStore( db.ensembles,EnsembleModel)
 const pinStore = useTableStore(db.pins,PinModel)
 const routeStore = useTableStore(db.routes, RouteModel)
 const pinInRouteStore = useTableStore(db.pinInRoutes)
-const itemInEnsembleStore = useTableStore(db.itemInEnsembles)
+const familyTreeStore = useTableStore(db.familyTrees)
 
 // Installe les hooks une seule fois
 ensembleStore.createHooks()
 pinStore.createHooks()
 routeStore.createHooks()
 pinInRouteStore.createHooks()
-itemInEnsembleStore.createHooks()
+familyTreeStore.createHooks()
 
 // Combinaison items
 const itemsList = computed(() => [
@@ -33,14 +33,14 @@ export function useDBStore() {
   pinStore.loadAll()
   routeStore.loadAll()
   pinInRouteStore.loadAll()
-  itemInEnsembleStore.loadAll()
+  familyTreeStore.loadAll()
 
   return {
     ensembleDict   : ensembleStore.dict,
     pinDict        : pinStore.dict,
     routeDict      : routeStore.dict,
     pinInRouteDict : pinInRouteStore.dict,
-    itemInEnsembleDict: itemInEnsembleStore.dict,
+    familyTreeDict: familyTreeStore.dict,
 
     itemsList,
     
@@ -48,7 +48,7 @@ export function useDBStore() {
     pinList: pinStore.list,
     routeList: routeStore.list,
     pinInRouteList: pinInRouteStore.list,
-    itemInEnsembleList: itemInEnsembleStore.list,
+    familyTreeList: familyTreeStore.list,
 
     get: (id: string) => ensembleStore.dict[id],
   }

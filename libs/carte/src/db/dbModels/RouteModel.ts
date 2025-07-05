@@ -6,6 +6,7 @@ import { computeBBox } from '../../elements/map';
 import googlePolyline from 'google-polyline';
 import { PinModel } from './PinModel';
 import type { BaseModelShape } from '../dbTypes/withBase.Model';
+import { FamilyTreeModel } from './FamilyTreeModel';
 
 const _RouteModel = withBaseModel(RouteClass, db.routes);
 export class RouteModel extends _RouteModel {
@@ -19,6 +20,8 @@ export class RouteModel extends _RouteModel {
       }
       const instance = new this(this.enrich({ ...defaults, ...data }));
       await (instance as any).save();
+      await FamilyTreeModel.addChildtoParent(instance.id, undefined, 0)
+          
       return instance;
   }
 

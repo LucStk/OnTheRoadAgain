@@ -3,6 +3,7 @@ import { PinClass } from '../dbClasses';
 import { db } from '../dbApp';
 import { withBaseModel } from './BaseModelMixin';
 import type { BaseModelShape } from '../dbTypes/withBase.Model';
+import { FamilyTreeModel } from './FamilyTreeModel';
 
 const _PinModel = withBaseModel(PinClass, db.pins);
 export class PinModel extends _PinModel {
@@ -15,6 +16,8 @@ export class PinModel extends _PinModel {
     }    
     const instance = new this(this.enrich({ ...defaults, ...data }));
     await (instance as any).save();
+    await FamilyTreeModel.addChildtoParent(instance.id, undefined, 0)
+    
     return instance;
   }
 }

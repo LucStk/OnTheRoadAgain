@@ -69,7 +69,7 @@
 
   import { useDBStore } from "../db/dbStores";
   import { useExplorerStore } from "../stores/storesExplorer";
-  import { ItemInEnsembleModel } from "../db/dbModels";
+  import { FamilyTreeModel } from "../db/dbModels";
   import draggable from 'vuedraggable'
 
   const explorerStore = useExplorerStore()
@@ -77,7 +77,7 @@
 
   // Est ensemble visible si il n'est pas supprimé et si il n'est pas lui même dans un item
   const rootEnsembles = computed(() => {
-    return dbStore.ensembleList.value.filter(e => !e.is_deleted && ItemInEnsembleModel.isItemInEnsemble(e.id))
+    return dbStore.ensembleList.value.filter(e => !e.is_deleted && FamilyTreeModel.isItemInEnsemble(e.id))
   })
   const visibleItems = computed(() => dbStore.itemsList.value.filter(e => !e.is_deleted))
 

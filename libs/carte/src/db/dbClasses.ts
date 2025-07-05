@@ -1,5 +1,5 @@
 import type { BaseType, EnsembleType, PinType, RouteType } from "./dbTypes/db-items";
-import type { PinInRouteType, ItemInEnsembleType} from './dbTypes/db-items'
+import type { PinInRouteType, FamilyTreeType} from './dbTypes/db-items'
 
 export abstract class BaseClass implements BaseType {
   id!: string;
@@ -62,14 +62,13 @@ export class PinInRouteClass implements PinInRouteType {
   }
 }
 
-export class ItemInEnsembleClass implements ItemInEnsembleType {
+export class FamilyTreeClass implements FamilyTreeType {
   id!: string;
-  ensemble_id!: string;
-  item_id!: string;
-  item_type!: 'pin' | 'route' | 'ensemble';
+  child_id!: string;
+  parent_id?: string;
   order?: number;
 
-  constructor(data?: Partial<ItemInEnsembleType>) {
+  constructor(data?: Partial<FamilyTreeType>) {
     if (data) {Object.assign(this, data);}
   }
 }
