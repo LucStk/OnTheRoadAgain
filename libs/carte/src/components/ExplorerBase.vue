@@ -77,6 +77,7 @@
 
   // Est ensemble visible si il n'est pas supprimé et si il n'est pas lui même dans un item
   const rootEnsembles = computed(() => {
+    const noParent = dbStore.familyTreeList.value.filter(e => e.parent_id === undefined)
     return dbStore.ensembleList.value.filter(e => !e.is_deleted && FamilyTreeModel.isItemInEnsemble(e.id))
   })
   const visibleItems = computed(() => dbStore.itemsList.value.filter(e => !e.is_deleted))

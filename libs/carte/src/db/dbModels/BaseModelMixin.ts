@@ -2,13 +2,16 @@
 import { getLastSyncTime } from '../syncMetaDB';
 import { type Table } from 'dexie';
 import type { BaseModelShape } from '../dbTypes/withBase.Model';
+import {db} from '../dbApp';
 
 export function withBaseModel<TBase extends new (...args: any[]) => { 
   id: string; 
   created_at: string; 
   updated_at: string; 
   dirty: number; 
-  is_deleted: number }>(
+  is_deleted: number;
+  type: 'ensemble' | 'pin' | 'route';
+}>(
   Base: TBase,
   table :Table<any, string>
 ) {
@@ -22,10 +25,16 @@ export function withBaseModel<TBase extends new (...args: any[]) => {
     }
 
     async save(): Promise<void> {
+      await db.typeTable.put({ id: this.id, type: this.type })
+      await db.familyTrees.put({ id: this.id, child_id: this.id, parent_id: undefined, order: 0 })
       await table.put(this);
     }
 
     async delete(): Promise<void> {
+      await db.typeTable.delete(this.id)
+      //TODO : Créer une suppression récursive
+      //await db.familyTrees.delete(this.id)
+
       const lastSync = await getLastSyncTime();
       if (new Date(lastSync) < new Date(this.created_at)) {
         await table.delete(this.id);

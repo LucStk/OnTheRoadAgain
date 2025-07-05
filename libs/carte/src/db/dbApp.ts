@@ -1,4 +1,4 @@
-import type { PinInRouteType,FamilyTreeType, EnsembleType, RouteType, PinType } from './dbTypes/db-items';
+import type { PinInRouteType,FamilyTreeType, EnsembleType, RouteType, PinType, TypeTable } from './dbTypes/db-items';
 import { api } from '@repo/auth';
 import { setLastSyncTime, getLastSyncTime} from './syncMetaDB.ts';
 import Dexie,{ type Table } from 'dexie';
@@ -33,6 +33,7 @@ export class AppDB extends Dexie {
   pins!: Table<PinType, string>;
   pinInRoutes!: Table<PinInRouteType, string>;
   familyTrees!: Table<FamilyTreeType, string>;
+  typeTable!: Table<TypeTable, string>;
 
   constructor() {
     super('AppDB');
@@ -42,7 +43,8 @@ export class AppDB extends Dexie {
       pins: 'id, updated_at, dirty',
       routes: 'id, updated_at, dirty',
       pinInRoutes: 'id, route_id, pin_id, order',
-      familyTrees: 'id, ensemble_id, item_id, item_type, order'
+      familyTrees: 'id, child_id, parent_id, order',
+      typeTable: 'id, type'
     });
   }
 
