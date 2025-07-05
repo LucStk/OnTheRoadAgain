@@ -5,7 +5,7 @@ export interface BaseType {
   user        : string;
   titre       : string;
   description : string;
-
+  
   created_at  : string;
   updated_at  : string;
 
@@ -38,7 +38,11 @@ export interface PinInRouteType {
 export interface FamilyTreeType {
   id: string;
   child_id: string;
-
-  parent_id?: string; 
+  parent_id?: string;
   order?: number;
+}
+
+export interface TypeTable {
+  id: string;
+  type: 'pin' | 'route' | 'ensemble';
 }
