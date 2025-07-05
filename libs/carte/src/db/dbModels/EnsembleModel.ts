@@ -16,10 +16,6 @@ export class EnsembleModel extends _EnsembleModel {
     };
     const instance = new this(this.enrich({ ...defaults, ...data }));
     await (instance as any).save();
-
-    // Ajoute une relation par defaut 
-    await FamilyTreeModel.addChildtoParent(instance.id, undefined, 0)
-
     return instance;
   }
 }

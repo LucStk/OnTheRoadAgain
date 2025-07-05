@@ -12,7 +12,7 @@
         </div>
 
         <draggable class="flex flex-col"
-          :list="rootEnsembles"
+          :list="rootItems"
           group="ensembles"
           item-key="id"
           @end="onDrop"
@@ -20,7 +20,7 @@
           >
           <template #item="{ element, index }">
             <ExplorerItem
-              :ensemble="element"
+              :element="element"
               :index="index"
             />
           </template>
@@ -61,28 +61,26 @@
 </script>
 
 <script setup lang="ts">
-  import { type Directive, computed } from 'vue'
+  import { type Directive, computed, type ComputedRef, ref } from 'vue'
   import { Plus, Route } from 'lucide-vue-next';
   import { TransitionRoot } from '@headlessui/vue'
-  
   import ExplorerItem from './ExplorerItems.vue'
-
   import { useDBStore } from "../db/dbStores";
   import { useExplorerStore } from "../stores/storesExplorer";
-  import { FamilyTreeModel } from "../db/dbModels";
   import draggable from 'vuedraggable'
-
+  
   const explorerStore = useExplorerStore()
   const dbStore = useDBStore()
 
-  // Est ensemble visible si il n'est pas supprimé et si il n'est pas lui même dans un item
-  const rootEnsembles = computed(() => {
+  const rootItems = computed(() => {
     const noParent = dbStore.familyTreeList.value.filter(e => e.parent_id === undefined)
-    return dbStore.ensembleList.value.filter(e => !e.is_deleted && FamilyTreeModel.isItemInEnsemble(e.id))
+    return noParent.map(e => {
+      const item = dbStore.get(e.child_id)
+      if (item && item.is_deleted === 0) return item
+      return null
+    }).filter(Boolean)
   })
-  const visibleItems = computed(() => dbStore.itemsList.value.filter(e => !e.is_deleted))
 
-  console.log("visibleEnsembles", rootEnsembles.value)
   function onDrop(e: any) {
     console.log("onDrop", e)
   }

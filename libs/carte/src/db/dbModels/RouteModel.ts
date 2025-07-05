@@ -20,8 +20,6 @@ export class RouteModel extends _RouteModel {
       }
       const instance = new this(this.enrich({ ...defaults, ...data }));
       await (instance as any).save();
-      await FamilyTreeModel.addChildtoParent(instance.id, undefined, 0)
-          
       return instance;
   }
 

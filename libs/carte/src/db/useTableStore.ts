@@ -16,7 +16,7 @@ export function useTableStore<T extends object, TM extends T>(
   async function loadAll() {
     const all = await dbtable.toArray()
     for (const obj of all) {
-      dict[(obj as any).id] = obj // déjà instancié
+      dict[(obj as any).id] = obj
     }
   }
 

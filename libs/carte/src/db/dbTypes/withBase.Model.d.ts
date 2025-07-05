@@ -20,6 +20,8 @@ export interface BaseModelShape {
 /**
  * Interface des méthodes injectées dans l'instance
  */
+export type BaseModelInstance = InstanceType<ReturnType<typeof withBaseModel<any>>>
+
 export interface BaseModelInstanceMethods<T> {
   update(data: Partial<T>): Promise<void>
   save(): Promise<void>
