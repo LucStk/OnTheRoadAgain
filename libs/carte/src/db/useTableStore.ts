@@ -1,14 +1,17 @@
 // stores/useTableStore.ts
-import { reactive, computed } from 'vue'
+import { reactive, computed, type ComputedRef } from 'vue'
 import { type Table } from 'dexie'
 
-export function useTableStore<T extends object>(
+export function useTableStore<T extends object, TM extends T>(
   dbtable: Table<T, string>,
-  Model?: new (data?: Partial<T>) => T,
+  Model?: new (data?: Partial<T>) => TM,
 ) {
   const dict = reactive<Record<string, T>>({})
-  const list = computed(() => Object.values(dict))
-  if (Model) dbtable.mapToClass(Model)
+  const list = computed(() => Object.values(dict)) as ComputedRef<TM[]>
+  
+  if (Model) {
+    dbtable.mapToClass(Model)
+  }
 
   async function loadAll() {
     const all = await dbtable.toArray()

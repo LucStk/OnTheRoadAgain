@@ -5,7 +5,7 @@ import { useTableStore } from './useTableStore'
 
 import { db } from './dbApp'
 import { EnsembleModel, PinModel, RouteModel } from './dbModels'
-import type { PinInRouteType, ItemInEnsembleType} from './dbTypes/Classes'
+import type { PinInRouteType, ItemInEnsembleType} from './dbTypes/db-items'
 
 // Crée les 3 stores
 const ensembleStore = useTableStore( db.ensembles,EnsembleModel)

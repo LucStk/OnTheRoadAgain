@@ -1,11 +1,10 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue';
 import { useMapStore } from './stores/storesMap';
-//import Bibliotheque from './components/Bibliotheque.vue'
-import Save from './components/Save.vue';
 import { usePinMarkers } from './composables/usePinMarkers';
 import { useMarkerMenu } from './composables/useMarkerMenu';
 import { useDBStore } from './db/dbStores';
+import {ExplorerBase, Save} from './components'
 
 useDBStore()
 const mapContainer = ref<HTMLElement | null>(null);
@@ -27,6 +26,7 @@ onMounted(() => {
 <template>
   <!-- <Searchbar /> 
   <Bibliotheque />-->
+  <ExplorerBase />
   <Save />
   <div ref="mapContainer" id="map" class="z-0"></div>
 </template>

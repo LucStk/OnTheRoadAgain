@@ -108,7 +108,7 @@
     import { useDBStore } from "../db/dbStores";
     import { EnsembleModel, PinModel, RouteModel } from "../db/dbModels";
     import type { BaseModelInstanceMethods, BaseModelShape } from "../db/dbTypes/withBase.Model";
-import type { BaseType } from '@/db/dbTypes/Classes';
+import type { BaseType } from '@/db/dbTypes/db-items';
 
     const syncStore = useDBStore()
     const visibleEnsembles = computed(() => syncStore.ensembleList.value.filter(e => !e.is_deleted))

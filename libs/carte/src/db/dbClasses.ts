@@ -1,5 +1,5 @@
-import { type PinType, type RouteType, type EnsembleType, type BaseType } from "./dbTypes/Classes.d";
-import type { PinInRouteType, ItemInEnsembleType} from './dbTypes/Classes'
+import type { BaseType, EnsembleType, PinType, RouteType } from "./dbTypes/db-items";
+import type { PinInRouteType, ItemInEnsembleType} from './dbTypes/db-items'
 
 export abstract class BaseClass implements BaseType {
   id!: string;

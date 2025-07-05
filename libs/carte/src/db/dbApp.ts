@@ -1,4 +1,4 @@
-import type { PinInRouteType,ItemInEnsembleType, EnsembleType, RouteType, PinType } from './dbTypes/Classes.d.ts';
+import type { PinInRouteType,ItemInEnsembleType, EnsembleType, RouteType, PinType } from './dbTypes/db-items';
 import { api } from '@repo/auth';
 import { setLastSyncTime, getLastSyncTime} from './syncMetaDB.ts';
 import Dexie,{ type Table } from 'dexie';

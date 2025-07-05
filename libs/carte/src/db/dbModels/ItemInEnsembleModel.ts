@@ -14,6 +14,13 @@ export class ItemInEnsembleModel extends ItemInEnsembleClass{
     await db.itemInEnsembles.put({ id, ensemble_id: ensembleId, item_id: itemId, item_type: itemType, order })
   }
 
+  static async isItemInEnsemble(itemId: string) : Promise<boolean> {
+    const rel = await db.itemInEnsembles
+        .where({ item_id: itemId})
+        .first()
+    return rel !== undefined
+  }
+
   static async removeItemFromEnsemble(itemId: string, ensembleId: string) {
     const rel = await db.itemInEnsembles
         .where({ item_id: itemId, ensemble_id: ensembleId })
