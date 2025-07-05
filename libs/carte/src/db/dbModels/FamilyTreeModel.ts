@@ -13,6 +13,22 @@ export class FamilyTreeModel extends FamilyTreeClass{
     await db.familyTrees.put({ id, child_id: child_id, parent_id: parent_id, order })
   }
 
+  static async addOrUpdateChildtoParent(
+    child_id: string,
+    parent_id?: string,
+    order?: number
+    ) {
+    const id = crypto.randomUUID()
+    await db.familyTrees.put({ id, child_id: child_id, parent_id: parent_id, order })
+  }
+
+  static async getParents(childId: string) {
+    const rel = await db.familyTrees
+        .where({ child_id: childId})
+        .first()
+    return rel
+  }
+
   static async isItemInEnsemble(itemId: string) : Promise<boolean> {
     const rel = await db.familyTrees
         .where({ item_id: itemId})

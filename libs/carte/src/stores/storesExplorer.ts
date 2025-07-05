@@ -4,8 +4,9 @@ import { ref } from 'vue';
 import { useDBStore } from "../db/dbStores";
 import type { BaseModelInstanceMethods, BaseModelShape } from "../db/dbTypes/withBase.Model";
 import type { BaseType } from '@/db/dbTypes/db-items';
-import { EnsembleModel } from "../db/dbModels";
+import { EnsembleModel, FamilyTreeModel } from "../db/dbModels";
 import { createError, ERROR_CODES } from '../errors';
+import { db } from '../db/dbApp';
 const dbStore = useDBStore()
 
 export const useExplorerStore = defineStore('explorerstore', () => {
@@ -50,11 +51,26 @@ export const useExplorerStore = defineStore('explorerstore', () => {
 		openMap.value[id] = !openMap.value[id]
 	}
 
+	function moveToParent(childId: string, newParentId: string) {
+		const tree = dbStore.familyTreeList.value.find(
+			e => e.child_id === childId
+		)
+		if (tree) {
+			tree.parent_id = newParentId
+			db.familyTrees.put(tree) // update dans Dexie
+		} else {
+			// s'il n’y a pas encore de lien, on le crée
+			FamilyTreeModel.addChildtoParent(childId, newParentId)
+		}
+	}
+
+
   return {
 		editName,
 		renameOpen,	
 		focusId,
 		openMap,
+		moveToParent,
 		toggleEnsemble,
 		openRename,
 		renameItems,

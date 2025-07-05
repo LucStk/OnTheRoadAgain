@@ -1,3 +1,5 @@
+// BaseExplorer.vue
+
 <template>
   <div class="flex h-screen absolute z-50">
     <!-- Sidebar -->
