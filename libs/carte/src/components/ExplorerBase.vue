@@ -13,20 +13,7 @@
           </button>
         </div>
 
-        <draggable class="flex flex-col"
-          :list="rootItems"
-          group="ensembles"
-          item-key="id"
-          @end="onDrop"
-          @change="onMove"
-          >
-          <template #item="{ element, index }">
-            <ExplorerItem
-              :element="element"
-              :index="index"
-            />
-          </template>
-        </draggable>
+        <ExplorerItems :elements="rootItems || []" />
         <Plus class="
             w-4 h-4 mt-5 
             mx-auto cursor-pointer 
@@ -66,29 +53,21 @@
   import { type Directive, computed, type ComputedRef, ref } from 'vue'
   import { Plus, Route } from 'lucide-vue-next';
   import { TransitionRoot } from '@headlessui/vue'
-  import ExplorerItem from './ExplorerItems.vue'
+  import ExplorerItems from './ExplorerItems.vue'
   import { useDBStore } from "../db/dbStores";
   import { useExplorerStore } from "../stores/storesExplorer";
-  import draggable from 'vuedraggable'
   
   const explorerStore = useExplorerStore()
   const dbStore = useDBStore()
 
   const rootItems = computed(() => {
     const noParent = dbStore.familyTreeList.value.filter(e => e.parent_id === undefined)
-    return noParent.map(e => {
-      const item = dbStore.get(e.child_id)
-      if (item && item.is_deleted === 0) return item
-      return null
-    }).filter(Boolean)
+    return noParent
+      .map(e => dbStore.get(e.child_id))
+      .filter(item => item && item.is_deleted === 0 && item.id != null)
   })
 
-  function onDrop(e: any) {
-    console.log("onDrop", e)
-  }
-  function onMove(e: any) {
-    console.log("onMove", e)
-  }
+
 </script>
 <style scoped>
 .fade-enter-active,
